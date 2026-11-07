@@ -13,9 +13,11 @@
 
 #include "SystemConfig.h"
 #include "AudioMonitor.h"
+#include "ImuManager.h"
 
 // global sensor obj
 extern AudioMonitor audioMonitor;
+extern ImuManager imuManager;
 
 // fw::StripData items from IMUTask. Created by the queue owner before IMUTask starts.
 //extern QueueHandle_t imuQueue;

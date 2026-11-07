@@ -8,7 +8,8 @@
 #include "ImuManager.h"
 #include "OrientationProcessor.h"
 
-void printSnapshot(const fw::Snapshot& snapshot);
+void printSnapshot(const fw::Snapshot& snapshot); 
+void printRawStrip(const fw::StripData& stripData);
 
 void acquisitionTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
@@ -31,19 +32,19 @@ void acquisitionTask(void*) {
 
 
     // env read
-    if (now - lastEnvTime >= envPeriod) {
+    if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
       lastEnvTime = now;
       // env read
     } 
 
     // audio read
-    if (now - lastAudioTime >= audioPeriod) {
+    if (now - lastAudioTime >= audioPeriod && SystemConfig::kInitAudio) {
       lastAudioTime = now;
       audioMonitor.read(snapshot.audioData);
     } 
 
     // heart read
-    if (now - lastHeartTime >= heartPeriod) {
+    if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
       lastHeartTime = now; 
       // heart read
     } 
@@ -54,12 +55,13 @@ void acquisitionTask(void*) {
     // push it through queue
 
     // temporary print to serial
-    printSnapshot(snapshot);
+    // printSnapshot(snapshot);
 
     vTaskDelayUntil(&lastWake, imuPeriod);
   }
 }
 
+<<<<<<< HEAD
 // argument is the ImuManager started in setup(). Reads all 4 IMUs every 10 ms.
 void IMUTask(void* argument) {
   ImuManager* imuManager = static_cast<ImuManager*>(argument);
@@ -75,6 +77,22 @@ void IMUTask(void* argument) {
     if (imuManager->read(strip) == fw::Result::Ok && imuQueue != nullptr) {
       xQueueSend(imuQueue, &strip, 0);  // Drop when full rather than stall the 100 Hz loop.
     }
+=======
+void IMUTask(void*) {
+  TickType_t lastWake = xTaskGetTickCount();
+  const TickType_t imuPeriod = pdMS_TO_TICKS(1000);  
+
+  fw::StripData stripData{};
+
+  while (true) {
+
+    // imu read (100Hz)
+    // push reading through queue
+    imuManager.read(stripData);
+    printRawStrip(stripData);
+
+    vTaskDelayUntil(&lastWake, imuPeriod);
+>>>>>>> origin/main
   }
 }
 
@@ -119,4 +137,19 @@ void printSnapshot(const fw::Snapshot& snapshot) {
 
     Serial.println("Audio");
     Serial.printf("  Loudness    : %7.2f dB relative\n", audio.relativeDb);
+}
+void printRawStrip(const fw::StripData& rawStrip) {
+    Serial.printf("\n=== Raw IMU data | timestamp: %lu ===\n",
+                  static_cast<unsigned long>(rawStrip.time));
+
+    unsigned index = 0;
+    for (const auto& imu : rawStrip.data) {
+        Serial.printf("  IMU[%u]\n", index++);
+        Serial.printf("    Accel  x=% .4f  y=% .4f  z=% .4f\n",
+                      imu.accel.x, imu.accel.y, imu.accel.z);
+        Serial.printf("    Gyro   x=% .4f  y=% .4f  z=% .4f\n",
+                      imu.gyro.x, imu.gyro.y, imu.gyro.z);
+        Serial.printf("    Magno  x=% .4f  y=% .4f  z=% .4f\n",
+                      imu.magno.x, imu.magno.y, imu.magno.z);
+    }
 }

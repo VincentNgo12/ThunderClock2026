@@ -25,8 +25,8 @@ class ImuManager {
   // Selects a mux channel. Shared with the environment and heart-rate modules on the same bus.
   fw::Result setChannel(uint8_t channel);
 
- private:
 
+private:
   TwoWire& wire_;
   uint8_t muxAddress = 0x70;
   // Mux channel i: pelvis, lumbar, thoracic, upper thoracic.
