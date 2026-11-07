@@ -1,9 +1,9 @@
 # ThunderClock wearable device boundary
 
-The planned device encoding is Protobuf with nanopb. Detailed fields, units,
-coordinate conventions and BLE size targets are in
-[ORIENTATION.md](../protocol/ORIENTATION.md). Schema files and bindings will be
-added with the implementation.
+The device encoding uses Protobuf with nanopb. The backend decodes the raw and
+quaternion schemas. Firmware encoding and BLE publication remain planned.
+See [ORIENTATION.md](../protocol/ORIENTATION.md) for fields, units, coordinate
+conventions and packet bounds.
 
 ## Responsibilities
 
@@ -19,9 +19,9 @@ Use service AAAA with raw characteristic 8888 and quaternion characteristic 8889
 for the prototype profile. Both support READ and NOTIFY. Confirm the actual device
 profile before connecting. Custom 128-bit UUIDs remain a team decision.
 
-Each notification carries one complete packet. Target bounds are 150 bytes for
-raw and 153 bytes for quaternion, requiring ATT MTU at least 153 and 156.
-Verify these bounds against generated code and the negotiated transport capacity.
+Each notification carries one complete packet. Generated bounds are 150 bytes
+for raw and 153 bytes for quaternion, requiring ATT MTU at least 153 and 156.
+Verify the negotiated transport capacity on the target laptop.
 Suppress an oversized packet and report the condition.
 
 ## Remaining agreements

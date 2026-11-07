@@ -61,10 +61,11 @@ One reader owns a device. Keep callbacks bounded, decode outside callbacks and
 select the packet format explicitly. Preserve signed raw readings and gravity.
 Fusion and gravity subtraction remain firmware concerns.
 
-Later FastAPI work will aggregate application state and publish
-`WorkerTelemetry` over `/ws/telemetry`, targeting approximately 20 Hz.
-Browser connections share acquisition. Device connection, sample validity and
-browser connection each need their own state.
+The optional FastAPI adapter shares the BLE reader and publishes diagnostic
+`WorkerTelemetry` snapshots over `/ws/telemetry` at about 20 Hz. It publishes
+usable quaternions and per-IMU freshness. Raw mode leaves orientations
+unavailable. Device connection, sample validity and browser connection each
+have their own state.
 
 Neutral-pose capture belongs to the backend and must validate all required
 orientations before confirming success. Posture, fall/impact, EEG, alerts and

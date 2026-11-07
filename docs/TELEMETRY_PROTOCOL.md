@@ -1,12 +1,12 @@
-# ThunderClock telemetry plan
+# ThunderClock telemetry
 
-Two interfaces connect the wearable, laptop and dashboard. The specifications
-below are design targets. Schemas, models and example fixtures will be added
-with their implementations.
+Two interfaces connect the wearable, laptop and dashboard. The diagnostic
+backend implements device decoding and the application snapshot described
+below. The remaining application sections describe demo targets.
 
 ## Device transport
 
-The ESP32 sends bounded Protobuf packets over BLE. Firmware owns calibration,
+The BLE reader accepts bounded Protobuf packets. Firmware owns calibration,
 fusion, mounting transforms and device validity. Backend code owns receipt,
 decoding and validation.
 
@@ -16,13 +16,16 @@ coordinate conventions and BLE delivery targets.
 
 ## Application telemetry
 
-The backend will deliver `WorkerTelemetry` JSON over `/ws/telemetry`.
-Target approximately 20 snapshots per second. Use the same application shape
-for hardware, simulated and replay input.
+The optional API publishes `WorkerTelemetry` JSON with `schema_version: "2.0"`
+over `/ws/telemetry` at approximately 20 snapshots per second. It shares one
+hardware reader and publishes four named IMU slots. Usable, fresh quaternion
+samples populate orientation values. Raw mode leaves orientations unavailable.
 
-Keep packet encoding and sensor registers behind the backend boundary. Plan an
-explicit `schema_version` from the first implementation. Agree its initial
-value and exact JSON shape when adding shared backend/frontend models.
+The diagnostic snapshot leaves `device`, per-IMU `acquired_us` and unsupported
+output groups null. Its system state is degraded while subscribed and offline
+otherwise. Simulated and replay input are planned for the wider application
+using the same application shape. Keep packet encoding and sensor registers
+behind the backend boundary.
 
 ### Envelope and connection state
 

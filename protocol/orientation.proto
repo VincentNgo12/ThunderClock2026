@@ -1,0 +1,26 @@
+// File: orientation.proto
+// Purpose: Four segment orientations with explicit sensor validity.
+// Contributors: Unassigned
+syntax = "proto3";
+package telemetry.orientation.v1;
+
+message Quaternion {
+  float w = 1;
+  float x = 2;
+  float y = 3;
+  float z = 4;
+}
+
+message Orientation {
+  optional uint32 sensor_id = 1;
+  optional bool valid = 2;
+  Quaternion rotation = 3;
+}
+
+message OrientationPacket {
+  // Header fields use explicit presence, including when counters are zero.
+  optional uint32 version = 16;
+  optional uint32 sequence = 17;
+  optional uint32 sample_time_ms = 18;
+  repeated Orientation orientations = 19;
+}

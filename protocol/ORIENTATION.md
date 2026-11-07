@@ -1,9 +1,9 @@
-# ThunderClock orientation protocol plan
+# ThunderClock orientation protocol
 
-This is the device-side contract for the four-IMU diagnostic milestone.
-Implement and generate the canonical `protocol/orientation.proto` with package
-`telemetry.orientation.v1` when adding the transport. Physical validation remains
-an acceptance task.
+The device-side contract for four-IMU diagnostics is defined in
+[orientation.proto](orientation.proto), package `telemetry.orientation.v1`.
+The backend decodes this schema. Firmware integration and physical validation
+remain acceptance tasks.
 
 ## BLE profile and raw measurements
 
@@ -11,8 +11,8 @@ The prototype profile targets `THUNDER CLOCK`, service AAAA, raw characteristic
 8888 and quaternion characteristic 8889. Each characteristic supports READ and
 NOTIFY. Confirm the installed profile and negotiated capacity on the laptop.
 
-Raw acceleration uses m/s² and gyro uses rad/s in sensor-board axes. The planned
-raw schema path is `firmware/proto/telemetry.proto`. Keep raw and quaternion
+Raw acceleration uses m/s² and gyro uses rad/s in sensor-board axes. The raw
+schema is [telemetry.proto](../firmware/proto/telemetry.proto). Keep raw and quaternion
 formats explicitly selected and on separate characteristics. A raw format
 without sensor validity must suppress a strip when a required reading is missing
 or stale.
@@ -28,7 +28,7 @@ or stale.
 
 Use explicit presence for header scalars, sensor ID and validity. Nanopb
 `has_*` flags must be set even for sequence/time zero or valid=false.
-Confirm nested field tags and generated bounds when adding the schema.
+Each orientation uses tag 1 for `sensor_id`, 2 for `valid` and 3 for `rotation`.
 
 Logical IDs are 1 pelvis, 2 lumbar, 3 thoracic and 4 upper thoracic. Each appears
 once and order is irrelevant. Mux channels 0–3 are the planned acquisition slots.
@@ -77,16 +77,14 @@ Without a boot identifier some restart/order ambiguities need reconnection.
 Backend freshness uses original local monotonic receipt time including queue
 residence. Radio delay and sample age before receipt remain unknown.
 
-## Generation and delivery targets
+## Generation and delivery
 
-Generate Python and nanopb bindings from the same canonical schema. Planned
-output directories are `backend/app/generated/` and `protocol/generated/`.
-Keep generated files out of manual edits.
+The backend generator writes Python and nanopb bindings to
+`backend/app/generated/` and `protocol/generated/`. Make schema changes in
+the source files and regenerate. The nanopb host conformance check uses
+runtime 0.4.9.1.
 
-The proposed nanopb runtime is 0.4.9.1. Add dependency pins and generation tooling
-with the implementation and verify these target bounds.
-
-| Payload | Target maximum bytes | Minimum unfragmented ATT MTU |
+| Payload | Generated maximum bytes | Minimum unfragmented ATT MTU |
 | --- | ---: | ---: |
 | Raw strip | 150 | 153 |
 | Four-sensor quaternion strip | 153 | 156 |
@@ -95,9 +93,9 @@ A preferred MTU of 517 alone cannot establish usable capacity. Each notification
 must carry one complete packet. Suppress and diagnose packets exceeding the
 actual MTU minus three. Keep framing simple and bounded.
 
-Generate host vectors for identity, signed raw values, partial availability and
-maximum encoded size. Validate Python/C conformance and BLE capacity separately
-from physical accuracy.
+The generator writes host vectors for identity, signed raw values, partial
+availability and maximum encoded size. Verify Python/C conformance, negotiated
+BLE capacity and physical accuracy separately.
 
 New fields need new tags, regenerated bindings and updated size checks.
 Reserve deleted tags and names. Compatible optional additions may retain
@@ -105,4 +103,4 @@ version 1. Changed units, meanings, required fields or enum semantics need a
 coordinated version change.
 
 See [firmware acquisition and acceptance](../firmware/ORIENTATION.md) and
-[backend diagnostic planning](../backend/DIAGNOSTICS.md).
+[backend diagnostics](../backend/DIAGNOSTICS.md).
