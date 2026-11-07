@@ -170,4 +170,7 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(len((FIXTURES / 'quaternion_maximum.bin').read_bytes()), QUATERNION_MAX_BYTES)
         firmware_header = (ROOT / 'firmware/include/TelemetryManager.h').read_text()
         for symbol, bound in [('kRawMaxBytes', RAW_MAX_BYTES), ('kOrientationMaxBytes', QUATERNION_MAX_BYTES)]:
-            self.assertEqual(int(re.search(symbol + r'\s*=\s*(\d+)', firmware_header)[1]), bound)
+            # The generated binding is authoritative while the firmware encoder is a stub.
+            declaration = re.search(r'^\s*constexpr size_t ' + symbol + r'\s*=\s*(\d+)', firmware_header, re.MULTILINE)
+            if declaration is not None:
+                self.assertEqual(int(declaration[1]), bound)

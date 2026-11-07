@@ -5,6 +5,7 @@
 import asyncio
 from collections.abc import AsyncIterator
 from datetime import UTC, datetime
+from functools import partial
 import time
 from uuid import UUID
 
@@ -16,6 +17,7 @@ from .protocol import decode, PacketError, QUATERNION_MAX_BYTES, RAW_MAX_BYTES
 SERVICE_UUID = "0000aaaa-0000-1000-8000-00805f9b34fb"
 NOTIFY_UUID = "00008888-0000-1000-8000-00805f9b34fb"
 ORIENTATION_UUID = "00008889-0000-1000-8000-00805f9b34fb"
+DEVICE_FORMATS = ("raw", "quaternion", "both")
 
 
 def uuid(value: str) -> str:
@@ -41,9 +43,13 @@ def select_device(devices: list[tuple[object, object]], device_id: str):
 class DeviceStream:
     def __init__(self, device, packet_format: str, *, service: str = SERVICE_UUID,
                  characteristic: str | None = None, timeout: float = 10,
-                 queue_size: int = 8, client_factory=None):
-        if packet_format not in ("raw", "quaternion"):
-            raise ValueError("Select raw or quaternion explicitly")
+                 queue_size: int | None = None, client_factory=None):
+        if packet_format not in DEVICE_FORMATS:
+            raise ValueError("Select raw, quaternion or both explicitly")
+        if packet_format == "both" and characteristic is not None:
+            raise ValueError("Dual streaming uses the standard raw and orientation characteristics")
+        if queue_size is None:
+            queue_size = 32 if packet_format == "both" else 8
         if not 1 <= queue_size <= 64 or timeout <= 0:
             raise ValueError("Queue size must be 1–64 and timeout positive")
         self.device = device
@@ -54,6 +60,12 @@ class DeviceStream:
         self.client_factory = BleakClient if client_factory is None else client_factory
         self.queue: asyncio.Queue = asyncio.Queue(queue_size)
         self.stats = Diagnostics()
+        primary_format = "quaternion" if packet_format == "both" else packet_format
+        self._characteristics = {primary_format: self.characteristic}
+        self.stats_by_format = {primary_format: self.stats}
+        if packet_format == "both":
+            self._characteristics["raw"] = NOTIFY_UUID
+            self.stats_by_format["raw"] = Diagnostics()
         self.latest: Sample | None = None
         self.received_at: datetime | None = None
         self.received_monotonic: float | None = None
@@ -61,23 +73,24 @@ class DeviceStream:
         self._lost = False
         self._used = False
 
-    def _notify(self, _sender, data):
+    def _notify(self, packet_format, _sender, data):
         if self._lost:
             return
         now = time.monotonic()
-        self.stats.received += 1
-        self.stats.last_notification = now
-        maximum = RAW_MAX_BYTES if self.packet_format == "raw" else QUATERNION_MAX_BYTES
+        stats = self.stats_by_format[packet_format]
+        stats.received += 1
+        stats.last_notification = now
+        maximum = RAW_MAX_BYTES if packet_format == "raw" else QUATERNION_MAX_BYTES
         if len(data) > maximum:
-            self.stats.rejected += 1
-            self.stats.last_error = f"Oversized notification ({len(data)} bytes); maximum {maximum} for {self.packet_format}"
+            stats.rejected += 1
+            stats.last_error = f"Oversized notification ({len(data)} bytes); maximum {maximum} for {packet_format}"
             return
         # Copy bounded bytes only. Decode, record and print outside the callback.
         if self.queue.full():
-            self.queue.get_nowait()
+            dropped_format, *_ = self.queue.get_nowait()
             self.queue.task_done()
-            self.stats.dropped += 1
-        self.queue.put_nowait((bytes(data), now, datetime.now(UTC)))
+            self.stats_by_format[dropped_format].dropped += 1
+        self.queue.put_nowait((packet_format, bytes(data), now, datetime.now(UTC)))
 
     def _disconnected(self, _client):
         self._lost = True
@@ -106,8 +119,10 @@ class DeviceStream:
         self._used = True
         self._lost = False
         client = self.client_factory(self.device, disconnected_callback=self._disconnected)
-        subscribed = False
-        self.stats.started_at = time.monotonic()
+        subscribed = []
+        started_at = time.monotonic()
+        for stats in self.stats_by_format.values():
+            stats.started_at = started_at
         try:
             self.stats.state = "connecting"
             await asyncio.wait_for(client.connect(), self.timeout)
@@ -116,13 +131,15 @@ class DeviceStream:
             self.stats.state = "connected"
             yield None
             service = client.services.get_service(self.service)
-            characteristic = None if service is None else service.get_characteristic(self.characteristic)
-            if characteristic is None or "notify" not in characteristic.properties:
-                raise ValueError(f"Missing notify characteristic {self.characteristic} in service {self.service}; check profile/UUIDs")
-            await asyncio.wait_for(client.start_notify(characteristic, self._notify), self.timeout)
-            subscribed = True
-            if self._lost or not client.is_connected:
-                raise ConnectionError("Device disconnected during subscription")
+            for packet_format, identifier in self._characteristics.items():
+                characteristic = None if service is None else service.get_characteristic(identifier)
+                if characteristic is None or "notify" not in characteristic.properties:
+                    raise ValueError(f"Missing notify characteristic {identifier} in service {self.service}; check profile/UUIDs")
+                callback = partial(self._notify, packet_format)
+                await asyncio.wait_for(client.start_notify(characteristic, callback), self.timeout)
+                subscribed.append(identifier)
+                if self._lost or not client.is_connected:
+                    raise ConnectionError("Device disconnected during subscription")
             self.stats.state = "subscribed"
             yield None
             deadline = None if duration is None else time.monotonic() + duration
@@ -131,24 +148,27 @@ class DeviceStream:
                 if remaining <= 0:
                     break
                 try:
-                    payload, received, utc = await asyncio.wait_for(self.queue.get(), remaining)
+                    packet_format, payload, received, utc = await asyncio.wait_for(self.queue.get(), remaining)
                 except TimeoutError:
                     yield None
                     continue
+                stats = self.stats_by_format[packet_format]
                 try:
-                    sample = decode(payload, self.packet_format)
+                    sample = decode(payload, packet_format)
                     self._check_sequence(sample)
                 except PacketError as error:
-                    self.stats.rejected += 1
-                    self.stats.last_error = str(error)
+                    stats.rejected += 1
+                    stats.last_error = str(error)
                     yield None  # Invalid traffic must not starve the terminal status refresh.
                 else:
-                    self.stats.decoded += 1
-                    self.latest = sample
-                    self.received_monotonic, self.received_at = received, utc
+                    stats.decoded += 1
+                    # In dual mode the dashboard and neutral capture track only quaternions.
+                    if stats is self.stats:
+                        self.latest = sample
+                        self.received_monotonic, self.received_at = received, utc
                     if sample.fully_usable:
-                        self.stats.last_valid = received
-                        self.stats.usable += 1
+                        stats.last_valid = received
+                        stats.usable += 1
                     yield sample
                 finally:
                     self.queue.task_done()
@@ -161,10 +181,13 @@ class DeviceStream:
             self.stats.last_error = f"{type(error).__name__}: {error}"
             raise
         finally:
-            self.stats.finished_at = time.monotonic()
+            finished_at = time.monotonic()
+            for stats in self.stats_by_format.values():
+                stats.finished_at = finished_at
             # Cleanup is bounded and still runs on Ctrl+C, timeout or partial setup failure.
             self._lost = True
-            for operation in ([lambda: client.stop_notify(self.characteristic)] if subscribed and client.is_connected else []) + [client.disconnect]:
+            cleanup = [partial(client.stop_notify, identifier) for identifier in subscribed if client.is_connected]
+            for operation in [*cleanup, client.disconnect]:
                 try:
                     await asyncio.wait_for(operation(), self.timeout)
                 except Exception as error:
