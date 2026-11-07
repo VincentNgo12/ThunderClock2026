@@ -54,6 +54,8 @@ def main():
     full.environment.eco2_ppm = 630
     full.environment.tvoc_ppb = 0  # Explicit presence must survive a round trip.
     full.environment.noise_relative_db = -24.5
+    full.heart_rate_bpm = 72
+    full.spo2_percent = 98
 
     # Exercise allocation bounds with uint32 values outside the valid sensor ranges.
     maximum = orientation.OrientationPacket(version=0xFFFFFFFF, sequence=0xFFFFFFFF, sample_time_ms=0xFFFFFFFF)
@@ -64,6 +66,8 @@ def main():
     maximum.environment.air_quality_index = 0xFFFFFFFF
     maximum.environment.eco2_ppm = 0xFFFFFFFF
     maximum.environment.tvoc_ppb = 0xFFFFFFFF
+    maximum.heart_rate_bpm = full.heart_rate_bpm
+    maximum.spo2_percent = full.spo2_percent
     strip = raw.ImuStripData(time=1234)
     for index in range(1, 5):
         item = strip.data.add()

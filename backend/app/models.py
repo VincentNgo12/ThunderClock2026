@@ -37,10 +37,12 @@ class Sample:
     imus: tuple[Imu, ...]
     sequence: int | None = None
     environment: Environment | None = None
+    heart_rate_bpm: float | None = None
+    spo2_percent: float | None = None
 
     @property
     def fully_usable(self) -> bool:
-        # Optional environment values do not affect IMU diagnostic health.
+        # Optional readings do not affect IMU diagnostic health.
         return all(imu.valid for imu in self.imus)
 
 

@@ -134,9 +134,10 @@ the demo requirements.
 
 ### Physiology and EEG
 
-MAX30102 heart rate is a supporting stretch signal in beats per minute.
-Keep it unavailable until reliable readings exist. SpO2 needs a separate
-reliability decision before inclusion.
+BLE v2 can carry MAX30102 heart rate in beats per minute and estimated SpO₂
+as a percentage. The diagnostic CLI exposes present values. Publishing these
+signals in dashboard snapshots is a separate integration step.
+[BLE field definitions](../protocol/ORIENTATION.md#quaternion-packet)
 
 OpenBCI Cyton connects independently through its official dongle and BrainFlow
 on the laptop. Plan signal quality, artifact context and compact downsampled

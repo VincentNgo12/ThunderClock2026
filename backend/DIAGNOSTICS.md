@@ -1,7 +1,8 @@
 # ThunderClock BLE diagnostics
 
 The standalone CLI discovers a wearable, displays signed raw IMU readings and
-validates four orientation quaternions and any available v2 environment readings.
+validates four orientation quaternions and any available v2 environment,
+heart rate and SpO₂ readings.
 Use one process per device connection.
 
 ## Install and inspect fixtures
@@ -27,7 +28,7 @@ offline. The packets in `protocol/fixtures/` are synthetic.
 
 The prototype profile targets advertising name `THUNDER CLOCK`, service `AAAA`,
 and READ + NOTIFY characteristics `8888` for raw and `8889` for quaternions
-with optional v2 environment readings. Select `--format quaternion` for either
+with optional v2 sensor readings. Select `--format quaternion` for either
 version on 8889.
 Short UUIDs expand using the Bluetooth base UUID
 `0000xxxx-0000-1000-8000-00805f9b34fb`.
@@ -90,8 +91,8 @@ uses a separate clock. Radio transit time is unknown.
 | Partial quaternions | Sensor validity, mounting and stationary calibration |
 
 Each notification carries one complete message. The raw, quaternion v1 and
-telemetry v2 bounds are 150, 153 and 189 bytes. They require ATT MTU at least
-153, 156 and 192 respectively to fit the maximum.
+telemetry v2 bounds are 150, 153 and 201 bytes. They require ATT MTU at least
+153, 156 and 204 respectively to fit the maximum.
 See [the device contract](../protocol/ORIENTATION.md) and
 [the firmware acceptance checklist](../firmware/ORIENTATION.md).
 
