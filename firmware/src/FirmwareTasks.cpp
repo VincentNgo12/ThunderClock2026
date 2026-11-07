@@ -17,24 +17,33 @@ void acquisitionTask(void*) {
   TickType_t lastAudioTime = lastWake;
   TickType_t lastHeartTime = lastWake;
 
-  const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.05s
+  const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.02 s, 50 Hz
   const TickType_t envPeriod = pdMS_TO_TICKS(1000);    // 1s
   const TickType_t audioPeriod = pdMS_TO_TICKS(100);   // 0.1s
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
 
   fw::Snapshot snapshot{};
-  fw::StripData strip{};
+  fw::StripData stripData{};
   OrientationProcessor orientationProcessor;
   orientationProcessor.begin();
   
   while (true) {
     const TickType_t now = xTaskGetTickCount();
 
+    if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
 
-    // env read
-    if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
-      lastEnvTime = now;
       // env read
+      if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
+        lastEnvTime = now;
+        // env read
+      } 
+
+      // heart read
+      if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
+        lastHeartTime = now; 
+        // heart read
+      }
+      xSemaphoreGive(i2cMutex);
     } 
 
     // audio read
@@ -43,16 +52,16 @@ void acquisitionTask(void*) {
       audioMonitor.read(snapshot.audioData);
     } 
 
-    // heart read
-    if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
-      lastHeartTime = now; 
-      // heart read
-    } 
-
     // imu read from queue 20 (hz)
-    // Fuse every queued strip, not only the newest: each filter needs all 100 Hz samples.
-    orientationProcessor.update(strip, snapshot.stripData);
-    // push it through queue
+
+
+    if (xQueueReceive(imuToSnapshotQueue, &stripData, portMAX_DELAY) == pdTRUE) {
+      // sensor fusion to get q
+      orientationProcessor.update(stripData, snapshot.stripData);
+      // put it in queue for telemetry
+      xQueueOverwrite(snapshotToTelemetryQueue, &snapshot);  
+    }
+
 
     // temporary print to serial
     // printSnapshot(snapshot);
@@ -61,38 +70,32 @@ void acquisitionTask(void*) {
   }
 }
 
-<<<<<<< HEAD
-// argument is the ImuManager started in setup(). Reads all 4 IMUs every 10 ms.
-void IMUTask(void* argument) {
-  ImuManager* imuManager = static_cast<ImuManager*>(argument);
-  if (imuManager == nullptr) {
-    vTaskDelete(nullptr);
-    return;
-  }
-
-  fw::StripData strip{};
-  TickType_t lastWake = xTaskGetTickCount();
-  while (true) {
-    vTaskDelayUntil(&lastWake, pdMS_TO_TICKS(SystemConfig::kAcquisitionPeriodMs));
-    if (imuManager->read(strip) == fw::Result::Ok && imuQueue != nullptr) {
-      xQueueSend(imuQueue, &strip, 0);  // Drop when full rather than stall the 100 Hz loop.
-    }
-=======
 void IMUTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
-  const TickType_t imuPeriod = pdMS_TO_TICKS(1000);  
+  TickType_t lastImuToSnapshotTime = lastWake;
 
+  const TickType_t imuToTelemetryPeriod = pdMS_TO_TICKS(1000); // target: 100Hz 
+  const TickType_t imuToSnapshotPeriod = pdMS_TO_TICKS(2000);  // target: 20Hz 
+  
   fw::StripData stripData{};
 
   while (true) {
+    const TickType_t now = xTaskGetTickCount();
 
-    // imu read (100Hz)
-    // push reading through queue
-    imuManager.read(stripData);
-    printRawStrip(stripData);
+    if (xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {
+      imuManager.read(stripData);
+      xSemaphoreGive(i2cMutex);
+    }
 
-    vTaskDelayUntil(&lastWake, imuPeriod);
->>>>>>> origin/main
+    xQueueOverwrite(imuToTelemetryQueue, &stripData);    
+    if (now - lastImuToSnapshotTime >= imuToSnapshotPeriod) {
+      xQueueOverwrite(imuToSnapshotQueue, &stripData);    
+      lastImuToSnapshotTime = now;
+    }
+    // printRawStrip(stripData);
+
+    vTaskDelayUntil(&lastWake, imuToTelemetryPeriod);
+
   }
 }
 
@@ -102,6 +105,7 @@ void telemetryTask(void*) {
     vTaskDelay(pdMS_TO_TICKS(SystemConfig::kTelemetryPeriodMs));
   }
 }
+
 
 
 // temporary helper to print snapshot for debug
@@ -149,7 +153,5 @@ void printRawStrip(const fw::StripData& rawStrip) {
                       imu.accel.x, imu.accel.y, imu.accel.z);
         Serial.printf("    Gyro   x=% .4f  y=% .4f  z=% .4f\n",
                       imu.gyro.x, imu.gyro.y, imu.gyro.z);
-        Serial.printf("    Magno  x=% .4f  y=% .4f  z=% .4f\n",
-                      imu.magno.x, imu.magno.y, imu.magno.z);
     }
 }

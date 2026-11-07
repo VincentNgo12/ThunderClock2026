@@ -15,6 +15,12 @@
 #include "AudioMonitor.h"
 #include "ImuManager.h"
 
+// global mutexes and queues
+extern SemaphoreHandle_t i2cMutex;
+extern QueueHandle_t imuToTelemetryQueue;
+extern QueueHandle_t imuToSnapshotQueue;
+extern QueueHandle_t snapshotToTelemetryQueue;
+
 // global sensor obj
 extern AudioMonitor audioMonitor;
 extern ImuManager imuManager;

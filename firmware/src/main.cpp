@@ -19,6 +19,13 @@
 
 #include "AudioMonitor.h"
 
+// queues & mutexes
+QueueHandle_t imuToTelemetryQueue = nullptr;
+QueueHandle_t imuToSnapshotQueue = nullptr;
+QueueHandle_t snapshotToTelemetryQueue = nullptr;
+SemaphoreHandle_t i2cMutex = nullptr;
+
+// sensor objects
 AudioMonitor audioMonitor{
   SystemConfig::kI2sBclkPin,
   SystemConfig::kI2sWsPin,
@@ -35,12 +42,17 @@ void setup() {
   // INITIALIZE MUTEX & QUEUE 
   // -----------------------------------
 
-//  snapshotMutex = xSemaphoreCreateMutex();
-//   if (snapshotMutex == nullptr) {
-//     debugPrintln("Snapshot mutex allocation failed.");
-//     return;
-//   }
+  i2cMutex = xSemaphoreCreateMutex();
+  if (i2cMutex == nullptr) Serial.println("i2c mutex failed");
 
+  imuToTelemetryQueue = xQueueCreate(1, sizeof(fw::StripData));
+  if (imuToTelemetryQueue == nullptr) Serial.println("imu to telemetry queue failed");
+  imuToSnapshotQueue = xQueueCreate(1, sizeof(fw::StripData));
+  if (imuToSnapshotQueue == nullptr) Serial.println("imu to snapshot queue failed");
+  snapshotToTelemetryQueue = xQueueCreate(1, sizeof(fw::Snapshot));
+  if (snapshotToTelemetryQueue == nullptr) Serial.println("snapshot to telemetry queue failed");
+
+  // ?? \/ ??
   const bool needsI2c = SystemConfig::kInitImuStrip || SystemConfig::kInitEnvironment ||
                         SystemConfig::kInitHeartRate || SystemConfig::kRunI2cScanAtBoot;
   if (needsI2c) {

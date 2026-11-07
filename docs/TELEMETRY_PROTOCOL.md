@@ -7,7 +7,14 @@ JSON schema version is independent of the BLE packet version.
 
 ## Connect and try the demo
 
+<<<<<<< HEAD
 From `backend/` with Python 3.11 or later and a virtual environment active:
+=======
+The BLE reader accepts bounded Protobuf packets. Version 2 of the fused packet
+adds optional environment readings to the four orientations. Firmware owns calibration,
+fusion and device validity. Backend code owns receipt, decoding, validation and
+sensor-to-segment mounting transforms.
+>>>>>>> main
 
 ```sh
 python -m pip install -r requirements-api.txt

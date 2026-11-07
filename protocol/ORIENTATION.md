@@ -79,15 +79,16 @@ to set those parameters and the freshness limit for each slow sensor.
 Use a right-handed application frame with +X wearer-right, +Y up and +Z posterior.
 Each quaternion rotates segment-local vectors into the common world frame.
 
-Firmware owns gyro calibration, fusion and sensor-to-segment mounting transforms.
-The proposed Fusion body frame is +X forward, +Y left and +Z up.
+Firmware owns gyro calibration and fusion. The Fusion body frame is the board's
+own axes, treated as +X forward, +Y left and +Z up.
 Changing both local and world bases to the application convention maps
-`(w, x, y, z)` to `(w, -y, z, -x)`.
+`(w, x, y, z)` to `(w, -y, z, -x)`. Firmware applies this change and no
+per-board mounting remap.
 
-Apply a proper mounting remap to both accelerometer and gyro inputs. Confirm
-board axes, mounting and measured rotations with a jig. Axis-aligned identity
-defaults require physical verification. Backend owns later neutral-reference
-capture and relative posture interpretation.
+The backend owns the sensor-to-segment mounting remap, for example from its
+neutral-reference and forward-bend calibration. Confirm board axes, mounting
+and measured rotations with a jig. Backend also owns neutral-reference capture
+and relative posture interpretation.
 
 All four sensors use six-axis fusion, which cannot observe absolute heading.
 Sensors start at a common heading during calibration. Firmware does not correct
