@@ -55,11 +55,6 @@ struct Orientation {
   Stamp stamp{};
   Quaternion rotation{};  // w,x,y,z, segment-local to world, +X right/+Y up/+Z back.
 };
-struct TelemetrySnapshot {
-  ImuStripData raw{};
-  Orientation orientations[kImuCount]{};
-};
-
 // Slow sensor fields keep their own acquisition times.
 struct Reading {
   Stamp stamp{};
@@ -76,6 +71,13 @@ struct AudioSummary {
   Stamp stamp{};
   float relativeDb = 0;  // Relative trend, requiring calibration for physical SPL.
 };
+struct TelemetrySnapshot {
+  ImuStripData raw{};
+  Orientation orientations[kImuCount]{};
+  Environment environment{};
+  AudioSummary audio{};
+};  // Encoder omits stale or unavailable readings using their acquisition stamps.
+
 struct HeartRate {
   Stamp stamp{};
   float bpm = 0;  // MAX30102 stretch feature.

@@ -54,13 +54,11 @@ Keep sensor requirements aligned across firmware, backend and dashboard document
 
 ## Implementation status
 
-This repository contains design documents and an unimplemented firmware scaffold.
-Firmware module interfaces, plain shared structs and optional task shells are in
-place. Sensor/BLE initialization and task startup are disabled by default.
-Commands and protocol integration in the guides remain implementation plans.
-
-The first backend milestone is the standalone BLE diagnostic CLI described in
-`backend/DIAGNOSTICS.md`. Do not add backend fusion or gravity subtraction.
+The standalone BLE diagnostic CLI and optional FastAPI adapter are available.
+Use `backend/DIAGNOSTICS.md` for commands and physical acceptance. Firmware
+contains module interfaces, plain shared structs and optional task shells.
+Hardware initialization and task startup are disabled by default.
+Keep sensor fusion in firmware. Preserve raw acceleration including gravity.
 
 Consult the following guides.
 
@@ -68,4 +66,4 @@ Consult the following guides.
 - `docs/TELEMETRY_PROTOCOL.md` when changing telemetry.
 - `docs/PRODUCT.md` for the hardware inventory and MVP scope.
 - `firmware/ORIENTATION.md` for calibration and physical acceptance targets.
-- `protocol/ORIENTATION.md` for the planned device packet and coordinate convention.
+- `protocol/ORIENTATION.md` for the device packet and coordinate convention.

@@ -1,0 +1,239 @@
+{
+  "synthetic_fixtures_not_hardware": true,
+  "raw_schema_sha256": "ce2b4ac5f807f7c36c7b596a2110edf812a5a20497f6214e54ead96ff6e5a239",
+  "fixtures": {
+    "raw_signed": {
+      "bytes": 147,
+      "packet": {
+        "time": 1234,
+        "data": [
+          {
+            "accel": {
+              "x": -1.25,
+              "y": 2.5,
+              "z": 9.75
+            },
+            "gyro": {
+              "x": -0.125,
+              "y": 0.25,
+              "z": -0.5
+            }
+          },
+          {
+            "accel": {
+              "x": -2.5,
+              "y": 5.0,
+              "z": 9.75
+            },
+            "gyro": {
+              "x": -0.25,
+              "y": 0.5,
+              "z": -1.0
+            }
+          },
+          {
+            "accel": {
+              "x": -3.75,
+              "y": 7.5,
+              "z": 9.75
+            },
+            "gyro": {
+              "x": -0.375,
+              "y": 0.75,
+              "z": -1.5
+            }
+          },
+          {
+            "accel": {
+              "x": -5.0,
+              "y": 10.0,
+              "z": 9.75
+            },
+            "gyro": {
+              "x": -0.5,
+              "y": 1.0,
+              "z": -2.0
+            }
+          }
+        ]
+      }
+    },
+    "quaternion_identity": {
+      "bytes": 65,
+      "packet": {
+        "version": 1,
+        "sequence": 0,
+        "sample_time_ms": 0,
+        "orientations": [
+          {
+            "sensor_id": 1,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 2,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 3,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 4,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          }
+        ]
+      }
+    },
+    "quaternion_partial": {
+      "bytes": 58,
+      "packet": {
+        "version": 1,
+        "sequence": 1,
+        "sample_time_ms": 100,
+        "orientations": [
+          {
+            "sensor_id": 1,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 2,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 3,
+            "valid": false
+          },
+          {
+            "sensor_id": 4,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          }
+        ]
+      }
+    },
+    "telemetry_v2": {
+      "bytes": 90,
+      "packet": {
+        "version": 2,
+        "sequence": 0,
+        "sample_time_ms": 0,
+        "orientations": [
+          {
+            "sensor_id": 1,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 2,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 3,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 4,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          }
+        ],
+        "environment": {
+          "temperature_c": 23.5,
+          "humidity_percent": 45.0,
+          "air_quality_index": 2,
+          "eco2_ppm": 630,
+          "tvoc_ppb": 0,
+          "noise_relative_db": -24.5
+        }
+      }
+    },
+    "quaternion_maximum": {
+      "bytes": 189,
+      "packet": {
+        "version": 4294967295,
+        "sequence": 4294967295,
+        "sample_time_ms": 4294967295,
+        "orientations": [
+          {
+            "sensor_id": 4294967295,
+            "valid": true,
+            "rotation": {
+              "w": 0.5,
+              "x": 0.5,
+              "y": 0.5,
+              "z": 0.5
+            }
+          },
+          {
+            "sensor_id": 4294967295,
+            "valid": true,
+            "rotation": {
+              "w": 0.5,
+              "x": 0.5,
+              "y": 0.5,
+              "z": 0.5
+            }
+          },
+          {
+            "sensor_id": 4294967295,
+            "valid": true,
+            "rotation": {
+              "w": 0.5,
+              "x": 0.5,
+              "y": 0.5,
+              "z": 0.5
+            }
+          },
+          {
+            "sensor_id": 4294967295,
+            "valid": true,
+            "rotation": {
+              "w": 0.5,
+              "x": 0.5,
+              "y": 0.5,
+              "z": 0.5
+            }
+          }
+        ],
+        "environment": {
+          "temperature_c": 23.5,
+          "humidity_percent": 45.0,
+          "air_quality_index": 4294967295,
+          "eco2_ppm": 4294967295,
+          "tvoc_ppb": 4294967295,
+          "noise_relative_db": -24.5
+        }
+      }
+    }
+  }
+}

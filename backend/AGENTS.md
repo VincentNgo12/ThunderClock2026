@@ -11,12 +11,12 @@ in [DIAGNOSTICS.md](DIAGNOSTICS.md).
   generated, vendor, third-party and virtual-environment files.
 - Use brief comments for resource ownership, async lifecycle and failure behavior.
   Keep the implementation approachable and add abstractions only for concrete needs.
-- Plan one device stream shared by the CLI or optional API. WebSocket clients
-  must share the backend reader. Only one process may own a wearable connection.
+- Use one device stream in either the CLI or optional API. WebSocket clients
+  share the backend reader. Only one process may own a wearable connection.
 - Keep BLE callbacks bounded to copying bytes and original local receipt times.
   Decode, validate, print and record outside the callbacks.
-- Firmware owns sensor calibration and fusion. Backend work starts with explicit
-  decoding and diagnostics. Preserve raw acceleration including gravity.
+- Firmware owns sensor calibration and fusion. Keep backend diagnostics and
+  decoding explicit. Preserve raw acceleration including gravity.
 - Keep unavailable measurements explicit. Four valid orientations alone cannot
   establish posture, fall state, fatigue or overall risk.
 - Route OpenBCI Cyton through its official dongle and a separate laptop acquisition
