@@ -4,55 +4,64 @@
  * Contributors:
  * - Unassigned
  */
-#include <Arduino.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-
 #include "FirmwareTasks.h"
-#include "ImuManager.h"
-#include "SystemConfig.h"
 
-namespace {
-const char* const kSlotNames[ImuManager::kSlotCount] = {"pelvis", "lumbar", "thoracic",
-                                                        "upper thoracic"};
-constexpr uint32_t kPrintEveryStrips = 10;  // ~10 Hz keeps 115200-baud Serial from falling behind.
+void printSnapshot(const fw::Snapshot& snapshot);
 
-void printStrip(const fw::StripData& strip) {
-  Serial.printf("t=%lu ms\n", static_cast<unsigned long>(strip.time));
-  for (size_t slot = 0; slot < ImuManager::kSlotCount; ++slot) {
-    const fw::IMUData& sample = strip.data[slot];
-    if (!sample.valid) {
-      Serial.printf("  %u %-14s INVALID\n", static_cast<unsigned>(slot + 1), kSlotNames[slot]);
-      continue;
-    }
-    Serial.printf("  %u %-14s a=(%7.2f %7.2f %7.2f) m/s2  g=(%6.2f %6.2f %6.2f) rad/s\n",
-                  static_cast<unsigned>(slot + 1), kSlotNames[slot], sample.accel.x,
-                  sample.accel.y, sample.accel.z, sample.gyro.x, sample.gyro.y, sample.gyro.z);
+void acquisitionTask(void*) {
+  TickType_t lastWake = xTaskGetTickCount();
+  TickType_t lastEnvTime = lastWake;
+  TickType_t lastAudioTime = lastWake;
+  TickType_t lastHeartTime = lastWake;
+
+  const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.05s
+  const TickType_t envPeriod = pdMS_TO_TICKS(1000);    // 1s
+  const TickType_t audioPeriod = pdMS_TO_TICKS(100);   // 0.1s
+  const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
+
+  fw::Snapshot snapshot{};
+  
+  while (true) {
+    const TickType_t now = xTaskGetTickCount();
+
+
+    // env read
+    if (now - lastEnvTime >= envPeriod) {
+      lastEnvTime = now;
+      // env read
+    } 
+
+    // audio read
+    if (now - lastAudioTime >= audioPeriod) {
+      lastAudioTime = now;
+      audioMonitor.read(snapshot.audioData);
+    } 
+
+    // heart read
+    if (now - lastHeartTime >= heartPeriod) {
+      lastHeartTime = now; 
+      // heart read
+    } 
+
+    // imu read from queue 20 (hz)
+    // sensor fusion to get quaternion
+    // push it through queue
+
+    // temporary print to serial
+    printSnapshot(snapshot);
+
+    vTaskDelayUntil(&lastWake, imuPeriod);
   }
 }
-}  // namespace
 
-// argument is the ImuManager started in setup().
-void acquisitionTask(void* argument) {
-  ImuManager* imuManager = static_cast<ImuManager*>(argument);
-  if (imuManager == nullptr) {
-    vTaskDelete(nullptr);
-    return;
-  }
-
-  fw::StripData strip{};
-  uint32_t stripCount = 0;
-  TickType_t lastWakeTime = xTaskGetTickCount();
+void IMUTask(void*) {
   while (true) {
-    // vTaskDelayUntil keeps a fixed 10 ms period even when a read takes a few ms.
-    vTaskDelayUntil(&lastWakeTime, pdMS_TO_TICKS(SystemConfig::kAcquisitionPeriodMs));
-    imuManager->read(strip);
-    // TODO(FW-ORIENTATION): pass each slot to its OrientationProcessor.
+    // TODO(FW-AUDIO): acquire bounded I2S windows and publish relative-noise summaries.
 
-    stripCount++;
-    if (SystemConfig::kDebugEnabled && stripCount % kPrintEveryStrips == 0) {
-      printStrip(strip);
-    }
+    // imu read (100Hz)
+    // push reading through queue
+
+    vTaskDelay(pdMS_TO_TICKS(SystemConfig::kAudioIdlePeriodMs));
   }
 }
 
@@ -63,9 +72,34 @@ void telemetryTask(void*) {
   }
 }
 
-void audioTask(void*) {
-  while (true) {
-    // TODO(FW-AUDIO): acquire bounded I2S windows and publish relative-noise summaries.
-    vTaskDelay(pdMS_TO_TICKS(SystemConfig::kAudioIdlePeriodMs));
-  }
+
+// temporary helper to print snapshot for debug
+void printSnapshot(const fw::Snapshot& snapshot) {
+    const auto& strip = snapshot.stripData;
+    const auto& env = snapshot.envData;
+    const auto& heart = snapshot.heartData;
+    const auto& audio = snapshot.audioData;
+
+    Serial.println("\n=== Snapshot ===");
+
+    Serial.printf("IMU timestamp: %lu\n", static_cast<unsigned long>(strip.time));
+    for (size_t i = 0; i < sizeof(strip.data) / sizeof(strip.data[0]); ++i) {
+        const auto& q = strip.data[i];
+        Serial.printf("  IMU[%u]  w=% .4f  x=% .4f  y=% .4f  z=% .4f\n",
+                      static_cast<unsigned>(i), q.w, q.x, q.y, q.z);
+    }
+
+    Serial.println("Environment");
+    Serial.printf("  Temperature : %7.2f C\n", env.temperature);
+    Serial.printf("  Humidity    : %7.2f %%\n", env.humidity);
+    Serial.printf("  Air quality : %7.0f AQI\n", env.air_quality_index);
+    Serial.printf("  eCO2        : %7.0f ppm\n", env.eco2_ppm);
+    Serial.printf("  TVOC        : %7.0f ppb\n", env.tvoc_ppb);
+
+    Serial.println("Heart");
+    Serial.printf("  Heart rate  : %7.1f BPM\n", heart.bpm);
+    Serial.printf("  SpO2        : %7.1f %%\n", heart.oxi);
+
+    Serial.println("Audio");
+    Serial.printf("  Loudness    : %7.2f dB relative\n", audio.relativeDb);
 }

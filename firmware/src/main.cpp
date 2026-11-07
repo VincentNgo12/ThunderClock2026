@@ -17,13 +17,26 @@
 #include "SlowSensors.h"
 #include "SystemConfig.h"
 
+#include "AudioMonitor.h"
+
 namespace {
 ImuManager imuManager(Wire);
 }
 
+AudioMonitor audioMonitor{
+  SystemConfig::kI2sBclkPin,
+  SystemConfig::kI2sWsPin,
+  SystemConfig::kI2sDataPin
+}; 
+
 void setup() {
   Serial.begin(SystemConfig::kSerialBaud);
+  while (!Serial) delay(500);
   debugPrintln("ThunderClock firmware scaffold. Hardware modules are unimplemented.");
+
+  // -----------------------------------
+  // INITIALIZE MUTEX & QUEUE 
+  // -----------------------------------
 
 //  snapshotMutex = xSemaphoreCreateMutex();
 //   if (snapshotMutex == nullptr) {
@@ -41,17 +54,33 @@ void setup() {
     slowSensorsScanBus(Wire, imuManager);
   }
   slowSensorsBegin(Wire, imuManager);
+
+  // -----------------------------------
+  // INITIALIZE SENSORS & PERIPHERALS
+  // -----------------------------------
   if (SystemConfig::kInitImuStrip) {
-    Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin);
-    if (imuManager.begin() != fw::Result::Ok) {
-      debugPrintln("IMU initialization is unavailable.");
-    }
+  //    if (imuManager.begin() != fw::Result::Ok) {
+  //      debugPrintln("IMU initialization is unavailable.");
+  //    }
   }
+
+  if (SystemConfig::kInitAudio) {
+    if (audioMonitor.begin() != fw::Result::Ok) {
+      Serial.println("failed to ini audio audio sensor");
+      while (true) delay(1000);
+    };
+    Serial.println("audio sensor ini succesful");
+  }
+
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
       debugPrintln("BLE initialization is unavailable.");
     }
   }
+
+  // -----------------------------------
+  // INITIALIZE RTOS TASKS 
+  // -----------------------------------
 
   if (SystemConfig::kStartAcquisitionTask) {
     if (xTaskCreate(acquisitionTask, "acquisition", SystemConfig::kTaskStackBytes,
@@ -66,7 +95,7 @@ void setup() {
     }
   }
   if (SystemConfig::kStartAudioTask) {
-    if (xTaskCreate(audioTask, "audio", SystemConfig::kTaskStackBytes,
+    if (xTaskCreate(IMUTask, "IMUTask", SystemConfig::kTaskStackBytes,
                     nullptr, 1, nullptr) != pdPASS) {
       debugPrintln("Audio task creation failed.");
     }
