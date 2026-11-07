@@ -93,9 +93,9 @@ signal-quality and artifact context, not a diagnosis.
 - Small EEG panel using live or prerecorded input
 - Visible connection state, alert severity, event timeline, and fallback controls
 
-The repository contains design documents and an unimplemented firmware scaffold.
-The capabilities above are implementation targets. Record physical acceptance
-results when each hardware path becomes available.
+The BLE diagnostic CLI and optional API are available alongside the firmware
+scaffold. The capabilities above describe the demo target. Record physical
+acceptance results as each hardware path becomes available.
 
 ### Stretch features
 

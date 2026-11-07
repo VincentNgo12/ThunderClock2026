@@ -1,0 +1,2 @@
+bleak==3.0.2
+protobuf==7.36.2

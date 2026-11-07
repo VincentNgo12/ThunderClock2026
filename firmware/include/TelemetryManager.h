@@ -8,9 +8,9 @@
 #include "FirmwareTypes.h"
 
 namespace telemetry {
-// Design targets. Verify against generated bounds when schemas are integrated.
+// Match the nanopb packet bounds in protocol/generated/.
 constexpr size_t kRawMaxBytes = 150;
-constexpr size_t kOrientationMaxBytes = 153;
+constexpr size_t kOrientationMaxBytes = 189;
 
 // outputLength is zero until encoding succeeds. The caller owns the buffer.
 fw::Result encodeRaw(const fw::TelemetrySnapshot& snapshot, fw::TimeUs now,

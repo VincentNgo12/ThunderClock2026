@@ -1,12 +1,13 @@
-# ThunderClock telemetry plan
+# ThunderClock telemetry
 
-Two interfaces connect the wearable, laptop and dashboard. The specifications
-below are design targets. Schemas, models and example fixtures will be added
-with their implementations.
+Two interfaces connect the wearable, laptop and dashboard. The diagnostic
+backend implements device decoding and the application snapshot described
+below. The remaining application sections describe demo targets.
 
 ## Device transport
 
-The ESP32 sends bounded Protobuf packets over BLE. Firmware owns calibration,
+The BLE reader accepts bounded Protobuf packets. Version 2 of the fused packet
+adds optional environment readings to the four orientations. Firmware owns calibration,
 fusion, mounting transforms and device validity. Backend code owns receipt,
 decoding and validation.
 
@@ -16,13 +17,19 @@ coordinate conventions and BLE delivery targets.
 
 ## Application telemetry
 
-The backend will deliver `WorkerTelemetry` JSON over `/ws/telemetry`.
-Target approximately 20 snapshots per second. Use the same application shape
-for hardware, simulated and replay input.
+The optional API publishes `WorkerTelemetry` JSON with `schema_version: "2.0"`
+over `/ws/telemetry` at approximately 20 snapshots per second. It shares one
+hardware reader and publishes four named IMU slots. Usable, fresh quaternion
+samples populate orientation values. Raw mode leaves orientations unavailable.
 
-Keep packet encoding and sensor registers behind the backend boundary. Plan an
-explicit `schema_version` from the first implementation. Agree its initial
-value and exact JSON shape when adding shared backend/frontend models.
+The diagnostic snapshot leaves `device`, per-IMU `acquired_us` and unsupported
+output groups null. The JSON publication counter and UTC time come from the
+backend. BLE counters and collection uptime belong to the device clock.
+The JSON schema version is independent of the BLE packet revision.
+Its system state is degraded while subscribed and offline
+otherwise. Simulated and replay input are planned for the wider application
+using the same application shape. Keep packet encoding and sensor registers
+behind the backend boundary.
 
 ### Envelope and connection state
 
@@ -53,8 +60,7 @@ risk.
 | Age in ms | Age known from available device timing and local monotonic receipt time, or null |
 
 Only valid measurements carry non-null values. Include required slots and use
-null consistently for missing measurements. Define partial environment/EEG
-group behavior explicitly when implementing those contracts.
+null consistently for missing measurements.
 
 Retain original monotonic receipt times across queues and shared state.
 UTC clock adjustments must leave freshness unchanged. When device timing
@@ -86,14 +92,23 @@ ordinary motion and sustained posture from an acute event.
 
 ### Environment
 
-| Planned field | Source | Unit / meaning |
+| JSON field | Source | Unit / meaning |
 | --- | --- | --- |
 | `temperature_c` | AHT21 | degrees Celsius |
 | `humidity_percent` | AHT21 | percent relative humidity, 0–100 |
-| `air_quality_index` | ENS160 | Device AQI estimate with documented mapping |
+| `air_quality_index` | ENS160 | AQI-UBA category from 1 to 5 |
 | `eco2_ppm` | ENS160 | Estimated CO2 equivalent in parts per million |
 | `tvoc_ppb` | ENS160 | Estimated total VOC in parts per billion |
 | `noise_relative_db` | INMP441-derived | Relative demo trend |
+
+For a fresh v2 packet with any environment readings, the backend copies those
+values into `environment` using the fields above. Absent fields are null.
+`freshness.environment` uses the packet's local receipt time and source and
+reports `valid` when at least one reading is available. A stale packet produces
+`environment: null` and `stale` freshness. A packet with no readings produces
+`environment: null` and `unavailable` freshness. Raw and v1 packets have no
+environment readings. Each packet stands on its own, so missing fields do not
+carry forward values from earlier packets.
 
 Keep relative-noise qualification visible. Raw speech/audio storage is outside
 the demo requirements.
