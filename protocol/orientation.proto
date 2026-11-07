@@ -1,5 +1,5 @@
 // File: orientation.proto
-// Purpose: Versioned wearable telemetry with four segment orientations and optional environment.
+// Purpose: Versioned wearable telemetry with orientations and optional sensor readings.
 // Contributors: Unassigned
 syntax = "proto3";
 package telemetry.orientation.v1;
@@ -30,7 +30,7 @@ message Environment {
 }
 
 message OrientationPacket {
-  // Version 1 carries orientations only. Version 2 allows environment.
+  // Version 1 carries orientations only. Version 2 allows additional readings.
   optional uint32 version = 16;
   // Both counters wrap at 2^32. Time is collection uptime in milliseconds.
   optional uint32 sequence = 17;
@@ -38,4 +38,7 @@ message OrientationPacket {
   // Exactly one entry per sensor ID, in any order.
   repeated Orientation orientations = 19;
   Environment environment = 20;
+  // Omit each reading when it is unavailable or stale.
+  optional float heart_rate_bpm = 21;
+  optional float spo2_percent = 22; // Peripheral oxygen saturation estimate, 0 to 100%.
 }

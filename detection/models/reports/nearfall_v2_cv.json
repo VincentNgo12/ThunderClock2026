@@ -1,0 +1,193 @@
+{
+ "note": "Grouped CV (public subjects LOSO; ThunderSim DEV seeds). Simulated rows are simulated.",
+ "trigger": {
+  "dip_g": 0.75,
+  "jolt_g": 1.8,
+  "rot_rad_s": 1.5
+ },
+ "cv": {
+  "gbt": {
+   "p_threshold": 0.6,
+   "public_stumble_recall": 0.5913978494623656,
+   "public_flags_per_h": 3.4751223913719413,
+   "sim_NF-STUMBLE": 0.95,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 0.95
+  },
+  "gbt@0.3": {
+   "public_stumble_recall": 0.6989247311827957,
+   "public_flags_per_h": 5.761387122537692,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.01992870847758789,
+   "sim_nf_min": 1.0
+  },
+  "gbt@0.4": {
+   "public_stumble_recall": 0.6666666666666666,
+   "public_flags_per_h": 4.846881230071392,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 1.0
+  },
+  "gbt@0.5": {
+   "public_stumble_recall": 0.6344086021505376,
+   "public_flags_per_h": 4.115276516098351,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 1.0
+  },
+  "gbt@0.6": {
+   "public_stumble_recall": 0.5913978494623656,
+   "public_flags_per_h": 3.4751223913719413,
+   "sim_NF-STUMBLE": 0.95,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 0.95
+  },
+  "gbt@0.7": {
+   "public_stumble_recall": 0.5376344086021505,
+   "public_flags_per_h": 3.109320034385421,
+   "sim_NF-STUMBLE": 0.95,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.95,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 0.95
+  },
+  "gbt@0.8": {
+   "public_stumble_recall": 0.4946236559139785,
+   "public_flags_per_h": 2.560616498905641,
+   "sim_NF-STUMBLE": 0.95,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.95,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 0.95
+  },
+  "gbt@0.9": {
+   "public_stumble_recall": 0.3548387096774194,
+   "public_flags_per_h": 2.0119129634258606,
+   "sim_NF-STUMBLE": 0.95,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.95,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 0.95
+  },
+  "gbt@0.95": {
+   "public_stumble_recall": 0.22580645161290322,
+   "public_flags_per_h": 1.5546600171927105,
+   "sim_NF-STUMBLE": 0.95,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.95,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.0,
+   "sim_nf_min": 0.95
+  },
+  "logreg_json": {
+   "p_threshold": 0.9,
+   "public_stumble_recall": 0.4838709677419355,
+   "public_flags_per_h": 3.8409247483584616,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.95,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.1594296678207031,
+   "sim_nf_min": 0.95
+  },
+  "logreg_json@0.3": {
+   "public_stumble_recall": 0.8279569892473119,
+   "public_flags_per_h": 28.80693561268846,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.23914450173105467,
+   "sim_nf_min": 1.0
+  },
+  "logreg_json@0.4": {
+   "public_stumble_recall": 0.8172043010752689,
+   "public_flags_per_h": 22.862647311657508,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.23914450173105467,
+   "sim_nf_min": 1.0
+  },
+  "logreg_json@0.5": {
+   "public_stumble_recall": 0.7956989247311828,
+   "public_flags_per_h": 18.564469617065896,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.21921579325346677,
+   "sim_nf_min": 1.0
+  },
+  "logreg_json@0.6": {
+   "public_stumble_recall": 0.7849462365591398,
+   "public_flags_per_h": 14.357742511720915,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.1992870847758789,
+   "sim_nf_min": 1.0
+  },
+  "logreg_json@0.7": {
+   "public_stumble_recall": 0.7419354838709677,
+   "public_flags_per_h": 10.608268352609084,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.1992870847758789,
+   "sim_nf_min": 1.0
+  },
+  "logreg_json@0.8": {
+   "public_stumble_recall": 0.6881720430107527,
+   "public_flags_per_h": 6.310090658017472,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 1.0,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.179358376298291,
+   "sim_nf_min": 1.0
+  },
+  "logreg_json@0.9": {
+   "public_stumble_recall": 0.4838709677419355,
+   "public_flags_per_h": 3.8409247483584616,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.95,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.1594296678207031,
+   "sim_nf_min": 0.95
+  },
+  "logreg_json@0.95": {
+   "public_stumble_recall": 0.27956989247311825,
+   "public_flags_per_h": 2.0119129634258606,
+   "sim_NF-STUMBLE": 1.0,
+   "sim_NF-RAIL": 1.0,
+   "sim_STRUCK-NF": 0.9,
+   "sim_adl_runs_flagged": 0.0,
+   "shift_flags_per_h": 0.1594296678207031,
+   "sim_nf_min": 0.9
+  }
+ },
+ "lr_grid_csv": "nearfall_v2_cv_grid.csv"
+}

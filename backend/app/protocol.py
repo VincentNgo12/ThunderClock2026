@@ -12,7 +12,7 @@ from .models import Environment, Imu, REGIONS, Sample
 # Generated nanopb allocation bounds; conformance tests check the C headers.
 RAW_MAX_BYTES = 150
 ORIENTATION_V1_MAX_BYTES = 153
-QUATERNION_MAX_BYTES = 189
+QUATERNION_MAX_BYTES = 201
 NORM_TOLERANCE = 0.001
 
 
@@ -66,8 +66,11 @@ def decode(payload: bytes, packet_format: str) -> Sample:
         raise PacketError("Missing quaternion header. Check that the selected format is quaternion")
     if message.version not in (1, 2):
         raise PacketError(f"Unsupported orientation version {message.version}; expected 1 or 2")
-    if message.version == 1 and (len(payload) > ORIENTATION_V1_MAX_BYTES or message.HasField("environment")):
-        raise PacketError("Version 1 packets allow up to 153 bytes and omit environment")
+    if message.version == 1 and (
+        len(payload) > ORIENTATION_V1_MAX_BYTES
+        or any(message.HasField(field) for field in ("environment", "heart_rate_bpm", "spo2_percent"))
+    ):
+        raise PacketError("Version 1 packets carry only orientations and allow up to 153 bytes")
     if len(message.orientations) != 4:
         raise PacketError("Orientation packet requires exactly four sensors")
     imus = []
@@ -89,10 +92,20 @@ def decode(payload: bytes, packet_format: str) -> Sample:
             if rotation is None or abs(math.hypot(*rotation) - 1) > NORM_TOLERANCE:
                 raise PacketError("Valid orientation needs a unit quaternion (norm tolerance 0.001)")
         imus.append(Imu(item.sensor_id, quaternion=rotation if item.valid else None, valid=item.valid))
+
+    heart_rate = message.heart_rate_bpm if message.HasField("heart_rate_bpm") else None
+    if heart_rate is not None and (not math.isfinite(heart_rate) or heart_rate <= 0):
+        raise PacketError("Heart rate must be finite and positive")
+    spo2 = message.spo2_percent if message.HasField("spo2_percent") else None
+    if spo2 is not None and not 0 <= spo2 <= 100:
+        raise PacketError("SpO2 must be between 0 and 100 percent")
+
     return Sample(
         "quaternion",
         message.sample_time_ms,
         tuple(sorted(imus, key=lambda imu: imu.sensor_id)),
         message.sequence,
         environment=decode_environment(message.environment),
+        heart_rate_bpm=heart_rate,
+        spo2_percent=spo2,
     )

@@ -1,0 +1,7 @@
+{
+  "_comment": "Hand-written rules applied AFTER the Stage-2 model (falldet.detector.apply_rules). Not learned: the training data contains no harness arrests or lying work. Tune on simulator dev seeds. height_free_fall_s: free fall (svm < 0.5 g) this long AND no gait afterwards -> fall_confirmed (harness arrest / fall from height; 0.35 s ~ 0.6 m drop). long_free_fall_s: confirm regardless of what follows (0.6 s ~ 1.8 m). Measured on the public data with the shipped Stage 1: 0.35 s upgrades 2 of 247 normal triggers (both VTT jumping-down; overall false alarms 0.73 -> 0.92 per h) and changes no fall/near-fall result (falls from standing max 0.33 s). lying_work: when work_mode == 'lying_work' and >= lying_work_min_anchors anchors were already above lying_work_pre_lying_deg before the trigger, a fall_confirmed is downgraded to normal.",
+  "height_free_fall_s": 0.35,
+  "long_free_fall_s": 0.6,
+  "lying_work_pre_lying_deg": 60.0,
+  "lying_work_min_anchors": 3
+}

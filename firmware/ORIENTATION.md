@@ -122,7 +122,7 @@ AAAA. Check subscription and negotiated MTU independently. A submission counter
 tracks local submissions. It cannot establish laptop receipt.
 
 Complete-packet bounds are 150 raw bytes, 153 orientation-only v1 bytes and
-189 telemetry v2 bytes. See [the BLE contract](../protocol/ORIENTATION.md) for
+201 telemetry v2 bytes. See [the BLE contract](../protocol/ORIENTATION.md) for
 version selection and the negotiated ATT MTU requirement.
 Suppress oversized packets and expose a diagnostic counter. Start with one
 central and a bounded latest-value queue.

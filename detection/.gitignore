@@ -1,0 +1,10 @@
+# Environments and caches
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Large or regenerable outputs
+models/data/
+models/sim_runs/
+simulation/output/

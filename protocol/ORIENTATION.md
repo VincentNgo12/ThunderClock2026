@@ -1,7 +1,8 @@
 # ThunderClock BLE telemetry contract
 
 The authoritative wearable schema is [orientation.proto](orientation.proto).
-Version 2 carries four fused orientations and optional environmental readings.
+Version 2 carries four fused orientations and optional environmental and
+pulse oximeter readings.
 Version 1 carries the same orientations. The Protobuf package and message name
 stay stable for binding compatibility. The packet's `version` field selects the
 wire revision. The backend accepts both revisions.
@@ -28,6 +29,13 @@ or stale.
 | `sample_time_ms` | 18 / uint32 | End-of-strip collection uptime in milliseconds |
 | `orientations` | 19 / repeated message | Exactly four identified sensor slots |
 | `environment` | 20 / message | Optional in v2 and absent in v1 |
+| `heart_rate_bpm` | 21 / optional float | Finite positive heart rate in beats per minute |
+| `spo2_percent` | 22 / optional float | Estimated peripheral oxygen saturation from 0 to 100% |
+
+Heart rate and SpO₂ are independently optional in v2 and absent in v1.
+Omit a reading when it is unavailable, invalid or stale. In nanopb, set
+`has_heart_rate_bpm` and `has_spo2_percent` only for usable values. The
+snapshot timestamp applies to both readings.
 
 Use explicit presence for header scalars, sensor ID and validity. Nanopb
 `has_*` flags must be set even for sequence/time zero or valid=false.
@@ -117,7 +125,7 @@ runtime 0.4.9.1.
 | --- | ---: | ---: |
 | Raw strip | 150 | 153 |
 | Version 1 orientations | 153 | 156 |
-| Version 2 telemetry | 189 | 192 |
+| Version 2 telemetry | 201 | 204 |
 
 Each notification carries one complete packet. The payload budget is the
 negotiated ATT MTU minus three bytes. The default MTU 23 allows 20 bytes.
@@ -125,8 +133,9 @@ Suppress and diagnose oversized packets. Verify negotiation on the target
 ESP32 and laptop before enabling v2 streaming.
 [Bluetooth ATT notification format](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-61/out/en/host/attribute-protocol--att-.html)
 
-The synthetic v2 fixture uses 90 bytes and includes a present zero TVOC value.
-The 189-byte maximum fixture uses out-of-range integers to exercise nanopb
+The synthetic v2 fixture uses 102 bytes and includes both pulse oximeter
+readings and a present zero TVOC value.
+The 201-byte maximum fixture uses out-of-range integers to exercise nanopb
 allocation. Its size is a conservative bound. See the backend guide to
 regenerate bindings and run the Python and C checks.
 [Regeneration and validation](../backend/DIAGNOSTICS.md#tests-and-generation)

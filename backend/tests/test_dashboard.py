@@ -29,7 +29,8 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             return DeviceStream(device, packet_format, client_factory=factory)
         async def scan():
             return [(DEVICE, ADVERTISEMENT)]
-        for patcher in (patch.dict(os.environ, {'DEVICE_ID': DEVICE.address, 'DEVICE_FORMAT': 'quaternion'}),
+        for patcher in (patch.dict(os.environ, {'TELEMETRY_SOURCE': 'hardware', 'DEVICE_ID': DEVICE.address,
+                                                'DEVICE_FORMAT': 'quaternion'}),
                         patch('app.main.scan', scan), patch('app.main.DeviceStream', stream)):
             patcher.start()
             self.addCleanup(patcher.stop)
@@ -41,7 +42,8 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             while self.app.state.stream.stats.decoded == 0:
                 await asyncio.sleep(0)
 
-    async def socket(self, blocked=False):
+    async def socket(self, blocked=False, *, app=None):
+        app = self.app if app is None else app
         incoming, outgoing = asyncio.Queue(), asyncio.Queue()
         incoming.put_nowait({'type': 'websocket.connect'})
         async def send(message):
@@ -50,7 +52,7 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             await outgoing.put(message)
         scope = {'type': 'websocket', 'path': '/ws/telemetry', 'scheme': 'ws', 'query_string': b'',
                  'headers': [], 'subprotocols': [], 'client': ('127.0.0.1', 1), 'server': ('127.0.0.1', 8000)}
-        task = asyncio.create_task(self.app(scope, incoming.get, send))
+        task = asyncio.create_task(app(scope, incoming.get, send))
         async def cleanup():
             task.cancel()
             await asyncio.gather(task, return_exceptions=True)
@@ -76,7 +78,10 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(left['device'])
         for field in ('posture', 'eeg', 'overall_risk', 'environment', 'heart_rate_bpm'):
             self.assertIsNone(left[field])
-        stale = snapshot(self.app.state.stream, 500, stale_after=0)
+        stream = self.app.state.stream
+        with patch('app.dashboard.time') as clock:
+            clock.monotonic.return_value = stream.received_monotonic + 1
+            stale = snapshot(stream, 500)
         self.assertTrue(all(imu['orientation'] is None for imu in stale['imus']))
         self.assertEqual(stale['imus'][0]['freshness']['status'], 'stale')
 
@@ -104,7 +109,9 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(current['environment']['tvoc_ppb'], 0)
         self.assertIsNone(current['environment']['temperature_c'])
         self.assertEqual(current['freshness']['environment']['status'], 'valid')
-        stale = snapshot(stream, 2, stale_after=0)
+        with patch('app.dashboard.time') as clock:
+            clock.monotonic.return_value = stream.received_monotonic + 1
+            stale = snapshot(stream, 2)
         self.assertIsNone(stale['environment'])
         self.assertEqual(stale['freshness']['environment']['status'], 'stale')
 
@@ -114,3 +121,42 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaises(ValueError):
                 async with app.router.lifespan_context(app):
                     pass
+
+    async def test_ble_neutral_capture_and_partial_frame_conflict(self):
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=self.app), base_url='http://test') as client:
+            response = await client.post('/posture/calibrate')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()['status'], 'captured')
+            self.assertAlmostEqual(self.app.state.posture.angles['lumbar_flexion_deg'], 0)
+
+            packet = orientation_pb2.OrientationPacket.FromString((FIXTURES / 'quaternion_partial.bin').read_bytes())
+            self.clients[0].callback(None, packet.SerializeToString())
+            async with asyncio.timeout(1):
+                while self.app.state.stream.stats.decoded < 2:
+                    await asyncio.sleep(0)
+            self.assertEqual((await client.post('/posture/calibrate')).status_code, 409)
+            self.assertEqual(self.app.state.posture.calibration, response.json())
+            self.assertIsNone(self.app.state.posture.angles)
+
+    async def test_explicit_simulation_publishes_calibrated_posture(self):
+        with patch.dict(os.environ, {'TELEMETRY_SOURCE': 'simulated'}), patch(
+            'app.main.scan', side_effect=AssertionError('Simulation must not scan for BLE')
+        ):
+            app = create_app()
+            async with app.router.lifespan_context(app):
+                async with asyncio.timeout(1):
+                    while app.state.stream.latest is None:
+                        await asyncio.sleep(0)
+                async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
+                    self.assertEqual((await client.get('/health')).json()['source'], 'simulated')
+                    self.assertEqual((await client.post('/posture/calibrate')).status_code, 200)
+                _task, outgoing = await self.socket(app=app)
+                async with asyncio.timeout(1):
+                    while True:
+                        message = json.loads((await outgoing.get())['text'])
+                        if message['posture'] is not None:
+                            break
+                self.assertEqual(message['connection']['source'], 'simulated')
+                self.assertEqual(message['freshness']['posture']['source'], 'simulated')
+                self.assertAlmostEqual(message['posture']['lumbar_flexion_deg'], 0)
+                self.assertEqual(message['alerts'], [])
