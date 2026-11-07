@@ -99,9 +99,11 @@ See [the device contract](../protocol/ORIENTATION.md) and
 ## Optional API
 
 Select `TELEMETRY_SOURCE=simulated` for a hardware-free demo. Hardware is the
-default. For hardware, export the exact `DEVICE_ID` from a scan and
-`DEVICE_FORMAT=quaternion` for posture or `raw` for raw diagnostics. Use one
-Uvicorn worker and stop CLI streaming before starting the hardware API.
+default. For hardware, export the exact `DEVICE_ID` from a scan. Select
+`DEVICE_FORMAT=both` for raw IMUs on 8888 and fused orientations on 8889 over
+one BLE connection. The single-stream settings are `quaternion` for posture
+and `raw` for raw diagnostics. Use one Uvicorn worker and stop CLI streaming
+before starting the hardware API.
 
 ```sh
 # From backend/ with the environment active
@@ -136,6 +138,37 @@ fields. A stale or missing environment block maps to null. Device metadata and
 per-IMU acquisition times are null. Fall state, EEG, heart rate and overall risk
 remain unavailable. See [application telemetry](../docs/TELEMETRY_PROTOCOL.md)
 for calibration, freshness and warning fields.
+
+### Raw IMU handoff for detector code
+
+With `DEVICE_FORMAT=both`, the usual `GET /diagnostics` counters track fused
+packets and the nested `raw` counters track raw packets. Check each stream's
+`valid_frame_hz`, `dropped`, and `rejected` values to measure what arrives.
+The two subscriptions share a bounded 32-packet receive queue.
+
+Detector code can supply a callback when creating the API app.
+
+```python
+from app.main import create_app
+from my_detector import accept_raw_sample  # Your detector-side callback.
+
+app = create_app(on_raw_sample=accept_raw_sample)
+```
+
+Run Uvicorn with that module's `app` and the dual-stream environment settings.
+The callback receives each decoded raw `Sample` as the backend consumes it.
+It carries `sample_time_ms` since device boot and four ordered IMUs with
+`accel` in m/s² including gravity and `gyro` in rad/s. Sensor IDs 1–4 are
+pelvis, lumbar, thoracic, and upper thoracic. Keep the callback quick and put
+expensive processing in a separate worker with a bounded queue.
+If the callback raises, the API logs the error and disables it for that session.
+
+For `FallDetectorStream.push_batch()`, use device timestamps in seconds
+and arrays shaped `(N, 4, 3)` for both accel and gyro. Handle uptime wrap and
+restart on the detector side. Apply the confirmed sensor-to-segment remap
+once before processing. Fused packets independently supply posture and
+calibration. The 20 Hz dashboard publication clock does not pace the raw
+callback. See the [fall detector input contract](../detection/models/README.md#2-inputs).
 
 ## Tests and generation
 

@@ -10,9 +10,9 @@ from unittest.mock import patch
 
 import httpx
 
-from app.ble import DeviceStream
+from app.ble import DeviceStream, NOTIFY_UUID, ORIENTATION_UUID
 from app.dashboard import snapshot
-from app.generated import orientation_pb2
+from app.generated import orientation_pb2, telemetry_pb2
 from app.main import create_app
 from test_ble_cli import Client, DEVICE, ADVERTISEMENT, FIXTURES
 
@@ -22,7 +22,7 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
         self.clients = []
         def factory(*args, **kwargs):
             client = Client(*args, **kwargs)
-            client.payloads = [(FIXTURES / 'quaternion_identity.bin').read_bytes()]
+            client.payloads_by_characteristic[ORIENTATION_UUID] = [(FIXTURES / 'quaternion_identity.bin').read_bytes()]
             self.clients.append(client)
             return client
         def stream(device, packet_format):
@@ -121,6 +121,33 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaises(ValueError):
                 async with app.router.lifespan_context(app):
                     pass
+
+    async def test_dual_mode_feeds_raw_consumer_and_keeps_posture(self):
+        samples = []
+        initial_connections = len(self.clients)
+        with patch.dict(os.environ, {'DEVICE_FORMAT': 'both'}):
+            app = create_app(on_raw_sample=samples.append)
+            async with app.router.lifespan_context(app):
+                stream = app.state.stream
+                async with asyncio.timeout(1):
+                    while stream.latest is None:
+                        await asyncio.sleep(0)
+                self.assertEqual(len(self.clients), initial_connections + 1)
+                client = self.clients[-1]
+                async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as http:
+                    self.assertEqual((await http.post('/posture/calibrate')).status_code, 200)
+                    raw = telemetry_pb2.ImuStripData.FromString((FIXTURES / 'raw_signed.bin').read_bytes())
+                    for _ in range(5):
+                        client.callbacks[NOTIFY_UUID](None, raw.SerializeToString())
+                        raw.time += 10
+                    async with asyncio.timeout(1):
+                        while len(samples) < 5:
+                            await asyncio.sleep(0)
+                    self.assertEqual([sample.sample_time_ms for sample in samples], [1234, 1244, 1254, 1264, 1274])
+                    self.assertEqual(samples[0].imus[0].accel[0], -1.25)
+                    self.assertAlmostEqual(app.state.posture.angles['lumbar_flexion_deg'], 0)
+                    stats = (await http.get('/diagnostics')).json()
+                    self.assertEqual((stats['decoded'], stats['raw']['decoded']), (1, 5))
 
     async def test_ble_neutral_capture_and_partial_frame_conflict(self):
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=self.app), base_url='http://test') as client:

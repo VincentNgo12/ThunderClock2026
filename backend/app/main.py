@@ -3,6 +3,7 @@
 # Contributors: Unassigned
 
 import asyncio
+from collections.abc import Callable
 from contextlib import asynccontextmanager, suppress
 import json
 import logging
@@ -12,14 +13,15 @@ import time
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from .ble import DeviceStream, scan, select_device
+from .ble import DEVICE_FORMATS, DeviceStream, scan, select_device
 from .dashboard import snapshot
-from .models import STREAMING_STATES
+from .models import Sample, STREAMING_STATES
 from .posture import Posture
 from .simulated import SimulatedStream
 
 
-def create_app():
+def create_app(*, on_raw_sample: Callable[[Sample], None] | None = None):
+    """Optionally hand each decoded raw frame to a quick, synchronous consumer."""
     @asynccontextmanager
     async def lifespan(app):
         posture = Posture(
@@ -32,8 +34,8 @@ def create_app():
         elif source == "hardware":
             device_id = os.getenv("DEVICE_ID")
             packet_format = os.getenv("DEVICE_FORMAT")
-            if not device_id or packet_format not in ("raw", "quaternion"):
-                raise ValueError("Set DEVICE_ID and DEVICE_FORMAT=raw or quaternion for hardware mode")
+            if not device_id or packet_format not in DEVICE_FORMATS:
+                raise ValueError("Set DEVICE_ID and DEVICE_FORMAT=raw, quaternion or both for hardware mode")
             stream = DeviceStream(select_device(await scan(), device_id), packet_format)
         else:
             raise ValueError("Set TELEMETRY_SOURCE=hardware or simulated")
@@ -44,9 +46,18 @@ def create_app():
 
         async def acquire():
             resets = stream.stats.resets
+            raw_consumer = on_raw_sample
             try:
                 async for sample in stream.updates():
                     if sample is None:
+                        continue
+                    if sample.format == "raw":
+                        if raw_consumer is not None:
+                            try:
+                                raw_consumer(sample)
+                            except Exception:
+                                logging.getLogger(__name__).exception("Raw IMU consumer disabled for this session")
+                                raw_consumer = None
                         continue
                     if stream.stats.resets != resets:
                         # A restarted wearable may have established a new orientation frame.
@@ -88,7 +99,12 @@ def create_app():
 
     @app.get("/diagnostics")
     async def diagnostics():
-        return app.state.stream.stats.snapshot()
+        stream = app.state.stream
+        result = stream.stats.snapshot()
+        if app.state.source == "hardware" and stream.packet_format == "both":
+            result["raw"] = stream.stats_by_format["raw"].snapshot()
+            result["raw"]["state"] = result["state"]
+        return result
 
     @app.post("/posture/calibrate")
     async def calibrate():

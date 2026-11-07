@@ -8,6 +8,7 @@ import math
 import time
 
 from .models import Diagnostics, Imu, Sample
+from .site_scenario import scenario_at
 
 
 class SimulatedStream:
@@ -34,7 +35,9 @@ class SimulatedStream:
                     half_angle = math.radians(-degrees * bend) / 2
                     rotation = (math.cos(half_angle), math.sin(half_angle), 0.0, 0.0)
                     imus.append(Imu(sensor_id, quaternion=rotation))
-                self.latest = Sample("quaternion", int(elapsed * 1000), tuple(imus), sequence)
+                environment, heart_rate_bpm, spo2_percent = scenario_at(elapsed)
+                self.latest = Sample("quaternion", int(elapsed * 1000), tuple(imus), sequence,
+                                     environment, heart_rate_bpm, spo2_percent)
                 self.received_monotonic = self.stats.last_notification = self.stats.last_valid = now
                 self.received_at = datetime.now(UTC)
                 self.stats.received += 1

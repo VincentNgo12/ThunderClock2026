@@ -4,20 +4,21 @@
 
 Construction sites are dangerous places. Tripping hazards, heavy objects, unsecured loads, improper or lacking safety guidelines and the overall impossibility of keeping an eye on everything at once. This culminates in an environment that is carefully managed yet highly volatile - leading to high operational costs for the company, uncertainty for the workers and red-tape for the government.
 
-All of these problems are direct consequences of the difficulty of monitoring worker health and supposedly little incentive to do so.
+All of these problems are direct consequences of the difficulty of monitoring worker health and and the belief that there’s little return on doing so.
 
 
-**InSite** is a safety vest that challenges that presumption. 
+**InSite** is a safety prototype that challenges that presumption.
 
-On average companies spend $xxx on following safety-related incidents:
-    - Safety insurance
-    - Administrative Overhead (Supervisors, Incident Reports)
-    - Legal Fees
-    - Active monitoring and maintainance of jobsite hazards
+On average, companies spend $xxx after safety-related incidents on:
 
+- Safety insurance
+- Administrative overhead (supervisors, incident reports)
+- Legal fees
+- Active monitoring and maintenance of jobsite hazards
 
-And most workers on jobsites are caught in this crossfire costing them:
-    - Temporary or permanent employment 
-    - Legal Fees
-    - Insufficient evidence for legal defense 
-    - Lack of transparency into their own practices UNTIL an incident happens 
+And workers on jobsites are caught in this crossfire, costing them:
+
+- Temporary or permanent loss of employment
+- Disputed or denied WCB claims
+- Insufficient evidence to support their side of an incident
+- No visibility into their own practices until an incident happens
