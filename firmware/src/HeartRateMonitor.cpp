@@ -11,7 +11,6 @@
 #include <cmath>
 
 #include "Debug.h"
-#include "I2cMux.h"
 #include "SystemConfig.h"
 
 namespace {
@@ -46,7 +45,7 @@ uint32_t sample18(const uint8_t* bytes) {
 }  // namespace
 
 fw::Result HeartRateMonitor::begin() {
-  if (i2cmux::select(wire_, SystemConfig::kHeartRateMuxChannel) != fw::Result::Ok) {
+  if (mux_.setChannel(SystemConfig::kHeartRateMuxChannel) != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
   uint8_t partId = 0;
@@ -92,7 +91,7 @@ fw::Result HeartRateMonitor::poll(fw::HeartData& output) {
   if (!present_) {
     return fw::Result::NotReady;
   }
-  if (i2cmux::select(wire_, SystemConfig::kHeartRateMuxChannel) != fw::Result::Ok) {
+  if (mux_.setChannel(SystemConfig::kHeartRateMuxChannel) != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
 

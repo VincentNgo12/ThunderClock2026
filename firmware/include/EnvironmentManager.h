@@ -8,12 +8,14 @@
 #include <Wire.h>
 
 #include "FirmwareTypes.h"
+#include "ImuManager.h"
 
 // Non-blocking cycle: startConversion() triggers the AHT21, and read() collects it
-// at least kAht21ConversionMs later. Both select the environment mux channel first.
+// at least kAht21ConversionMs later. Both select the environment mux channel first,
+// using the IMU manager's mux helper.
 class EnvironmentManager {
  public:
-  explicit EnvironmentManager(TwoWire& wire) : wire_(wire) {}
+  EnvironmentManager(TwoWire& wire, ImuManager& mux) : wire_(wire), mux_(mux) {}
   fw::Result begin();  // Ok when at least one of the two sensors answered.
   fw::Result startConversion();  // NotReady while the previous conversion is pending.
   // Fills output with the latest readings. Missing, stale or warming-up values are
@@ -32,6 +34,7 @@ class EnvironmentManager {
   void fillOutput(uint32_t nowMs, fw::EnvData& output) const;
 
   TwoWire& wire_;
+  ImuManager& mux_;
   bool aht21Present_ = false;
   bool ens160Present_ = false;
   bool ens160WarmingUp_ = true;

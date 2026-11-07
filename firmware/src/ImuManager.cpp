@@ -4,7 +4,6 @@
  * Contributors: Pedro
  */
 
-<<<<<<< HEAD
 
  // status : working 
 
@@ -33,7 +32,7 @@
  }
  
  // read data from the 4 imus sequentially, return Ok
- fw::Result ImuManager::read(fw::ImuStripData& output) {
+ fw::Result ImuManager::read(fw::StripData& output) {
    sensors_event_t a, g, t;
    for (uint8_t i = 0; i < 4; ++i) {
      setChannel(i);
@@ -60,23 +59,3 @@
    return fw::Result::Ok;
  }
  
-=======
-// fw::Result ImuManager::begin() {
-//   // TODO(FW-IMU): select confirmed mux channels and configure each sensor through wire_.
-//   return fw::Result::NotImplemented;
-// }
-// 
-// fw::Result ImuManager::readBatch(size_t, ImuBatch& output) {
-//   output = ImuBatch{};
-//   // TODO(FW-IMU): drain checked FIFO samples with acquisition times and explicit loss reporting.
-//   return fw::Result::NotImplemented;
-// }
-// 
-// uint32_t ImuManager::losses(size_t) const {
-//   return 0;  // Acquisition has not started.
-// }
-// 
-// bool ImuManager::available(size_t) const {
-//   return false;
-// }
->>>>>>> origin/main

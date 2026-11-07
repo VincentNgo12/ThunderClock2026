@@ -9,11 +9,12 @@
 
 #include "BeatDetector.h"
 #include "FirmwareTypes.h"
+#include "ImuManager.h"
 #include "Spo2Estimator.h"
 
 class HeartRateMonitor {
  public:
-  explicit HeartRateMonitor(TwoWire& wire) : wire_(wire) {}
+  HeartRateMonitor(TwoWire& wire, ImuManager& mux) : wire_(wire), mux_(mux) {}
   fw::Result begin();  // Checks the part ID and starts 100 Hz red+IR sampling.
   // Drains the sensor FIFO. Call at least every 250 ms or samples are lost.
   // Unavailable values are NaN (FirmwareTypes has no validity flags), so the
@@ -29,6 +30,7 @@ class HeartRateMonitor {
   fw::Result readRegisters(uint8_t reg, uint8_t* data, size_t length);
 
   TwoWire& wire_;
+  ImuManager& mux_;
   BeatDetector detector_{100.0f};
   Spo2Estimator spo2_{};
   bool present_ = false;
