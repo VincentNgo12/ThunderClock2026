@@ -8,9 +8,14 @@
 #include <Wire.h>
 
 #include "FirmwareTypes.h"
+#include "ImuManager.h"
 
 // Call once after Wire.begin(). Sensors disabled in SystemConfig are skipped.
-void slowSensorsBegin(TwoWire& wire);
+// mux is the IMU manager, whose setChannel() selects channels 4 and 5 for us.
+void slowSensorsBegin(TwoWire& wire, ImuManager& mux);
+
+// Prints every responding address on each mux channel. Bring-up only: it blocks.
+void slowSensorsScanBus(TwoWire& wire, ImuManager& mux);
 
 // Call every kSlowSensorPollMs from the I2C owner: loop() while the acquisition
 // task is disabled, or the acquisition task between IMU reads once it is enabled.

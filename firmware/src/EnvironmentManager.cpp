@@ -10,7 +10,6 @@
 #include <cmath>
 
 #include "Debug.h"
-#include "I2cMux.h"
 #include "SystemConfig.h"
 
 namespace {
@@ -54,7 +53,7 @@ bool isFresh(uint32_t acquiredMs, uint32_t nowMs) {
 }  // namespace
 
 fw::Result EnvironmentManager::begin() {
-  if (i2cmux::select(wire_, SystemConfig::kEnvironmentMuxChannel) != fw::Result::Ok) {
+  if (mux_.setChannel(SystemConfig::kEnvironmentMuxChannel) != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
   aht21Present_ = beginAht21() == fw::Result::Ok;
@@ -113,7 +112,7 @@ fw::Result EnvironmentManager::startConversion() {
   if (conversionPending_) {
     return fw::Result::NotReady;
   }
-  if (i2cmux::select(wire_, SystemConfig::kEnvironmentMuxChannel) != fw::Result::Ok) {
+  if (mux_.setChannel(SystemConfig::kEnvironmentMuxChannel) != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
   wire_.beginTransmission(SystemConfig::kAht21Address);
@@ -128,7 +127,7 @@ fw::Result EnvironmentManager::startConversion() {
 
 fw::Result EnvironmentManager::read(fw::EnvData& output) {
   const uint32_t nowMs = millis();
-  if (i2cmux::select(wire_, SystemConfig::kEnvironmentMuxChannel) != fw::Result::Ok) {
+  if (mux_.setChannel(SystemConfig::kEnvironmentMuxChannel) != fw::Result::Ok) {
     fillOutput(nowMs, output);
     return fw::Result::IoFailure;
   }

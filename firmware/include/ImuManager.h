@@ -7,7 +7,6 @@
 
  // status : working 
 
-<<<<<<< HEAD
  #pragma once
  #include <Arduino.h>
  #include <Wire.h>
@@ -20,32 +19,14 @@
      explicit ImuManager(TwoWire& wire) : wire_(wire) {}
      fw::Result begin();  // Future per-sensor setup and identity checks.
      // Only Ok permits using output; each real sample carries its original acquisition time.
-     fw::Result read(fw::ImuStripData& output);
+     fw::Result read(fw::StripData& output);
+     // Routes the shared I2C bus to one mux channel. Public so the heart-rate and
+     // environment sensors on channels 4 and 5 share this one mux helper.
+     fw::Result setChannel(uint8_t channel);
  
    private:
      Adafruit_MPU6050 imuSensors[4];
      uint8_t muxAddress = 0x70;
      TwoWire& wire_;
-     fw::Result setChannel(uint8_t channel);
  };
  
-=======
-// struct ImuBatch {
-//   fw::ImuData samples[SystemConfig::kFifoBatchSize]{};
-//   size_t count = 0;
-// };
-// 
-// class ImuManager {
-//  public:
-//   explicit ImuManager(TwoWire& wire) : wire_(wire) {}
-//   fw::Result begin();  // Future per-sensor configuration and identity checks.
-//   // Only Ok exposes count usable entries for the requested sensor index.
-//   fw::Result readBatch(size_t sensor, ImuBatch& output);
-//   uint32_t losses(size_t sensor) const;
-//   bool available(size_t sensor) const;
-// 
-//  private:
-//   TwoWire& wire_;
-// };
-// 
->>>>>>> origin/main

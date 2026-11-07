@@ -55,15 +55,35 @@ void printStatus(const fw::EnvData& env, const fw::HeartData& heart) {
 }
 }  // namespace
 
-void slowSensorsBegin(TwoWire& wire) {
+void slowSensorsBegin(TwoWire& wire, ImuManager& mux) {
   latestMutex = xSemaphoreCreateMutex();
   if (SystemConfig::kInitEnvironment) {
-    environment = new EnvironmentManager(wire);
+    environment = new EnvironmentManager(wire, mux);
     environmentReady = environment->begin() == fw::Result::Ok;
   }
   if (SystemConfig::kInitHeartRate) {
-    heartRate = new HeartRateMonitor(wire);
+    heartRate = new HeartRateMonitor(wire, mux);
     heartRateReady = heartRate->begin() == fw::Result::Ok;
+  }
+}
+
+void slowSensorsScanBus(TwoWire& wire, ImuManager& mux) {
+  Serial.println("I2C scan through the mux:");
+  for (uint8_t channel = 0; channel < 8; channel++) {
+    mux.setChannel(channel);
+    Serial.printf("  ch%u:", channel);
+    int found = 0;
+    for (uint8_t address = 1; address < 127; address++) {
+      if (address == SystemConfig::kMuxAddress) {
+        continue;
+      }
+      wire.beginTransmission(address);
+      if (wire.endTransmission() == 0) {
+        Serial.printf(" 0x%02X", address);
+        found++;
+      }
+    }
+    Serial.println(found == 0 ? " (none)" : "");
   }
 }
 

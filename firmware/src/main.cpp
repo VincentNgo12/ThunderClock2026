@@ -13,13 +13,12 @@
 #include "Debug.h"
 #include "FirmwareTasks.h"
 #include "ImuManager.h"
-#include "I2cMux.h"
 #include "SharedData.h"
 #include "SlowSensors.h"
 #include "SystemConfig.h"
 
 namespace {
-// ImuManager imuManager(Wire);
+ImuManager imuManager(Wire);  // Also owns the mux used by every sensor.
 }
 
 void setup() {
@@ -39,9 +38,9 @@ void setup() {
     Wire.setTimeOut(SystemConfig::kI2cTimeoutMs);
   }
   if (SystemConfig::kRunI2cScanAtBoot) {
-    i2cmux::scanAllChannels(Wire);
+    slowSensorsScanBus(Wire, imuManager);
   }
-  slowSensorsBegin(Wire);
+  slowSensorsBegin(Wire, imuManager);
   if (SystemConfig::kInitImuStrip) {
 //    if (imuManager.begin() != fw::Result::Ok) {
 //      debugPrintln("IMU initialization is unavailable.");
