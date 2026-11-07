@@ -60,7 +60,7 @@ fw::Result ImuManager::read(fw::StripData& output) {
     output.data[i] = fw::IMUData{};  // Zeroed and invalid until a read succeeds.
     if (!slotAvailable[i] || setChannel(i) != fw::Result::Ok) {
       continue;
-    }
+    }z
 
     // getEvent does not report bus errors, so confirm the sensor answers first.
     wire_.beginTransmission(isIcm[i] ? ICM20948_I2CADDR_DEFAULT : MPU6050_I2CADDR_DEFAULT);
