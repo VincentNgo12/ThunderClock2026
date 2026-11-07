@@ -40,7 +40,7 @@ constexpr int kI2sDataPin = -1;
 // Prototype mux defaults. Confirm wiring, placement and mounting before use.
 constexpr uint8_t kMuxAddress = 0x70;
 constexpr uint8_t kImuAddress = 0x68;
-constexpr int kImuMuxChannels[fw::kImuCount] = {0, 1, 2, 3};
+// constexpr int kImuMuxChannels[fw::kImuCount] = {0, 1, 2, 3};
 // TODO(FW-IMU): confirm each board's sensor-to-segment mounting transform.
 
 // Zero leaves each auxiliary sensor address unconfirmed.
