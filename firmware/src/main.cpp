@@ -17,7 +17,7 @@
 #include "SystemConfig.h"
 
 namespace {
-// ImuManager imuManager(Wire);
+ImuManager imuManager(Wire);
 }
 
 void setup() {
@@ -32,9 +32,9 @@ void setup() {
 
   if (SystemConfig::kInitImuStrip) {
     Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin);
-//    if (imuManager.begin() != fw::Result::Ok) {
-//      debugPrintln("IMU initialization is unavailable.");
-//    }
+    if (imuManager.begin() != fw::Result::Ok) {
+      debugPrintln("IMU initialization is unavailable.");
+    }
   }
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
@@ -44,7 +44,7 @@ void setup() {
 
   if (SystemConfig::kStartAcquisitionTask) {
     if (xTaskCreate(acquisitionTask, "acquisition", SystemConfig::kTaskStackBytes,
-                    nullptr, 1, nullptr) != pdPASS) {
+                    &imuManager, 1, nullptr) != pdPASS) {
       debugPrintln("Acquisition task creation failed.");
     }
   }

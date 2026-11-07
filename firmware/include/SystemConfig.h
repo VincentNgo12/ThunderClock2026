@@ -12,9 +12,9 @@ constexpr unsigned long kSerialBaud = 115200;
 constexpr bool kDebugEnabled = true;
 
 // Enable initialization and task shells as their implementations become useful.
-constexpr bool kInitImuStrip = false;
+constexpr bool kInitImuStrip = true;
 constexpr bool kInitBLE = false;
-constexpr bool kStartAcquisitionTask = false;
+constexpr bool kStartAcquisitionTask = true;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartAudioTask = false;
 

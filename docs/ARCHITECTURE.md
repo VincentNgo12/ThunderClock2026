@@ -85,7 +85,7 @@ values visible.
 ## Orientation and calibration
 
 1. Acquire four accelerometer/gyro streams (two ICM-20948, two MPU-6050) through
-   the mux as FIFO strips at least every 10 ms.
+   the mux as one strip every 10 ms.
 2. Calibrate gyro bias and fuse each stream independently on the ESP32.
 3. Apply each confirmed sensor-to-segment mounting transform once.
 4. Send segment-local-to-world quaternions using the convention in

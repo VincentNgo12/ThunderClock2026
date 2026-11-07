@@ -38,9 +38,10 @@ struct Vec3 {
 }; 
 
 struct IMUData {
-  Vec3 accel;
-  Vec3 gyro;
-  Vec3 magno;
+  Vec3 accel;  // m/s² in sensor-board axes.
+  Vec3 gyro;   // rad/s in sensor-board axes.
+  Vec3 magno;  // Unused. The magnetometer is not read.
+  bool valid;  // False when this sensor failed to start or read.
 };
 
 // unprocessed IMU data

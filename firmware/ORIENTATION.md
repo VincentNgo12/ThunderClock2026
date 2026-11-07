@@ -15,7 +15,7 @@ Adafruit ESP32-S3 Feather with two ICM-20948 and two MPU-6050 sensors.
 
 The ICM-20948 contains a magnetometer, but this project does not read, record or
 fuse magnetometer data. All four sensors use the same 6-axis fusion. Mux channels
-are confirmed. Record the sensor type for each slot in `SystemConfig.h`.
+are confirmed. `ImuManager` records the sensor type and channel for each slot.
 Remaining MPU-6050 boards are spares.
 
 ## Acquisition targets
@@ -23,41 +23,38 @@ Remaining MPU-6050 boards are spares.
 - PCA9548/TCA9548A mux address 0x70, channels 0–3, one sensor per channel.
 - MPU-6050 address 0x68. ICM-20948 address 0x69 (Adafruit breakout default),
   or 0x68 with the AD0 jumper bridged.
-- ±2 g acceleration and ±250 deg/s gyro on both sensor types.
-- MPU-6050 10 Hz low-pass. Use the closest available ICM-20948 low-pass setting.
-- ICM-20948 magnetometer left unconfigured.
-- Nominal 100 Hz sampling on every sensor and approximately 20 Hz snapshot
-  publication.
-- Board-default I2C pins, proposed 400 kHz bus and 10 ms transaction timeout.
-  Confirm wiring and pull-ups before using that bus speed.
+- ±8 g acceleration and ±1000 deg/s gyro on both sensor types, so fall impacts
+  and fast trunk rotation do not clip.
+- About 10 Hz low-pass: 10 Hz on the MPU-6050, 11.5 Hz accel and 11.6 Hz gyro on
+  the ICM-20948. Further filtering happens on the laptop.
+- ICM-20948 internal rates set near 100 Hz. The driver starts the magnetometer,
+  but firmware never reads it.
+- 100 Hz strip reads and approximately 20 Hz snapshot publication.
+- Board-default I2C pins, 400 kHz bus and 10 ms transaction timeout. Confirm
+  wiring and pull-ups at that bus speed.
 
-Drivers are Adafruit MPU6050 (vendored in `lib/`) and Adafruit ICM20X. Keep all
-addresses, channels and settings in `SystemConfig.h`. Confirm actual board wiring
+Drivers are Adafruit MPU6050 (vendored in `lib/`) and Adafruit ICM20X. Addresses,
+channels, ranges and filters live in `ImuManager`. Confirm actual board wiring
 and register settings during bring-up.
 
-## FIFO strip acquisition
+## Strip acquisition
 
-After setup, acquisition owns I2C and mux selection. Each sensor buffers accel
-and gyro samples in its hardware FIFO. Every 10 ms, acquisition drains all four
-FIFOs and assembles strips. A strip holds one sample from each of the four
-sensors and is the unit passed to fusion. Produce at least one strip every 10 ms.
+After setup, acquisition owns I2C and mux selection. Every 10 ms the acquisition
+task reads the latest accel and gyro from all four sensors in turn and stores
+them together as one strip. A strip is the unit passed to fusion. The task uses
+a fixed 10 ms period, so a strip is produced every 10 ms.
 
-Each sensor runs on its own clock, so FIFO counts can differ by a sample between
-drains. Pair samples across sensors by order and estimated time. Carry an extra
-sample to the next drain rather than dropping it. An eight-sample backlog per
-sensor is a proposed bound. Count overflow, excess backlog, transfer failure and
-clock gaps.
+All four sensors are read together, so the strip carries one collection time in
+milliseconds. Sequential mux reads take a few milliseconds, so the readings are
+close but not simultaneous. Hardware FIFO draining is a possible later
+improvement if timing needs to be tighter.
 
-The Adafruit drivers configure each sensor but do not expose FIFO reads.
-`ImuManager` reads FIFO count and data registers directly for both sensor types.
-
-A strip is still produced on time when a sensor fails or has no new sample. The
-whole strip goes to fusion with that sensor's slot marked invalid. Valid sensors
-update their filters normally. The invalid sensor skips its filter update for
-that strip, and its quaternion is marked invalid for that strip. Each sample
-stores raw sensor-board accel in m/s² and gyro in rad/s, its own acquisition time
-and validity. Pass every sample through that sensor's filter before replacing a
-telemetry snapshot.
+A strip is still produced on time when a sensor fails. The whole strip goes to
+fusion with that sensor's slot marked invalid. Valid sensors update their
+filters normally. The invalid sensor skips its filter update for that strip, and
+its quaternion is marked invalid for that strip. Each sample stores raw
+sensor-board accel in m/s² and gyro in rad/s and a validity flag. Pass every
+sample through that sensor's filter before replacing a telemetry snapshot.
 
 ## Calibration and fusion
 
@@ -75,7 +72,7 @@ Keep orientation unavailable until calibration and startup finish. A simple
 serial `c` command may reset all calibration/filter states. Recalibrate after
 reboot or mounting changes. Document the command when it is implemented.
 
-Nominal sensitivity at the selected ranges is 16384 counts/g and 131
+Nominal sensitivity at the selected ranges is 4096 counts/g and 32.8
 counts/(deg/s) on both sensor types. Verify all stationary ±axis readings and
 excessive offset/scale error. Stationary slow rotation may resemble gyro bias,
 so hold the jig still.
@@ -101,14 +98,12 @@ neutral-reference capture. Record tilt and heading drift separately.
 
 ## Timing and validity
 
-FIFO sample times are estimates. Use nominal 10 ms spacing for an initial batch,
-then estimate intervals from monotonic drain time and sample count. Anchor each
-sensor's latest sample to its drain time. The strip also carries one collection
-time in milliseconds for the packet.
+Each strip carries one collection time in milliseconds from `millis()`. Fusion
+uses the time between strips as its update interval.
 
-Proposed reset conditions include more than eight queued samples, lost packet
-alignment or a per-sample gap above 30 ms. Reset the affected calibration/filter
-and expose a loss diagnostic. Nonfinite data, free fall, near-range clipping and
+Proposed reset conditions include a gap above 30 ms between valid samples for a
+sensor or repeated read failures. Reset the affected calibration/filter and
+expose a loss diagnostic. Nonfinite data, free fall, near-range clipping and
 failed reads also need explicit invalidation.
 
 Use a 50 ms local freshness target before encoding. Require finite unit
@@ -132,8 +127,7 @@ central and a bounded latest-value queue.
 1. Confirm board, mux, addresses, sensor type per channel, I2C wiring and mounts.
 2. Inspect signed raw readings. At rest, acceleration magnitude should be near
    9.81 m/s². Record gyro offsets and sample/loss counters.
-3. Confirm a full strip arrives at least every 10 ms and FIFO counts stay below
-   the backlog bound on all four sensors.
+3. Confirm a strip arrives every 10 ms and all four slots stay valid.
 4. Calibrate stationary and confirm each sensor transitions from unavailable to
    finite near-unit orientation.
 5. Measure stationary tilt and heading drift over 60 seconds for each sensor.
@@ -142,7 +136,7 @@ central and a bounded latest-value queue.
    tolerance before calling the behavior accepted.
 7. Mount all four boards on one rigid object with confirmed remaps. Calibrate
    together, rotate and return. Compare relative orientations.
-8. Induce a missing sensor, pause or FIFO overflow. Verify affected validity,
+8. Induce a missing sensor or pause. Verify affected validity,
    counted loss, continued operation of other sensors and fresh calibration
    after repair/restart.
 9. Disconnect BLE while fusion runs, reconnect and confirm current snapshots
