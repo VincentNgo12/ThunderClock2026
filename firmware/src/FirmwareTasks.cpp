@@ -23,13 +23,9 @@ void acquisitionTask(void*) {
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
 
   fw::Snapshot snapshot{};
-<<<<<<< HEAD
   fw::StripData strip{};
   OrientationProcessor orientationProcessor;
   orientationProcessor.begin();
-=======
-  fw::StripData stripData{};
->>>>>>> feat/mutexesAndQueues
   
   while (true) {
     const TickType_t now = xTaskGetTickCount();
