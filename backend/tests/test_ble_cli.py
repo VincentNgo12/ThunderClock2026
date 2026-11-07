@@ -32,8 +32,11 @@ class Client:
         self.services = self
         self.properties = ['read', 'notify']
         self.callback = None
+        self.callbacks = {}
         self.payloads = []
+        self.payloads_by_characteristic = {}
         self.stopped = self.closed = False
+        self.stopped_ids = []
         self.block = None
         self.drop = False
 
@@ -41,7 +44,8 @@ class Client:
         return self if identifier == SERVICE_UUID else None
 
     def get_characteristic(self, identifier):
-        return self if identifier in (NOTIFY_UUID, ORIENTATION_UUID) else None
+        if identifier in (NOTIFY_UUID, ORIENTATION_UUID):
+            return SimpleNamespace(uuid=identifier, properties=self.properties)
 
     async def connect(self):
         if self.block == 'connect':
@@ -50,9 +54,10 @@ class Client:
 
     async def start_notify(self, characteristic, callback):
         self.callback = callback
-        if self.block == 'subscribe':
+        self.callbacks[characteristic.uuid] = callback
+        if self.block in ('subscribe', characteristic.uuid):
             await asyncio.Event().wait()
-        for payload in self.payloads:
+        for payload in self.payloads_by_characteristic.get(characteristic.uuid, self.payloads):
             callback(None, payload)
         if self.drop:
             self.is_connected = False
@@ -60,6 +65,7 @@ class Client:
 
     async def stop_notify(self, characteristic):
         self.stopped = True
+        self.stopped_ids.append(characteristic)
 
     async def disconnect(self):
         self.closed = True
@@ -126,6 +132,46 @@ class BleCliTests(unittest.IsolatedAsyncioTestCase):
                 async for _ in stream.updates(.01):
                     pass
             self.assertTrue(client.closed)
+
+    async def test_dual_stream_routes_packets_and_counts_drops_by_characteristic(self):
+        client = Client(DEVICE, lambda _: None)
+        stream = DeviceStream(DEVICE, 'both', queue_size=2, client_factory=lambda *a, **k: client)
+        updates = stream.updates()
+        await anext(updates)  # connected
+        await anext(updates)  # both subscribed
+        quaternion = (FIXTURES / 'quaternion_identity.bin').read_bytes()
+        raw = (FIXTURES / 'raw_signed.bin').read_bytes()
+        client.callbacks[ORIENTATION_UUID](None, quaternion)
+        self.assertEqual((await anext(updates)).format, 'quaternion')
+        orientation_receipt = stream.received_monotonic
+
+        for _ in range(3):
+            client.callbacks[NOTIFY_UUID](None, raw)
+        self.assertEqual((await anext(updates)).format, 'raw')
+        self.assertEqual((await anext(updates)).format, 'raw')
+        self.assertEqual(stream.latest.format, 'quaternion')
+        self.assertEqual(stream.received_monotonic, orientation_receipt)
+        self.assertEqual(stream.stats.decoded, 1)
+        raw_stats = stream.stats_by_format['raw']
+        self.assertEqual((raw_stats.received, raw_stats.decoded, raw_stats.dropped), (3, 2, 1))
+
+        client.callbacks[NOTIFY_UUID](None, quaternion)
+        self.assertIsNone(await anext(updates))
+        self.assertEqual(raw_stats.rejected, 1)
+        self.assertEqual(stream.stats.rejected, 0)
+        await updates.aclose()
+        self.assertCountEqual(client.stopped_ids, [NOTIFY_UUID, ORIENTATION_UUID])
+        self.assertTrue(client.closed)
+
+    async def test_dual_stream_unsubscribes_first_when_second_times_out(self):
+        client = Client(DEVICE, lambda _: None)
+        client.block = NOTIFY_UUID
+        stream = DeviceStream(DEVICE, 'both', timeout=.03, client_factory=lambda *a, **k: client)
+        with self.assertRaises(TimeoutError):
+            async for _ in stream.updates():
+                pass
+        self.assertEqual(client.stopped_ids, [ORIENTATION_UUID])
+        self.assertTrue(client.closed)
 
     async def test_cancellation_cleans_subscription(self):
         stream, clients = self.setup_stream()
