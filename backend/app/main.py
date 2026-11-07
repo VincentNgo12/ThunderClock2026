@@ -1,5 +1,5 @@
 # File: main.py
-# Purpose: Optional HTTP/WebSocket adapter for the same diagnostic core; never imported by the CLI.
+# Purpose: Run one telemetry source, own neutral capture and publish shared dashboard state.
 # Contributors: Unassigned
 
 import asyncio
@@ -7,30 +7,52 @@ from contextlib import asynccontextmanager, suppress
 import json
 import logging
 import os
+import time
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from .ble import DeviceStream, scan, select_device
 from .dashboard import snapshot
+from .models import STREAMING_STATES
+from .posture import Posture
+from .simulated import SimulatedStream
 
 
 def create_app():
     @asynccontextmanager
     async def lifespan(app):
-        device_id = os.getenv("DEVICE_ID")
-        packet_format = os.getenv("DEVICE_FORMAT")
-        if not device_id or packet_format not in ("raw", "quaternion"):
-            raise ValueError("Set DEVICE_ID and explicit DEVICE_FORMAT=raw or quaternion; do not run CLI streaming simultaneously")
-        device = select_device(await scan(), device_id)
-        stream = DeviceStream(device, packet_format)
+        posture = Posture(
+            warning_deg=float(os.getenv("POSTURE_WARNING_DEG", "20")),
+            warning_seconds=float(os.getenv("POSTURE_WARNING_SECONDS", "2")),
+        )
+        source = os.getenv("TELEMETRY_SOURCE", "hardware")
+        if source == "simulated":
+            stream = SimulatedStream()
+        elif source == "hardware":
+            device_id = os.getenv("DEVICE_ID")
+            packet_format = os.getenv("DEVICE_FORMAT")
+            if not device_id or packet_format not in ("raw", "quaternion"):
+                raise ValueError("Set DEVICE_ID and DEVICE_FORMAT=raw or quaternion for hardware mode")
+            stream = DeviceStream(select_device(await scan(), device_id), packet_format)
+        else:
+            raise ValueError("Set TELEMETRY_SOURCE=hardware or simulated")
+        app.state.source = source
         app.state.stream = stream
-        app.state.latest = json.dumps(snapshot(stream, 0))
+        app.state.posture = posture
+        app.state.latest = json.dumps(snapshot(stream, 0, source=source, posture=posture))
 
         async def acquire():
+            resets = stream.stats.resets
             try:
-                async for _sample in stream.updates():
-                    pass  # Core retains the latest sample; this adapter performs no sensor interpretation.
+                async for sample in stream.updates():
+                    if sample is None:
+                        continue
+                    if stream.stats.resets != resets:
+                        # A restarted wearable may have established a new orientation frame.
+                        posture.reset()
+                        resets = stream.stats.resets
+                    posture.update(sample, stream.received_monotonic)
             except Exception as error:
                 # Keep HTTP diagnostics available after a device/setup failure; never substitute a source.
                 stream.stats.state = "error"
@@ -40,7 +62,8 @@ def create_app():
         async def publish():
             sequence = 0
             while True:
-                app.state.latest = json.dumps(snapshot(stream, sequence), allow_nan=False)
+                state = snapshot(stream, sequence, source=source, posture=posture)
+                app.state.latest = json.dumps(state, allow_nan=False)
                 sequence += 1
                 await asyncio.sleep(0.05)
 
@@ -53,15 +76,31 @@ def create_app():
             await asyncio.gather(*tasks, return_exceptions=True)
 
     app = FastAPI(title="ThunderClock telemetry diagnostics", lifespan=lifespan)
-    app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_methods=["GET"])
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+        allow_methods=["GET", "POST"],
+    )
 
     @app.get("/health")
     async def health():
-        return {"status": "ok", "source": "hardware"}
+        return {"status": "ok", "source": app.state.source}
 
     @app.get("/diagnostics")
     async def diagnostics():
         return app.state.stream.stats.snapshot()
+
+    @app.post("/posture/calibrate")
+    async def calibrate():
+        stream = app.state.stream
+        if stream.stats.state not in STREAMING_STATES:
+            raise HTTPException(status_code=409, detail="Neutral capture requires an active telemetry source")
+        posture = app.state.posture
+        try:
+            posture.capture(stream.latest, stream.received_monotonic, stream.received_at, time.monotonic())
+        except ValueError as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        return posture.calibration
 
     @app.websocket("/ws/telemetry")
     async def telemetry(websocket: WebSocket):

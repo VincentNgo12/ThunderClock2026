@@ -1,11 +1,36 @@
 # ThunderClock backend
 
 The BLE diagnostic CLI discovers the wearable, streams signed raw readings or
-quaternions, and inspects synthetic packets offline. The optional FastAPI adapter
-shares the same reader and publishes dashboard snapshots over WebSockets.
+quaternions, and inspects synthetic packets offline. The optional FastAPI service
+processes live BLE or explicitly selected synthetic telemetry. It captures a
+neutral reference and publishes joint angles and sustained-bend warnings over
+WebSockets.
 
 Use Python 3.11 or later. Install `requirements.txt` for the CLI,
 `requirements-api.txt` for the optional API, or `requirements-dev.txt` for the
 test and generation tools.
 
-See [DIAGNOSTICS.md](DIAGNOSTICS.md) for setup, commands, and hardware acceptance.
+## BLE checks
+
+From `backend/` with your Python environment active, install the CLI
+dependencies and run the automated BLE tests and offline fixture checks.
+
+```sh
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -p "test_ble_cli.py" -v
+python -m app.cli decode ../protocol/fixtures/raw_signed.bin --format raw
+python -m app.cli decode ../protocol/fixtures/telemetry_v2.bin --format quaternion
+```
+
+For a live wearable check, stop any API session using the wearable, then
+scan and copy its exact OS device ID. Run the stream command for the format
+your firmware exposes.
+
+```sh
+python -m app.cli scan --timeout 5
+python -m app.cli stream --device "<exact OS id>" --format raw --duration 10
+python -m app.cli stream --device "<exact OS id>" --format quaternion --duration 15
+```
+
+See [DIAGNOSTICS.md](DIAGNOSTICS.md) for setup, the posture demo, and hardware
+acceptance.
