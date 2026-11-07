@@ -23,7 +23,7 @@ void acquisitionTask(void*) {
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
 
   fw::Snapshot snapshot{};
-  fw::StripData strip{};
+  fw::StripData stripData{};
   OrientationProcessor orientationProcessor;
   orientationProcessor.begin();
   
@@ -57,7 +57,7 @@ void acquisitionTask(void*) {
 
     if (xQueueReceive(imuToSnapshotQueue, &stripData, portMAX_DELAY) == pdTRUE) {
       // sensor fusion to get q
-      orientationProcessor.update(strip, snapshot.stripData);
+      orientationProcessor.update(stripData, snapshot.stripData);
       // put it in queue for telemetry
       xQueueOverwrite(snapshotToTelemetryQueue, &snapshot);  
     }
@@ -70,33 +70,6 @@ void acquisitionTask(void*) {
   }
 }
 
-// argument is the ImuManager started in setup(). Reads all 4 IMUs every 10 ms.
-void IMUTask(void* argument) {
-  ImuManager* imuManager = static_cast<ImuManager*>(argument);
-  if (imuManager == nullptr) {
-    vTaskDelete(nullptr);
-    return;
-  }
-
-  fw::StripData strip{};
-  uint32_t maxReadUs = 0;      // Worst read time since the last timing print.
-  uint32_t overrunCount = 0;   // Reads longer than one acquisition period.
-  uint32_t lastTimingPrintMs = millis();
-  TickType_t lastWake = xTaskGetTickCount();
-  while (true) {
-    vTaskDelayUntil(&lastWake, pdMS_TO_TICKS(SystemConfig::kAcquisitionPeriodMs));
-
-    const uint32_t readStartUs = micros();
-    const fw::Result readResult = imuManager->read(strip);
-    const uint32_t readUs = micros() - readStartUs;
-    if (readUs > maxReadUs) {
-      maxReadUs = readUs;
-    }
-    if (readUs > SystemConfig::kAcquisitionPeriodMs * 1000) {
-      overrunCount++;
-    }
-<<<<<<< HEAD
-=======
 void IMUTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
   TickType_t lastImuToSnapshotTime = lastWake;
@@ -114,10 +87,6 @@ void IMUTask(void*) {
       xSemaphoreGive(i2cMutex);
     }
 
-<<<<<<< HEAD
-    vTaskDelayUntil(&lastWake, imuPeriod);
->>>>>>> origin/main
-=======
     xQueueOverwrite(imuToTelemetryQueue, &stripData);    
     if (now - lastImuToSnapshotTime >= imuToSnapshotPeriod) {
       xQueueOverwrite(imuToSnapshotQueue, &stripData);    
@@ -126,22 +95,7 @@ void IMUTask(void*) {
     // printRawStrip(stripData);
 
     vTaskDelayUntil(&lastWake, imuToTelemetryPeriod);
->>>>>>> feat/mutexesAndQueues
-=======
 
-    if (readResult == fw::Result::Ok) {
-      // TODO(FW-QUEUE): enable once the teammate creates imuQueue.
-      // xQueueSend(imuQueue, &strip, 0);  // Drop when full rather than stall the 100 Hz loop.
-    }
-
-    // Shows whether four mux reads fit inside the 10 ms period at the current I2C clock.
-    if (SystemConfig::kDebugEnabled && millis() - lastTimingPrintMs >= 1000) {
-      lastTimingPrintMs = millis();
-      Serial.printf("IMU read max=%lu us over10ms=%lu\n", static_cast<unsigned long>(maxReadUs),
-                    static_cast<unsigned long>(overrunCount));
-      maxReadUs = 0;
-    }
->>>>>>> BTng
   }
 }
 
