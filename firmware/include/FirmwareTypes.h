@@ -56,44 +56,6 @@ struct Quaternion {
   float z;
 };  
 
-<<<<<<< HEAD
-struct ImuData {
-  Stamp stamp{};
-  Vec3 accel{};  // m/s² in sensor-board axes.
-  Vec3 gyro{};  // rad/s in sensor-board axes.
-};
-struct ImuStripData {
-  uint32_t time = 0;  // End-of-strip collection time in milliseconds since boot.
-  ImuData data[kImuCount]{};
-};
-struct Orientation {
-  Stamp stamp{};
-  Quaternion rotation{};  // w,x,y,z, segment-local to world, +X right/+Y up/+Z back.
-};
-// Slow sensor fields keep their own acquisition times.
-struct Reading {
-  Stamp stamp{};
-  float value = 0;
-};
-struct Environment {
-  Reading temperatureC{};
-  Reading humidityPercent{};
-  Reading eco2Ppm{};  // ENS160 estimate.
-  Reading tvocPpb{};
-  Reading ens160Aqi{};
-};
-struct AudioSummary {
-  Stamp stamp{};
-  float relativeDb = 0;  // Relative trend, requiring calibration for physical SPL.
-};
-struct TelemetrySnapshot {
-  ImuStripData raw{};
-  Orientation orientations[kImuCount]{};
-  Environment environment{};
-  AudioSummary audio{};
-};  // Encoder omits stale or unavailable readings using their acquisition stamps.
-
-=======
 // proccessed IMU data
 struct StripDataProcessed {
   uint32_t time;
@@ -101,8 +63,7 @@ struct StripDataProcessed {
 };
 
 // MAX30102
->>>>>>> firmwareTypesMod
-struct HeartRate {
+struct HeartData {
   float bpm; 
   float oxi;
 };
@@ -132,20 +93,5 @@ struct Snapshot {
   AudioData audioData;
 };
 
-// ignore the code below for now
-
-// Future control work tracks receipt, acceptance and completion separately.
-// enum class CommandKind { GyroCalibration, ResetProcessing, Diagnostics };
-// enum class CommandStage { Received, Accepted, Rejected, Completed, Failed };
-// struct DeviceCommand {
-//   uint32_t id = 0;
-//   CommandKind kind = CommandKind::Diagnostics;
-//   uint8_t imuMask = 0x0f;  // Bits 0..3 select pelvis through upper thoracic.
-// };
-// struct CommandResult {
-//   uint32_t id = 0;
-//   CommandStage stage = CommandStage::Received;
-//   Result result = Result::NotImplemented;
-// };
 
 }  // namespace fw

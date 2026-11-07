@@ -16,8 +16,8 @@ fw::Result EnvironmentManager::startConversion() {
   return fw::Result::NotImplemented;
 }
 
-fw::Result EnvironmentManager::read(fw::Environment& output) {
-  output = fw::Environment{};
+fw::Result EnvironmentManager::read(fw::EnvData& output) {
+  output = fw::EnvData{};
   // TODO(FW-ENV): collect completed fields with their own acquisition times and validity.
   return fw::Result::NotImplemented;
 }
