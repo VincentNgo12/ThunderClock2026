@@ -7,6 +7,8 @@ import time
 from typing import Literal
 
 REGIONS = {1: "pelvis", 2: "lumbar", 3: "thoracic", 4: "upper_thoracic"}
+STALE_AFTER_SECONDS = 0.5
+STREAMING_STATES = ("subscribed", "simulated")
 
 
 @dataclass(frozen=True)

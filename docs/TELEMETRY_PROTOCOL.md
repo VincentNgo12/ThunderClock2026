@@ -1,8 +1,8 @@
 # ThunderClock telemetry
 
-Two interfaces connect the wearable, laptop and dashboard. The diagnostic
-backend implements device decoding and the application snapshot described
-below. The remaining application sections describe demo targets.
+Two interfaces connect the wearable, laptop and dashboard. The backend
+implements device decoding, posture processing and the application snapshot
+described below.
 
 ## Device transport
 
@@ -18,18 +18,19 @@ coordinate conventions and BLE delivery targets.
 ## Application telemetry
 
 The optional API publishes `WorkerTelemetry` JSON with `schema_version: "2.0"`
-over `/ws/telemetry` at approximately 20 snapshots per second. It shares one
-hardware reader and publishes four named IMU slots. Usable, fresh quaternion
-samples populate orientation values. Raw mode leaves orientations unavailable.
+over `/ws/telemetry` at approximately 20 snapshots per second. It uses one
+hardware or explicitly selected synthetic source and publishes four named IMU
+slots. Fresh, usable quaternion samples populate orientation values. Raw mode
+leaves orientations unavailable.
 
 The diagnostic snapshot leaves `device`, per-IMU `acquired_us` and unsupported
 output groups null. The JSON publication counter and UTC time come from the
 backend. BLE counters and collection uptime belong to the device clock.
 The JSON schema version is independent of the BLE packet revision.
-Its system state is degraded while subscribed and offline
-otherwise. Simulated and replay input are planned for the wider application
-using the same application shape. Keep packet encoding and sensor registers
-behind the backend boundary.
+System state is degraded while streaming and offline otherwise. Simulated
+snapshots set `connection.source` and available freshness sources to
+`simulated`. The hardware source reports hardware data and connection errors.
+Keep packet encoding and sensor registers behind the backend boundary.
 
 ### Envelope and connection state
 
@@ -78,11 +79,29 @@ and require an explicit selection for simulated fallback.
 - Four named regions are pelvis, lumbar, thoracic and upper_thoracic.
 - Quaternion order is `[w, x, y, z]`, with finite normalized values.
 - Device validity and local freshness must both permit use.
-- Posture angles use degrees relative to a captured neutral pose.
-- Target forward flexion, backward extension, lateral bending and sustained
-  posture context. Agree exact derived fields when implementing posture logic.
 - Use the coordinate convention in
   [ORIENTATION.md](../protocol/ORIENTATION.md) and confirm physical mounting.
+
+`POST /posture/calibrate` captures one current frame with four valid
+orientations. Ask the wearer to stand upright and still. The backend stores
+the reference in memory. It clears the reference at service restart or a
+detected wearable restart. Capture returns `calibration` with `status:
+"captured"` and `captured_at` set to the frame's UTC receipt time.
+An unavailable source, stale frame, raw frame or missing IMU returns HTTP 409
+and preserves any existing reference. The same endpoint recenters the pose.
+
+The backend expresses each upper segment in the lower segment's frame and
+compares that rotation with the neutral reference. The pairs are pelvis to
+lumbar, lumbar to thoracic, and thoracic to upper thoracic. It projects each
+joint's neutral-relative up vector into the sagittal and lateral planes.
+This estimates local bending and cancels motion shared by both segments.
+
+`posture` contains `lumbar_flexion_deg`, `thoracic_flexion_deg`, and
+`upper_thoracic_flexion_deg`, with positive values for forward bend and
+negative values for extension. The same joint prefixes have
+`_lateral_bend_deg` fields with positive values toward the wearer's left.
+Posture is null until calibrated and whenever the complete frame is unavailable
+or stale. The snapshot carries `calibration` even when posture is unavailable.
 
 ### Movement and acute events
 
@@ -130,9 +149,14 @@ Target overall-risk labels are low, moderate, elevated and high. They represent
 prototype classifications. Planned alert severities are normal, advisory,
 warning and critical.
 
-Agree contextual thresholds before implementing alerts. Each alert should carry
-severity, category, summary, active/cleared state and time. Posture, EEG and risk
-remain unavailable until their respective algorithms exist.
+`alerts` lists active posture warnings for the snapshot. A joint qualifies
+after its larger absolute bend angle stays at or above `POSTURE_WARNING_DEG`
+(default 20°) for `POSTURE_WARNING_SECONDS` (default 2 s). The backend measures
+the hold with monotonic receipt times. A gap over 500 ms, a missing joint,
+recapture or a return below threshold clears the hold. Stale snapshots show
+an empty list. Each entry has `severity: "warning"`, `category: "posture"`,
+`region`, `summary`, `active: true`, and `sustained_seconds`.
+EEG and overall risk remain unavailable.
 
 ## Publication and versioning
 
