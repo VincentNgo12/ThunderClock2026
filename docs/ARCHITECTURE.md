@@ -87,9 +87,9 @@ values visible.
 1. Acquire four accelerometer/gyro streams (two ICM-20948, two MPU-6050) through
    the mux as one strip every 10 ms.
 2. Calibrate gyro bias and fuse each stream independently on the ESP32.
-3. Apply each confirmed sensor-to-segment mounting transform once.
-4. Send segment-local-to-world quaternions using the convention in
+3. Send board-local-to-world quaternions using the convention in
    [ORIENTATION.md](../protocol/ORIENTATION.md).
+4. Apply each sensor-to-segment mounting transform once in the backend.
 5. Capture neutral references and calculate relative segment posture on the laptop.
 6. Render measured anchors and interpolated geometry in the frontend.
 
