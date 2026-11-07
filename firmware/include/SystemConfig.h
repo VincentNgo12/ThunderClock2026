@@ -11,9 +11,12 @@ namespace SystemConfig {
 constexpr unsigned long kSerialBaud = 115200;
 constexpr bool kDebugEnabled = true;
 
-// Enable initialization and task shells as their implementations become useful.
+// sensor and telemetry ini 
 constexpr bool kInitImuStrip = false;
 constexpr bool kInitBLE = false;
+constexpr bool kInitAudio = true;
+
+// task ini
 constexpr bool kStartAcquisitionTask = false;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartAudioTask = false;
