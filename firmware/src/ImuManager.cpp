@@ -7,8 +7,8 @@
 
 // init each of the 4 imus sequentially, return Ok when at least one starts
 fw::Result ImuManager::begin() {
-  wire_.setClock(400000);  // 400 kHz so four sequential reads fit inside the 10 ms period.
-  wire_.setTimeOut(10);    // ms, so a stuck sensor cannot stall acquisition.
+  // Bus clock comes from SystemConfig::kI2cClockHz in main.cpp.
+  wire_.setTimeOut(10);  // ms, so a stuck sensor cannot stall acquisition.
 
   size_t startedCount = 0;
   for (uint8_t i = 0; i < kSlotCount; ++i) {
@@ -60,7 +60,7 @@ fw::Result ImuManager::read(fw::StripData& output) {
     output.data[i] = fw::IMUData{};  // Zeroed and invalid until a read succeeds.
     if (!slotAvailable[i] || setChannel(i) != fw::Result::Ok) {
       continue;
-    }z
+    }
 
     // getEvent does not report bus errors, so confirm the sensor answers first.
     wire_.beginTransmission(isIcm[i] ? ICM20948_I2CADDR_DEFAULT : MPU6050_I2CADDR_DEFAULT);

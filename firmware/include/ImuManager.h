@@ -22,9 +22,10 @@ class ImuManager {
   // Ok when at least one slot is valid. Each slot's valid flag reports its own read.
   fw::Result read(fw::StripData& output);
   bool available(size_t slot) const;
+  // Selects a mux channel. Shared with the environment and heart-rate modules on the same bus.
+  fw::Result setChannel(uint8_t channel);
 
  private:
-  fw::Result setChannel(uint8_t channel);
 
   TwoWire& wire_;
   uint8_t muxAddress = 0x70;
