@@ -18,11 +18,7 @@
 #include "SystemConfig.h"
 
 namespace {
-<<<<<<< HEAD
 ImuManager imuManager(Wire);
-=======
-ImuManager imuManager(Wire);  // Also owns the mux used by every sensor.
->>>>>>> origin/main
 }
 
 void setup() {
@@ -46,16 +42,10 @@ void setup() {
   }
   slowSensorsBegin(Wire, imuManager);
   if (SystemConfig::kInitImuStrip) {
-<<<<<<< HEAD
     Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin);
     if (imuManager.begin() != fw::Result::Ok) {
       debugPrintln("IMU initialization is unavailable.");
     }
-=======
-//    if (imuManager.begin() != fw::Result::Ok) {
-//      debugPrintln("IMU initialization is unavailable.");
-//    }
->>>>>>> origin/main
   }
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
