@@ -27,6 +27,8 @@ class ImuManager {
 
 
 private:
+  bool readIcm(fw::IMUData& output);  // Accel + gyro only from the ICM on the selected channel.
+
   TwoWire& wire_;
   uint8_t muxAddress = 0x70;
   // Mux channel i: pelvis, lumbar, thoracic, upper thoracic.

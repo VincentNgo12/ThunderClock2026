@@ -11,10 +11,8 @@
 #include "SystemConfig.h"
 
 namespace {
-constexpr float kRadToDeg = 57.29578f;
 constexpr float kStandardGravity = 9.80665f;  // m/s² per g.
 constexpr float kUnitNormTolerance = 0.001f;
-constexpr uint32_t kMaxSampleGapMs = SystemConfig::kMaxSampleGapUs / 1000;
 
 FusionVector toFusionVector(const fw::Vec3& value, float scale) {
   FusionVector result;
@@ -49,7 +47,7 @@ void OrientationProcessor::begin() {
   ahrsSettings.sampleRate = SystemConfig::kImuRateHz;
   ahrsSettings.convention = FusionConventionNwu;
   ahrsSettings.gain = 0.5f;
-  ahrsSettings.gyroscopeRange = 1000.0f;       // deg/s, matches the ImuManager gyro range.
+  ahrsSettings.gyroscopeRange = SystemConfig::kImuGyroRangeDps;
   ahrsSettings.accelerationRejection = 10.0f;  // deg; ignore accel during sharp movement.
   ahrsSettings.magneticRejection = 0.0f;       // Magnetometer is not used.
   ahrsSettings.rejectionTimeout = 5.0f;        // s
@@ -85,27 +83,28 @@ fw::Result OrientationProcessor::update(const fw::StripData& input,
     // A repeated timestamp is a strip already fused; report it again without re-integrating.
     bool alreadyFused = false;
     if (hasPreviousSample[slot]) {
-      const uint32_t gapMs = input.time - lastSampleTimeMs[slot];
-      if (gapMs == 0) {
+      const uint32_t gapUs = input.timeUs - lastSampleTimeUs[slot];
+      if (gapUs == 0) {
         alreadyFused = true;
-      } else if (gapMs > kMaxSampleGapMs) {
+      } else if (gapUs > SystemConfig::kMaxSampleGapUs) {
         // Too long without a sample means the old orientation can't be trusted.
         restartSlot(slot);
         FusionAhrsSetSamplePeriod(&ahrs[slot], 1.0f / SystemConfig::kImuRateHz);
       } else {
-        FusionAhrsSetSamplePeriod(&ahrs[slot], gapMs / 1000.0f);
+        FusionAhrsSetSamplePeriod(&ahrs[slot], gapUs / 1e6f);
       }
     } else {
       FusionAhrsSetSamplePeriod(&ahrs[slot], 1.0f / SystemConfig::kImuRateHz);
     }
 
     if (!alreadyFused) {
-      lastSampleTimeMs[slot] = input.time;
+      lastSampleTimeUs[slot] = input.timeUs;
       hasPreviousSample[slot] = true;
 
       // Fusion expects deg/s and g. Raw accel keeps gravity.
-      // TODO(FW-MOUNTING): apply a per-slot FusionRemap once board mounting on the strip is known.
-      const FusionVector gyroDps = toFusionVector(sample.gyro, kRadToDeg);
+      // Mounting remap is owned by the backend; each quaternion is in this board's own axes
+      // after the protocol axis-convention change.
+      const FusionVector gyroDps = toFusionVector(sample.gyro, FusionRadiansToDegrees(1.0f));
       const FusionVector accelG = toFusionVector(sample.accel, 1.0f / kStandardGravity);
 
       const FusionVector correctedGyro = FusionBiasUpdate(&bias[slot], gyroDps);

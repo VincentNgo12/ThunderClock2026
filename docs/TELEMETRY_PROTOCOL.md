@@ -8,8 +8,8 @@ described below.
 
 The BLE reader accepts bounded Protobuf packets. Version 2 of the fused packet
 adds optional environment readings to the four orientations. Firmware owns calibration,
-fusion, mounting transforms and device validity. Backend code owns receipt,
-decoding and validation.
+fusion and device validity. Backend code owns receipt, decoding, validation and
+sensor-to-segment mounting transforms.
 
 See [the device boundary](FIRMWARE_PROTOCOL.md) and
 [the orientation packet](../protocol/ORIENTATION.md) for fields, units,
