@@ -24,7 +24,7 @@ def snapshot(stream, sequence: int, stale_after: float = STALE_AFTER_SECONDS, *,
     by_id = {} if sample is None or sample.format != "quaternion" else {imu.sensor_id: imu for imu in sample.imus}
     for sensor_id, region in REGIONS.items():
         imu = by_id.get(sensor_id)
-        valid = imu is not None and imu.valid
+        valid = imu is not None and imu.valid and imu.quaternion is not None
         status = "valid" if valid and current else "stale" if valid else "unavailable"
         freshness = dict(unavailable) if imu is None else {"status": status, **receipt}
         imus.append({"region": region, "orientation": dict(zip("wxyz", imu.quaternion)) if valid and current else None,
@@ -33,9 +33,14 @@ def snapshot(stream, sequence: int, stale_after: float = STALE_AFTER_SECONDS, *,
     freshness = {key: dict(unavailable) for key in ("posture", "fall_state", "heart_rate", "environment", "eeg", "overall_risk")}
     if environment is not None:
         freshness["environment"] = {"status": "valid" if current else "stale", **receipt}
-    angles = None if posture is None else posture.angles
-    if angles is not None:
+    pose = None
+    if posture is not None and posture.angles is not None:
         freshness["posture"] = {"status": "valid" if current else "stale", **receipt}
+        if current:
+            pose = {
+                **posture.angles,
+                "joint_rotations": {name: dict(zip("wxyz", q)) for name, q in posture.joint_deltas.items()},
+            }
     esp32 = "disconnected"
     if connected:
         esp32 = "simulated" if source == "simulated" else "connected"
@@ -45,8 +50,10 @@ def snapshot(stream, sequence: int, stale_after: float = STALE_AFTER_SECONDS, *,
         "system_status": "degraded" if connected else "offline",
         "connection": {"source": source, "esp32": esp32, "openbci": "disconnected"},
         "imus": imus,
-        "posture": angles if current else None,
-        "calibration": posture.calibration if posture is not None else {"status": "uncalibrated", "captured_at": None},
+        "posture": pose,
+        "calibration": posture.calibration if posture is not None else {
+            "status": "uncalibrated", "captured_at": None, "reference": None,
+        },
         "alerts": posture.alerts if current and posture is not None else [],
         "fall_state": None, "heart_rate_bpm": None, "eeg": None, "overall_risk": None,
         "environment": asdict(environment) if current and environment is not None else None,

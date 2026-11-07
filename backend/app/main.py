@@ -71,7 +71,7 @@ def create_app(*, on_raw_sample: Callable[[Sample], None] | None = None):
                 logging.getLogger(__name__).error("Device stream stopped: %s", stream.stats.last_error)
 
         async def publish():
-            sequence = 0
+            sequence = 1  # The initial snapshot already uses sequence zero.
             while True:
                 state = snapshot(stream, sequence, source=source, posture=posture)
                 app.state.latest = json.dumps(state, allow_nan=False)

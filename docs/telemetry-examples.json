@@ -1,0 +1,358 @@
+{
+  "simulated_bend": {
+    "schema_version": "2.0",
+    "timestamp": "2026-11-07T19:00:14.265000+00:00",
+    "sequence": 285,
+    "device": null,
+    "system_status": "degraded",
+    "connection": {
+      "source": "simulated",
+      "esp32": "simulated",
+      "openbci": "disconnected"
+    },
+    "imus": [
+      {
+        "region": "pelvis",
+        "orientation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "simulated",
+          "received_at": "2026-11-07T19:00:14.250000+00:00",
+          "age_ms": 15.0
+        }
+      },
+      {
+        "region": "lumbar",
+        "orientation": {
+          "w": 0.9612617,
+          "x": -0.27563736,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "simulated",
+          "received_at": "2026-11-07T19:00:14.250000+00:00",
+          "age_ms": 15.0
+        }
+      },
+      {
+        "region": "thoracic",
+        "orientation": {
+          "w": 0.89100652,
+          "x": -0.4539905,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "simulated",
+          "received_at": "2026-11-07T19:00:14.250000+00:00",
+          "age_ms": 15.0
+        }
+      },
+      {
+        "region": "upper_thoracic",
+        "orientation": {
+          "w": 0.84339145,
+          "x": -0.53729961,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "simulated",
+          "received_at": "2026-11-07T19:00:14.250000+00:00",
+          "age_ms": 15.0
+        }
+      }
+    ],
+    "posture": {
+      "lumbar_flexion_deg": 32.0,
+      "lumbar_lateral_bend_deg": 0.0,
+      "thoracic_flexion_deg": 22.0,
+      "thoracic_lateral_bend_deg": 0.0,
+      "upper_thoracic_flexion_deg": 11.0,
+      "upper_thoracic_lateral_bend_deg": 0.0,
+      "joint_rotations": {
+        "lumbar": {
+          "w": 0.9612617,
+          "x": -0.27563736,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "thoracic": {
+          "w": 0.98162718,
+          "x": -0.190809,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "upper_thoracic": {
+          "w": 0.9953962,
+          "x": -0.09584575,
+          "y": 0.0,
+          "z": 0.0
+        }
+      }
+    },
+    "calibration": {
+      "status": "captured",
+      "captured_at": "2026-11-07T19:00:01+00:00",
+      "reference": {
+        "root_orientation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "joint_rotations": {
+          "lumbar": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "thoracic": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "upper_thoracic": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        }
+      }
+    },
+    "alerts": [
+      {
+        "severity": "warning",
+        "category": "posture",
+        "region": "lumbar",
+        "summary": "Sustained lumbar bend",
+        "active": true,
+        "sustained_seconds": 3.25
+      },
+      {
+        "severity": "warning",
+        "category": "posture",
+        "region": "thoracic",
+        "summary": "Sustained thoracic bend",
+        "active": true,
+        "sustained_seconds": 3.25
+      }
+    ],
+    "fall_state": null,
+    "heart_rate_bpm": null,
+    "eeg": null,
+    "overall_risk": null,
+    "environment": {
+      "temperature_c": 24.1,
+      "humidity_percent": 39.3,
+      "air_quality_index": 1,
+      "eco2_ppm": 464,
+      "tvoc_ppb": 82,
+      "noise_relative_db": 59.5
+    },
+    "freshness": {
+      "posture": {
+        "status": "valid",
+        "source": "simulated",
+        "received_at": "2026-11-07T19:00:14.250000+00:00",
+        "age_ms": 15.0
+      },
+      "fall_state": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "heart_rate": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "environment": {
+        "status": "valid",
+        "source": "simulated",
+        "received_at": "2026-11-07T19:00:14.250000+00:00",
+        "age_ms": 15.0
+      },
+      "eeg": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "overall_risk": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      }
+    }
+  },
+  "hardware_partial": {
+    "schema_version": "2.0",
+    "timestamp": "2026-11-07T19:00:00.115000+00:00",
+    "sequence": 3,
+    "device": null,
+    "system_status": "degraded",
+    "connection": {
+      "source": "hardware",
+      "esp32": "connected",
+      "openbci": "disconnected"
+    },
+    "imus": [
+      {
+        "region": "pelvis",
+        "orientation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "hardware",
+          "received_at": "2026-11-07T19:00:00.100000+00:00",
+          "age_ms": 15.0
+        }
+      },
+      {
+        "region": "lumbar",
+        "orientation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "hardware",
+          "received_at": "2026-11-07T19:00:00.100000+00:00",
+          "age_ms": 15.0
+        }
+      },
+      {
+        "region": "thoracic",
+        "orientation": null,
+        "acquired_us": null,
+        "freshness": {
+          "status": "unavailable",
+          "source": "hardware",
+          "received_at": "2026-11-07T19:00:00.100000+00:00",
+          "age_ms": 15.0
+        }
+      },
+      {
+        "region": "upper_thoracic",
+        "orientation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "acquired_us": null,
+        "freshness": {
+          "status": "valid",
+          "source": "hardware",
+          "received_at": "2026-11-07T19:00:00.100000+00:00",
+          "age_ms": 15.0
+        }
+      }
+    ],
+    "posture": null,
+    "calibration": {
+      "status": "captured",
+      "captured_at": "2026-11-07T19:00:00+00:00",
+      "reference": {
+        "root_orientation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "joint_rotations": {
+          "lumbar": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "thoracic": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "upper_thoracic": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        }
+      }
+    },
+    "alerts": [],
+    "fall_state": null,
+    "heart_rate_bpm": null,
+    "eeg": null,
+    "overall_risk": null,
+    "environment": null,
+    "freshness": {
+      "posture": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "fall_state": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "heart_rate": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "environment": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "eeg": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      },
+      "overall_risk": {
+        "status": "unavailable",
+        "source": null,
+        "received_at": null,
+        "age_ms": null
+      }
+    }
+  }
+}

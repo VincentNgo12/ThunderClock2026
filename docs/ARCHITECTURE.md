@@ -63,9 +63,10 @@ Fusion and gravity subtraction remain firmware concerns.
 
 The optional FastAPI service uses one explicitly selected source. BLE and
 synthetic samples share the same posture processor. It owns neutral capture,
-relative joint angles and sustained bend warnings. It publishes
+neutral-relative joint quaternions, angles and sustained bend warnings. It publishes
 `WorkerTelemetry` over `/ws/telemetry` at about 20 Hz with per-IMU freshness
 and source labels. Raw mode leaves orientations unavailable.
+[Frontend contract and rig instructions](TELEMETRY_PROTOCOL.md)
 
 Fall/impact, EEG and combined risk are separate future work. Add NumPy, SciPy or
 BrainFlow when their implementation needs them.

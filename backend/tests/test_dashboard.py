@@ -155,6 +155,14 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.json()['status'], 'captured')
             self.assertAlmostEqual(self.app.state.posture.angles['lumbar_flexion_deg'], 0)
+            stream = self.app.state.stream
+            pose = self.app.state.posture
+            with patch('app.dashboard.time') as clock:
+                clock.monotonic.return_value = stream.received_monotonic + 1
+                stale = snapshot(stream, 1, posture=pose)
+            self.assertIsNone(stale['posture'])
+            self.assertEqual(stale['freshness']['posture']['status'], 'stale')
+            self.assertEqual(stale['calibration'], response.json())
 
             packet = orientation_pb2.OrientationPacket.FromString((FIXTURES / 'quaternion_partial.bin').read_bytes())
             self.clients[0].callback(None, packet.SerializeToString())
@@ -164,6 +172,10 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual((await client.post('/posture/calibrate')).status_code, 409)
             self.assertEqual(self.app.state.posture.calibration, response.json())
             self.assertIsNone(self.app.state.posture.angles)
+            partial = snapshot(stream, 2, posture=pose)
+            self.assertIsNone(partial['posture'])
+            self.assertIsNone(partial['imus'][2]['orientation'])
+            self.assertEqual(partial['imus'][2]['freshness']['status'], 'unavailable')
 
     async def test_explicit_simulation_publishes_calibrated_posture(self):
         with patch.dict(os.environ, {'TELEMETRY_SOURCE': 'simulated'}), patch(
@@ -176,7 +188,8 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
                         await asyncio.sleep(0)
                 async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
                     self.assertEqual((await client.get('/health')).json()['source'], 'simulated')
-                    self.assertEqual((await client.post('/posture/calibrate')).status_code, 200)
+                    calibration = await client.post('/posture/calibrate')
+                    self.assertEqual(calibration.status_code, 200)
                 _task, outgoing = await self.socket(app=app)
                 async with asyncio.timeout(1):
                     while True:
@@ -187,3 +200,30 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(message['freshness']['posture']['source'], 'simulated')
                 self.assertAlmostEqual(message['posture']['lumbar_flexion_deg'], 0)
                 self.assertEqual(message['alerts'], [])
+                identity = {'w': 1, 'x': 0, 'y': 0, 'z': 0}
+                self.assertEqual(message['calibration'], calibration.json())
+                self.assertEqual(message['calibration']['reference']['root_orientation'], identity)
+                self.assertEqual(message['posture']['joint_rotations']['lumbar'], identity)
+                self.assertEqual(message['imus'][0]['orientation'], identity)
+
+                # Jump into the simulator's held bend without waiting 12 real seconds.
+                app.state.stream.stats.started_at -= 12
+                async with asyncio.timeout(1):
+                    while True:
+                        message = json.loads((await outgoing.get())['text'])
+                        if message['posture']['lumbar_flexion_deg'] > 30:
+                            break
+                delta = message['posture']['joint_rotations']['lumbar']
+                self.assertLess(delta['x'], 0)
+                self.assertAlmostEqual(sum(value * value for value in delta.values()), 1)
+                self.assertEqual(message['imus'][0]['orientation'], identity)
+                examples = FIXTURES.parents[1] / 'docs/telemetry-examples.json'
+                example = json.loads(examples.read_text(encoding='utf-8'))['simulated_bend']
+                self.assertEqual(message.keys(), example.keys())
+                self.assertEqual(message['posture'].keys(), example['posture'].keys())
+                self.assertEqual(message['calibration']['reference'], example['calibration']['reference'])
+                for name, expected in example['posture']['joint_rotations'].items():
+                    actual = message['posture']['joint_rotations'][name]
+                    self.assertEqual(actual.keys(), expected.keys())
+                    for component in expected:
+                        self.assertAlmostEqual(actual[component], expected[component])

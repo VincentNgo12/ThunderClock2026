@@ -1,5 +1,5 @@
 # File: test_posture.py
-# Purpose: Verify neutral-relative angles, sustained warnings, and unavailable input.
+# Purpose: Verify neutral-relative rotations, angles, sustained warnings, and unavailable input.
 # Contributors: Unassigned
 
 from datetime import UTC, datetime
@@ -26,6 +26,13 @@ def frame(pelvis=IDENTITY, lumbar=IDENTITY, thoracic=IDENTITY, upper=IDENTITY):
     ))
 
 
+def world_chain(root, joints):
+    orientations = [root]
+    for joint in joints:
+        orientations.append(multiply(orientations[-1], joint))
+    return orientations
+
+
 class PostureTests(unittest.TestCase):
     def setUp(self):
         self.posture = Posture(warning_deg=25, warning_seconds=0.5)
@@ -38,6 +45,7 @@ class PostureTests(unittest.TestCase):
     def test_upright_and_common_motion(self):
         self.posture.update(frame(), 0.0)
         self.assertIsNone(self.posture.angles)
+        self.assertIsNone(self.posture.joint_deltas)
         self.capture()
         self.assertTrue(all(angle == 0 for angle in self.posture.angles.values()))
 
@@ -45,6 +53,32 @@ class PostureTests(unittest.TestCase):
         self.posture.update(frame(tilt, tilt, tilt, tilt), 0.1)
         for angle in self.posture.angles.values():
             self.assertAlmostEqual(angle, 0)
+        for delta in self.posture.joint_deltas.values():
+            self.assertEqual(delta, IDENTITY)
+
+    def test_rig_reconstructs_world_rotations_with_non_identity_neutral(self):
+        neutral_root = rotation((0, 1, 0), 35)
+        neutral_joints = [rotation((0, 0, 1), 18), rotation((1, 0, 0), -10), rotation((0, 1, 0), 12)]
+        self.posture.capture(frame(*world_chain(neutral_root, neutral_joints)), 0.0, RECEIPT, 0.0)
+        reference = self.posture.calibration["reference"]
+        for actual, expected in zip(reference["root_orientation"].values(), neutral_root):
+            self.assertAlmostEqual(actual, expected)
+
+        root = rotation((1, 0, 0), -22)
+        bends = [self.forward, rotation((0, 0, 1), 9), IDENTITY]
+        current_world = world_chain(root, [multiply(n, d) for n, d in zip(neutral_joints, bends)])
+        # The BLE decoder accepts small norm errors. Derived quaternions stay unit length.
+        self.posture.update(frame(*(tuple(1.0003 * c for c in q) for q in current_world)), 0.1)
+        reconstructed = root
+        for index, name in enumerate(("lumbar", "thoracic", "upper_thoracic")):
+            delta = self.posture.joint_deltas[name]
+            self.assertAlmostEqual(math.hypot(*delta), 1)
+            for actual, expected in zip(delta, bends[index]):
+                self.assertAlmostEqual(actual, expected)
+            neutral = tuple(reference["joint_rotations"][name][key] for key in "wxyz")
+            reconstructed = multiply(reconstructed, multiply(neutral, delta))
+            for actual, expected in zip(reconstructed, current_world[index + 1]):
+                self.assertAlmostEqual(actual, expected)
 
     def test_signed_relative_rotations(self):
         self.capture()
@@ -83,6 +117,7 @@ class PostureTests(unittest.TestCase):
         self.posture.update(self.bent, 0.25)
         self.posture.update(frame(upper=None), 0.5)
         self.assertIsNone(self.posture.angles)
+        self.assertIsNone(self.posture.joint_deltas)
         self.assertEqual(self.posture.alerts, [])
         self.posture.update(self.bent, 0.75)
         self.assertEqual(self.posture.alerts, [])
@@ -94,7 +129,9 @@ class PostureTests(unittest.TestCase):
         self.assertEqual(self.posture.calibration["status"], "uncalibrated")
         self.capture()
         reference = self.posture.neutral
+        calibration = self.posture.calibration
         for sample, now in ((frame(upper=None), 0.0), (Sample("raw", 0, ()), 0.0), (self.bent, 1.0)):
             with self.subTest(sample=sample, now=now), self.assertRaises(ValueError):
                 self.posture.capture(sample, 0.0, RECEIPT, now)
             self.assertIs(self.posture.neutral, reference)
+            self.assertEqual(self.posture.calibration, calibration)

@@ -26,14 +26,23 @@ def multiply(a, b):
     )
 
 
+def unit(q):
+    # Wire quaternions can have a small norm error. Derived rotations use unit length.
+    length = math.hypot(*q)
+    return tuple(component / length for component in q)
+
+
 def joint_rotations(sample):
-    if sample is None or sample.format != "quaternion":
+    if sample is None or sample.format != "quaternion" or len(sample.imus) != len(REGIONS):
         return None
     orientations = {imu.sensor_id: imu.quaternion for imu in sample.imus if imu.valid and imu.quaternion is not None}
     if orientations.keys() != REGIONS.keys():
         return None
     # Express the upper segment in the lower segment's frame to cancel common motion.
-    return {name: multiply(conjugate(orientations[lower]), orientations[upper]) for name, lower, upper in JOINTS}
+    return {
+        name: unit(multiply(conjugate(orientations[lower]), orientations[upper]))
+        for name, lower, upper in JOINTS
+    }
 
 
 def bend_angles(q):
@@ -56,15 +65,27 @@ class Posture:
 
     def reset(self):
         self.neutral = None
+        self.neutral_root = None
         self.captured_at = None
         self.angles = None
+        self.joint_deltas = None
         self.alerts = []
         self._bend_started = {}
         self._previous_receipt = None
 
     @property
     def calibration(self):
-        return {"status": "captured" if self.neutral is not None else "uncalibrated", "captured_at": self.captured_at}
+        reference = None
+        if self.neutral is not None:
+            reference = {
+                "root_orientation": dict(zip("wxyz", self.neutral_root)),
+                "joint_rotations": {name: dict(zip("wxyz", q)) for name, q in self.neutral.items()},
+            }
+        return {
+            "status": "captured" if reference is not None else "uncalibrated",
+            "captured_at": self.captured_at,
+            "reference": reference,
+        }
 
     def capture(self, sample, received, received_at, now):
         if received is None or received_at is None or now - received > STALE_AFTER_SECONDS:
@@ -72,15 +93,18 @@ class Posture:
         neutral = joint_rotations(sample)
         if neutral is None:
             raise ValueError("Neutral capture requires all four valid IMU orientations")
+        root = unit(next(imu.quaternion for imu in sample.imus if imu.sensor_id == 1))
 
         # Commit the reference only after validation so a failed recapture preserves it.
         self.reset()
         self.neutral = neutral
+        self.neutral_root = root
         self.captured_at = received_at.isoformat()
         self.update(sample, received)
 
     def update(self, sample, received):
         self.angles = None
+        self.joint_deltas = None
         self.alerts = []
         if self.neutral is None:
             return
@@ -92,9 +116,12 @@ class Posture:
             return
 
         self.angles = {}
+        self.joint_deltas = {}
         for name, rotation in joints.items():
-            # Compare each joint with its own neutral orientation.
-            flexion, lateral = bend_angles(multiply(conjugate(self.neutral[name]), rotation))
+            # D = inverse(neutral) * current. A rig recovers the local joint as neutral * D.
+            delta = unit(multiply(conjugate(self.neutral[name]), rotation))
+            self.joint_deltas[name] = delta
+            flexion, lateral = bend_angles(delta)
             self.angles[f"{name}_flexion_deg"] = flexion
             self.angles[f"{name}_lateral_bend_deg"] = lateral
             if max(abs(flexion), abs(lateral)) < self.warning_deg:

@@ -137,7 +137,7 @@ environment object with nulls for missing
 fields. A stale or missing environment block maps to null. Device metadata and
 per-IMU acquisition times are null. Fall state, EEG, heart rate and overall risk
 remain unavailable. See [application telemetry](../docs/TELEMETRY_PROTOCOL.md)
-for calibration, freshness and warning fields.
+for endpoint responses, joint quaternions, freshness and warning fields.
 
 ### Raw IMU handoff for detector code
 
