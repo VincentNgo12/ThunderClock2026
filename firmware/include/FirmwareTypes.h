@@ -69,17 +69,17 @@ struct HeartRate {
 };
 
 // ENS160 + AHT21
-struct Environment {
-  // Reading temperatureC{};
-  // Reading humidityPercent{};
-  // Reading eco2Ppm{};  // ENS160 estimate.
-  // Reading tvocPpb{};
-  // Reading ens160Aqi{};
+struct EnvData {
+  float temperature;
+  float humidity;
+  float air_quality_index;
+  float eco2_ppm;
+  float tvoc_ppb;
 };
 
 // INMP441
-struct AudioSummary {
-  float relativeDb = 0;  // Relative trend, requiring calibration for physical SPL.
+struct AudioData {
+  float relativeDb;  // Relative trend, requiring calibration for physical SPL.
 };
 
 // --------------------------------
@@ -88,9 +88,9 @@ struct AudioSummary {
 
 struct Snapshot {
   StripDataProcessed stripData;
-  // HeartData heartData;
-  // EnvData envData;
-  // AudioData audioData;
+  EnvData envData;
+  HeartData heartData;
+  AudioData audioData;
 };
 
 // ignore the code below for now
