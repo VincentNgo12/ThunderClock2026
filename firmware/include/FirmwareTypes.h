@@ -46,7 +46,8 @@ struct IMUData {
 
 // unprocessed IMU data
 struct StripData {
-  uint32_t time;
+  uint32_t time;    // ms, collection time for telemetry.
+  uint32_t timeUs;  // µs, collection time used by fusion for its update interval.
   IMUData data[4];
 };
 

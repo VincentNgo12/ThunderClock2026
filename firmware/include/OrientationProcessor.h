@@ -24,6 +24,6 @@ class OrientationProcessor {
 
   FusionAhrs ahrs[kSlotCount]; //gyro orientation filters (turn it into quaternion)
   FusionBias bias[kSlotCount]; // gyro offset estimation
-  uint32_t lastSampleTimeMs[kSlotCount] = {};
+  uint32_t lastSampleTimeUs[kSlotCount] = {};
   bool hasPreviousSample[kSlotCount] = {};
 };

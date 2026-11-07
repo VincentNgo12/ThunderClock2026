@@ -27,12 +27,13 @@ Remaining MPU-6050 boards are spares.
   and fast trunk rotation do not clip.
 - About 10 Hz low-pass: 10 Hz on the MPU-6050, 11.5 Hz accel and 11.6 Hz gyro on
   the ICM-20948. Further filtering happens on the laptop.
-- ICM-20948 internal rates set near 100 Hz. The driver starts the magnetometer,
-  but firmware never reads it.
+- ICM-20948 internal rates set near 100 Hz. The driver starts the magnetometer;
+  `ImuManager` shuts it down after setup and reads only the 12 accel/gyro bytes.
 - 100 Hz strip reads and approximately 20 Hz snapshot publication.
 - Board-default I2C pins, bus clock from `SystemConfig::kI2cClockHz` (100 kHz
   for long harness wires) and 10 ms transaction timeout. Confirm one strip read
-  fits inside 10 ms at that speed.
+  fits inside 10 ms at that speed with `IMUTask`'s once-a-second
+  `IMU read max=... us over10ms=...` print.
 
 Drivers are Adafruit MPU6050 (vendored in `lib/`) and Adafruit ICM20X. Addresses,
 channels, ranges and filters live in `ImuManager`. Confirm actual board wiring
@@ -45,8 +46,7 @@ latest accel and gyro from all four sensors in turn, stores them together as one
 strip and sends it to `imuQueue`. `acquisitionTask` runs every 20 ms and must
 pass every queued strip, in order, to `OrientationProcessor::update`.
 
-All four sensors are read together, so the strip carries one collection time in
-milliseconds. Sequential mux reads take a few milliseconds, so the readings are
+All four sensors are read together, so the strip carries one collection time. Sequential mux reads take a few milliseconds, so the readings are
 close but not simultaneous. Hardware FIFO draining is a possible later
 improvement if timing needs to be tighter.
 
@@ -83,11 +83,11 @@ so hold the jig still.
 ## Mounting and coordinates
 
 Logical anchors are pelvis, lumbar, thoracic and upper thoracic. Confirm physical
-placement and per-board remaps before interpreting posture.
+placement before interpreting posture.
 
-Remap both acceleration and gyro into segment axes with a proper rotation.
-Axis-aligned remaps need matching board orientation. Arbitrary mounting angles
-require a separately agreed calibration.
+The backend owns the sensor-to-segment mounting remap. Firmware sends each
+quaternion in that board's own axes after the protocol axis-convention change,
+and does not apply a per-board remap.
 
 Follow the application coordinate convention in
 [the orientation protocol](../protocol/ORIENTATION.md).
@@ -101,10 +101,11 @@ neutral-reference capture. Record tilt and heading drift separately.
 
 ## Timing and validity
 
-Each strip carries one collection time in milliseconds from `millis()`. Fusion
-uses the time between strips as its update interval.
+Each strip carries its collection time in milliseconds (`time`, from `millis()`)
+for telemetry and in microseconds (`timeUs`, from `micros()`). Fusion uses the
+`timeUs` difference between strips as its update interval.
 
-A gap above 30 ms between valid samples for a sensor restarts that sensor's
+A gap above 100 ms (`SystemConfig::kMaxSampleGapUs`) between valid samples for a sensor restarts that sensor's
 filter, including its startup phase; the gyro offset is kept. Repeated read
 failures and a loss diagnostic are still proposed. Nonfinite data, free fall, near-range clipping and
 failed reads also need explicit invalidation.
@@ -137,7 +138,7 @@ central and a bounded latest-value queue.
 6. Use a measured jig for +90° about each segment axis. Check sign, axis, angle
    and return-to-start error, allowing quaternion sign equivalence. Agree a demo
    tolerance before calling the behavior accepted.
-7. Mount all four boards on one rigid object with confirmed remaps. Calibrate
+7. Mount all four boards on one rigid object. Calibrate
    together, rotate and return. Compare relative orientations.
 8. Induce a missing sensor or pause. Verify affected validity,
    counted loss, continued operation of other sensors and fresh calibration

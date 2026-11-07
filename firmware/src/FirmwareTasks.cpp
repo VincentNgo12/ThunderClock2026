@@ -17,7 +17,7 @@ void acquisitionTask(void*) {
   TickType_t lastAudioTime = lastWake;
   TickType_t lastHeartTime = lastWake;
 
-  const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.05s
+  const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.02 s, 50 Hz
   const TickType_t envPeriod = pdMS_TO_TICKS(1000);    // 1s
   const TickType_t audioPeriod = pdMS_TO_TICKS(100);   // 0.1s
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
@@ -61,7 +61,6 @@ void acquisitionTask(void*) {
   }
 }
 
-<<<<<<< HEAD
 // argument is the ImuManager started in setup(). Reads all 4 IMUs every 10 ms.
 void IMUTask(void* argument) {
   ImuManager* imuManager = static_cast<ImuManager*>(argument);
@@ -71,28 +70,35 @@ void IMUTask(void* argument) {
   }
 
   fw::StripData strip{};
+  uint32_t maxReadUs = 0;      // Worst read time since the last timing print.
+  uint32_t overrunCount = 0;   // Reads longer than one acquisition period.
+  uint32_t lastTimingPrintMs = millis();
   TickType_t lastWake = xTaskGetTickCount();
   while (true) {
     vTaskDelayUntil(&lastWake, pdMS_TO_TICKS(SystemConfig::kAcquisitionPeriodMs));
-    if (imuManager->read(strip) == fw::Result::Ok && imuQueue != nullptr) {
-      xQueueSend(imuQueue, &strip, 0);  // Drop when full rather than stall the 100 Hz loop.
+
+    const uint32_t readStartUs = micros();
+    const fw::Result readResult = imuManager->read(strip);
+    const uint32_t readUs = micros() - readStartUs;
+    if (readUs > maxReadUs) {
+      maxReadUs = readUs;
     }
-=======
-void IMUTask(void*) {
-  TickType_t lastWake = xTaskGetTickCount();
-  const TickType_t imuPeriod = pdMS_TO_TICKS(1000);  
+    if (readUs > SystemConfig::kAcquisitionPeriodMs * 1000) {
+      overrunCount++;
+    }
 
-  fw::StripData stripData{};
+    if (readResult == fw::Result::Ok) {
+      // TODO(FW-QUEUE): enable once the teammate creates imuQueue.
+      // xQueueSend(imuQueue, &strip, 0);  // Drop when full rather than stall the 100 Hz loop.
+    }
 
-  while (true) {
-
-    // imu read (100Hz)
-    // push reading through queue
-    imuManager.read(stripData);
-    printRawStrip(stripData);
-
-    vTaskDelayUntil(&lastWake, imuPeriod);
->>>>>>> origin/main
+    // Shows whether four mux reads fit inside the 10 ms period at the current I2C clock.
+    if (SystemConfig::kDebugEnabled && millis() - lastTimingPrintMs >= 1000) {
+      lastTimingPrintMs = millis();
+      Serial.printf("IMU read max=%lu us over10ms=%lu\n", static_cast<unsigned long>(maxReadUs),
+                    static_cast<unsigned long>(overrunCount));
+      maxReadUs = 0;
+    }
   }
 }
 
@@ -149,7 +155,5 @@ void printRawStrip(const fw::StripData& rawStrip) {
                       imu.accel.x, imu.accel.y, imu.accel.z);
         Serial.printf("    Gyro   x=% .4f  y=% .4f  z=% .4f\n",
                       imu.gyro.x, imu.gyro.y, imu.gyro.z);
-        Serial.printf("    Magno  x=% .4f  y=% .4f  z=% .4f\n",
-                      imu.magno.x, imu.magno.y, imu.magno.z);
     }
 }
