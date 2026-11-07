@@ -1,0 +1,380 @@
+[
+ {
+  "file": "fall_front_lying.jsonl",
+  "true_label": "fall_confirmed",
+  "activity": "front-lying",
+  "duration_s": 20.12,
+  "loso_prediction": null,
+  "shipped_detect_state": "fall_confirmed",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 9760
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 9760,
+    "decided_at_ms": 17760,
+    "state": "fall_confirmed",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "fall_back_lying.jsonl",
+  "true_label": "fall_confirmed",
+  "activity": "back-lying",
+  "duration_s": 17.28,
+  "loso_prediction": null,
+  "shipped_detect_state": "fall_confirmed",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 8990
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 8990,
+    "decided_at_ms": 16990,
+    "state": "fall_confirmed",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "fall_right_sideway.jsonl",
+  "true_label": "fall_confirmed",
+  "activity": "right-sideway",
+  "duration_s": 16.64,
+  "loso_prediction": null,
+  "shipped_detect_state": "fall_confirmed",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 8020
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 8020,
+    "decided_at_ms": 16020,
+    "state": "fall_confirmed",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "fall_syncope.jsonl",
+  "true_label": "fall_confirmed",
+  "activity": "syncope",
+  "duration_s": 17.32,
+  "loso_prediction": null,
+  "shipped_detect_state": "fall_confirmed",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 8250
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 8250,
+    "decided_at_ms": 16250,
+    "state": "fall_confirmed",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "near_fall_front_quick_recovery.jsonl",
+  "true_label": "near_fall",
+  "activity": "front-quick-recovery",
+  "duration_s": 17.8,
+  "loso_prediction": null,
+  "shipped_detect_state": "near_fall",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 8170
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 8170,
+    "decided_at_ms": 16170,
+    "state": "near_fall",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "near_fall_stumble.jsonl",
+  "true_label": "near_fall",
+  "activity": "stumble",
+  "duration_s": 26.88,
+  "loso_prediction": null,
+  "shipped_detect_state": "near_fall",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 15210
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 15210,
+    "decided_at_ms": 23210,
+    "state": "near_fall",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "adl_walking.jsonl",
+  "true_label": "normal",
+  "activity": "walking-fw",
+  "duration_s": 26.84,
+  "loso_prediction": null,
+  "shipped_detect_state": "normal",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": []
+ },
+ {
+  "file": "adl_jogging.jsonl",
+  "true_label": "normal",
+  "activity": "jogging",
+  "duration_s": 24.48,
+  "loso_prediction": null,
+  "shipped_detect_state": "normal",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 10070
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 10070,
+    "decided_at_ms": 18070,
+    "state": "normal",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "adl_sit_chair.jsonl",
+  "true_label": "normal",
+  "activity": "sit-chair",
+  "duration_s": 17.92,
+  "loso_prediction": null,
+  "shipped_detect_state": "normal",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": []
+ },
+ {
+  "file": "adl_bending_pick_up.jsonl",
+  "true_label": "normal",
+  "activity": "bending-pick-up",
+  "duration_s": 17.88,
+  "loso_prediction": null,
+  "shipped_detect_state": "normal",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": []
+ },
+ {
+  "file": "construction_jumping_down.jsonl",
+  "true_label": "normal",
+  "activity": "jumping-down",
+  "duration_s": 56.99,
+  "loso_prediction": null,
+  "shipped_detect_state": "normal",
+  "shipped_detect_confidence": 0.999,
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 4010
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 10980
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 4010,
+    "decided_at_ms": 12010,
+    "state": "normal",
+    "confidence": 0.999
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 10980,
+    "decided_at_ms": 18980,
+    "state": "normal",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 19350
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 25960
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 19350,
+    "decided_at_ms": 27350,
+    "state": "normal",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 25960,
+    "decided_at_ms": 33960,
+    "state": "normal",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 39440
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 45850
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 39440,
+    "decided_at_ms": 47440,
+    "state": "normal",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 52420
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 45850,
+    "decided_at_ms": 53850,
+    "state": "normal",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 52420,
+    "decided_at_ms": 56980,
+    "state": "normal",
+    "confidence": 1.0
+   }
+  ]
+ },
+ {
+  "file": "construction_kneel_floor.jsonl",
+  "true_label": "normal",
+  "activity": "kneel-floor",
+  "duration_s": 56.99,
+  "loso_prediction": null,
+  "shipped_detect_state": "normal",
+  "shipped_detect_confidence": 1.0,
+  "stream_events": []
+ },
+ {
+  "file": "composite_shift_ending_in_fall.jsonl",
+  "true_label": "fall_confirmed (last segment)",
+  "activity": "composite mini-shift",
+  "duration_s": 122.54,
+  "timeline": [
+   {
+    "start_ms": 0,
+    "activity": "walking-fw",
+    "code": 801,
+    "true_label": "normal"
+   },
+   {
+    "start_ms": 26340,
+    "activity": "bending-pick-up",
+    "code": 806,
+    "true_label": "normal"
+   },
+   {
+    "start_ms": 43720,
+    "activity": "sit-chair",
+    "code": 811,
+    "true_label": "normal"
+   },
+   {
+    "start_ms": 61140,
+    "activity": "jogging",
+    "code": 803,
+    "true_label": "normal"
+   },
+   {
+    "start_ms": 85120,
+    "activity": "front-quick-recovery",
+    "code": 905,
+    "true_label": "near_fall"
+   },
+   {
+    "start_ms": 102420,
+    "activity": "front-lying",
+    "code": 901,
+    "true_label": "fall_confirmed"
+   }
+  ],
+  "stream_events": [
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 71210
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 71210,
+    "decided_at_ms": 79210,
+    "state": "normal",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 93290
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 93290,
+    "decided_at_ms": 101290,
+    "state": "near_fall",
+    "confidence": 1.0
+   },
+   {
+    "type": "stage1_trigger",
+    "state": "suspected",
+    "t_ms": 112180
+   },
+   {
+    "type": "stage2_result",
+    "t_ms": 112180,
+    "decided_at_ms": 120180,
+    "state": "fall_confirmed",
+    "confidence": 1.0
+   }
+  ]
+ }
+]

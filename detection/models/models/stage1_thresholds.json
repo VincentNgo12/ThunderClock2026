@@ -1,0 +1,11 @@
+{
+  "freefall_g": 0.7,
+  "freefall_min_ms": 100,
+  "impact_g": 2.25,
+  "rotation_rad_s": 3.0,
+  "coincidence_window_ms": 1000,
+  "min_conditions": 2,
+  "impact_required": true,
+  "refractory_ms": 5000,
+  "_comment": "Stage-1 thresholds for device profile 'target' {'fs_hz': 100.0, 'acc_range_g': 16.0, 'gyro_range_dps': 2000.0, 'dlpf_hz': 44.0}. Signals: svm_g = mean(|a_pelvis|,|a_lumbar|)/g, rot = max(|w_pelvis|,|w_lumbar|) rad/s. Tuned on pooled Erciyes+VTT (recall 0.955 on fall+near-fall recordings, 22.6 triggers/h on normal recordings). Erciyes is 25 Hz upsampled: real 100 Hz impact peaks will be higher; re-tune on team recordings. rotation_rad_s should become the worker's own 99.9th percentile once personal data exist."
+}

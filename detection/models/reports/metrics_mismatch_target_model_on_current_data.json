@@ -1,0 +1,265 @@
+{
+ "note": "Models and Stage-1 thresholds trained for the TARGET profile, tested (LOSO) on the same recordings degraded to the CURRENT profile",
+ "models": {
+  "logreg": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1071,
+    "fn": 393,
+    "fp": 1,
+    "tn": 1838,
+    "sensitivity": 0.7316,
+    "sensitivity_ci95": [
+     0.7083,
+     0.7536
+    ],
+    "specificity": 0.9995,
+    "specificity_ci95": [
+     0.9969,
+     0.9999
+    ],
+    "precision": 0.9991,
+    "f1": 0.8446
+   },
+   "any_event_detected_rate": 0.6976,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1382,
+     "near_fall": 3,
+     "fall_confirmed": 0
+    },
+    "near_fall": {
+     "normal": 193,
+     "near_fall": 260,
+     "fall_confirmed": 1
+    },
+    "fall_confirmed": {
+     "normal": 387,
+     "near_fall": 6,
+     "fall_confirmed": 1071
+    }
+   },
+   "macro_f1_3class": 0.7966,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 3,
+    "stage1_triggers": 22,
+    "stage1_triggers_per_hour": 2.88
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 1,
+    "stage1_triggers": 9,
+    "stage1_triggers_per_hour": 2.75
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 4,
+    "stage1_triggers": 31,
+    "stage1_triggers_per_hour": 2.84
+   },
+   "stage1_recall_fall_confirmed": 0.7445,
+   "stage1_recall_near_fall": 0.5969
+  },
+  "svm": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1080,
+    "fn": 384,
+    "fp": 1,
+    "tn": 1838,
+    "sensitivity": 0.7377,
+    "sensitivity_ci95": [
+     0.7146,
+     0.7596
+    ],
+    "specificity": 0.9995,
+    "specificity_ci95": [
+     0.9969,
+     0.9999
+    ],
+    "precision": 0.9991,
+    "f1": 0.8487
+   },
+   "any_event_detected_rate": 0.6997,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1383,
+     "near_fall": 2,
+     "fall_confirmed": 0
+    },
+    "near_fall": {
+     "normal": 193,
+     "near_fall": 260,
+     "fall_confirmed": 1
+    },
+    "fall_confirmed": {
+     "normal": 383,
+     "near_fall": 1,
+     "fall_confirmed": 1080
+    }
+   },
+   "macro_f1_3class": 0.8004,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 2,
+    "stage1_triggers": 22,
+    "stage1_triggers_per_hour": 2.88
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 0,
+    "stage1_triggers": 9,
+    "stage1_triggers_per_hour": 2.75
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 2,
+    "stage1_triggers": 31,
+    "stage1_triggers_per_hour": 2.84
+   },
+   "stage1_recall_fall_confirmed": 0.7445,
+   "stage1_recall_near_fall": 0.5969
+  },
+  "gbt": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1081,
+    "fn": 383,
+    "fp": 2,
+    "tn": 1837,
+    "sensitivity": 0.7384,
+    "sensitivity_ci95": [
+     0.7153,
+     0.7603
+    ],
+    "specificity": 0.9989,
+    "specificity_ci95": [
+     0.996,
+     0.9997
+    ],
+    "precision": 0.9982,
+    "f1": 0.8488
+   },
+   "any_event_detected_rate": 0.6976,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1382,
+     "near_fall": 2,
+     "fall_confirmed": 1
+    },
+    "near_fall": {
+     "normal": 197,
+     "near_fall": 256,
+     "fall_confirmed": 1
+    },
+    "fall_confirmed": {
+     "normal": 383,
+     "near_fall": 0,
+     "fall_confirmed": 1081
+    }
+   },
+   "macro_f1_3class": 0.7979,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 1,
+    "fa_per_hour": 0.131,
+    "near_fall_flags": 2,
+    "stage1_triggers": 22,
+    "stage1_triggers_per_hour": 2.88
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 0,
+    "stage1_triggers": 9,
+    "stage1_triggers_per_hour": 2.75
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 1,
+    "fa_per_hour": 0.092,
+    "near_fall_flags": 2,
+    "stage1_triggers": 31,
+    "stage1_triggers_per_hour": 2.84
+   },
+   "stage1_recall_fall_confirmed": 0.7445,
+   "stage1_recall_near_fall": 0.5969
+  },
+  "rule": {
+   "fall_confirmed_vs_rest": {
+    "tp": 938,
+    "fn": 526,
+    "fp": 0,
+    "tn": 1839,
+    "sensitivity": 0.6407,
+    "sensitivity_ci95": [
+     0.6158,
+     0.6649
+    ],
+    "specificity": 1.0,
+    "specificity_ci95": [
+     0.9979,
+     1.0
+    ],
+    "precision": 1.0,
+    "f1": 0.781
+   },
+   "any_event_detected_rate": 0.7096,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1367,
+     "near_fall": 18,
+     "fall_confirmed": 0
+    },
+    "near_fall": {
+     "normal": 183,
+     "near_fall": 271,
+     "fall_confirmed": 0
+    },
+    "fall_confirmed": {
+     "normal": 374,
+     "near_fall": 152,
+     "fall_confirmed": 938
+    }
+   },
+   "macro_f1_3class": 0.7376,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 22,
+    "stage1_triggers": 22,
+    "stage1_triggers_per_hour": 2.88
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 9,
+    "stage1_triggers": 9,
+    "stage1_triggers_per_hour": 2.75
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 31,
+    "stage1_triggers": 31,
+    "stage1_triggers_per_hour": 2.84
+   },
+   "stage1_recall_fall_confirmed": 0.7445,
+   "stage1_recall_near_fall": 0.5969
+  }
+ }
+}
