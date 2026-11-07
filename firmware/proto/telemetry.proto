@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package telemetry;
+
+message Vec3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message ImuData {
+  Vec3 accel = 1;
+  Vec3 gyro = 2;
+}
+
+message ImuStripData {
+  uint32 time = 1;
+  repeated ImuData data = 2;
+}

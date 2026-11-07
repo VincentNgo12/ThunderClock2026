@@ -54,9 +54,10 @@ Keep sensor requirements aligned across firmware, backend and dashboard document
 
 ## Implementation status
 
-This repository currently contains the directory scaffold and design documents.
-Module names, commands and protocol fields in these guides are implementation
-plans. Confirm them against code as each component is added.
+This repository contains design documents and an unimplemented firmware scaffold.
+Firmware module interfaces, plain shared structs and optional task shells are in
+place. Sensor/BLE initialization and task startup are disabled by default.
+Commands and protocol integration in the guides remain implementation plans.
 
 The first backend milestone is the standalone BLE diagnostic CLI described in
 `backend/DIAGNOSTICS.md`. Do not add backend fusion or gravity subtraction.

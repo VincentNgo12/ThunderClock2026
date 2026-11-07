@@ -1,8 +1,8 @@
 # ThunderClock system architecture
 
-This document defines the planned service boundaries. The current repository
-contains the directory scaffold and design documents. Hardware inventory and
-feature scope are in [PRODUCT.md](PRODUCT.md).
+This document defines the planned service boundaries. Firmware currently has
+unimplemented module interfaces and disabled task shells. Hardware inventory
+and feature scope are in [PRODUCT.md](PRODUCT.md).
 
 ## Architectural commitments
 

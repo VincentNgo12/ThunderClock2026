@@ -93,7 +93,7 @@ signal-quality and artifact context, not a diagnosis.
 - Small EEG panel using live or prerecorded input
 - Visible connection state, alert severity, event timeline, and fallback controls
 
-The repository currently contains the directory scaffold and design documents.
+The repository contains design documents and an unimplemented firmware scaffold.
 The capabilities above are implementation targets. Record physical acceptance
 results when each hardware path becomes available.
 

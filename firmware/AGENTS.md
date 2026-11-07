@@ -3,6 +3,15 @@
 Follow the root AGENTS.md. Build an approachable Arduino/PlatformIO MVP one module
 at a time. Start with setup()/loop(), small modules and plain shared structs.
 
+Build the scaffold from the repository root with `pio run -d firmware`.
+The pinned esptool 5.0.0 requires Click below 8.2 in the PlatformIO Python
+environment. A `get_metavar` error during image generation indicates a version
+mismatch to check in that environment.
+Sensor, fusion, audio, encoding and BLE operations report NotImplemented.
+`SystemConfig.h` disables hardware initialization and all task shells by default.
+`setup()` creates the shared snapshot mutex before optional task startup.
+The raw schema in `proto/` awaits code-generation integration.
+
 ## Planned module ownership
 
 - `SystemConfig.h` owns pinouts, task toggles, timing targets and the debug switch.
