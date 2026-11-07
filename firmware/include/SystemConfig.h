@@ -17,10 +17,18 @@ constexpr bool kInitBLE = false;
 constexpr bool kStartAcquisitionTask = false;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartAudioTask = false;
+constexpr bool kInitEnvironment = false;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
+constexpr bool kInitHeartRate = false;  // MAX30102 on kHeartRateMuxChannel.
+constexpr bool kRunI2cScanAtBoot = false;  // Bring-up aid: lists devices on every mux channel.
+constexpr bool kPrintHeartRateRaw = false;  // Prints IR samples for the Serial Plotter.
 
 constexpr uint32_t kAcquisitionPeriodMs = 10;  // Target 100 Hz.
 constexpr uint32_t kTelemetryPeriodMs = 50;  // Target 20 Hz.
-constexpr uint32_t kAudioIdlePeriodMs = 50;  // Shell wait, independent of I2S sample rate.
+constexpr uint32_t kAudioIdlePeriodMs = 50;
+constexpr uint32_t kSlowSensorPollMs = 50;  // MAX30102 FIFO holds 320 ms at 100 Hz.
+constexpr uint32_t kEnvironmentPeriodMs = 1000;  // One AHT21/ENS160 cycle per second.
+constexpr uint32_t kAht21ConversionMs = 80;  // Datasheet measurement time.
+constexpr uint32_t kHeartRateBeatTimeoutMs = 3000;  // No beat for this long -> unavailable.  // Shell wait, independent of I2S sample rate.
 constexpr uint32_t kTaskStackBytes = 4096;  // ESP32 FreeRTOS uses bytes.
 
 constexpr float kImuRateHz = 100.0f;
@@ -43,8 +51,16 @@ constexpr uint8_t kImuAddress = 0x68;
 constexpr int kImuMuxChannels[fw::kImuCount] = {0, 1, 2, 3};
 // TODO(FW-IMU): confirm each board's sensor-to-segment mounting transform.
 
-// Zero leaves each auxiliary sensor address unconfirmed.
-constexpr uint8_t kAht21Address = 0;
-constexpr uint8_t kEns160Address = 0;
-constexpr uint8_t kMax30102Address = 0;  // Optional stretch feature.
+// Datasheet default addresses. Confirm with kRunI2cScanAtBoot during bring-up.
+constexpr uint32_t kI2cClockHz = 100000;  // Long harness wires: stay at 100 kHz.
+constexpr uint16_t kI2cTimeoutMs = 10;
+constexpr int kHeartRateMuxChannel = 4;  // TODO(FW-HR): confirm wiring.
+constexpr int kEnvironmentMuxChannel = 5;  // TODO(FW-ENV): confirm wiring.
+constexpr uint8_t kAht21Address = 0x38;
+constexpr uint8_t kEns160Address = 0x53;  // 0x52 when the breakout ties ADDR low.
+constexpr uint8_t kMax30102Address = 0x57;  // Optional stretch feature.
+// MAX30102 LED current, 0.2 mA per step. Raise for earlobe if the IR level is low.
+constexpr uint8_t kMax30102LedCurrent = 0x24;
+// Raw IR (18-bit) below this means the sensor is not touching skin. Tune on the body.
+constexpr uint32_t kHeartRateContactThreshold = 50000;
 }  // namespace SystemConfig

@@ -13,7 +13,9 @@
 #include "Debug.h"
 #include "FirmwareTasks.h"
 #include "ImuManager.h"
+#include "I2cMux.h"
 #include "SharedData.h"
+#include "SlowSensors.h"
 #include "SystemConfig.h"
 
 namespace {
@@ -30,12 +32,21 @@ void setup() {
     return;
   }
 
+  const bool needsI2c = SystemConfig::kInitImuStrip || SystemConfig::kInitEnvironment ||
+                        SystemConfig::kInitHeartRate || SystemConfig::kRunI2cScanAtBoot;
+  if (needsI2c) {
+    Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin, SystemConfig::kI2cClockHz);
+    Wire.setTimeOut(SystemConfig::kI2cTimeoutMs);
+  }
+  if (SystemConfig::kRunI2cScanAtBoot) {
+    i2cmux::scanAllChannels(Wire);
+  }
   if (SystemConfig::kInitImuStrip) {
-    Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin);
     if (imuManager.begin() != fw::Result::Ok) {
       debugPrintln("IMU initialization is unavailable.");
     }
   }
+  slowSensorsBegin(Wire);
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
       debugPrintln("BLE initialization is unavailable.");
@@ -63,5 +74,10 @@ void setup() {
 }
 
 void loop() {
-  delay(100);
+  // Until the acquisition task owns I2C, loop() polls the slow sensors.
+  // TODO(FW-ACQUISITION): move this call into acquisitionTask when it is enabled.
+  if (!SystemConfig::kStartAcquisitionTask) {
+    slowSensorsPoll();
+  }
+  delay(SystemConfig::kSlowSensorPollMs);
 }
