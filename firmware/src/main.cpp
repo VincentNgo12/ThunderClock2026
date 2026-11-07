@@ -19,15 +19,12 @@
 
 #include "AudioMonitor.h"
 
-namespace {
-ImuManager imuManager(Wire);
-}
-
 AudioMonitor audioMonitor{
   SystemConfig::kI2sBclkPin,
   SystemConfig::kI2sWsPin,
   SystemConfig::kI2sDataPin
 }; 
+ImuManager imuManager(Wire);
 
 void setup() {
   Serial.begin(SystemConfig::kSerialBaud);
@@ -59,9 +56,11 @@ void setup() {
   // INITIALIZE SENSORS & PERIPHERALS
   // -----------------------------------
   if (SystemConfig::kInitImuStrip) {
-  //    if (imuManager.begin() != fw::Result::Ok) {
-  //      debugPrintln("IMU initialization is unavailable.");
-  //    }
+    if (imuManager.begin() != fw::Result::Ok) {
+      Serial.println("failed to ini imu strip");
+      while (true) delay(1000);
+    }
+    Serial.println("imu strip ini succesful");
   }
 
   if (SystemConfig::kInitAudio) {
@@ -94,10 +93,10 @@ void setup() {
       debugPrintln("Telemetry task creation failed.");
     }
   }
-  if (SystemConfig::kStartAudioTask) {
+  if (SystemConfig::kStartIMUTask) {
     if (xTaskCreate(IMUTask, "IMUTask", SystemConfig::kTaskStackBytes,
                     nullptr, 1, nullptr) != pdPASS) {
-      debugPrintln("Audio task creation failed.");
+      debugPrintln("IMU task creation failed.");
     }
   }
 }

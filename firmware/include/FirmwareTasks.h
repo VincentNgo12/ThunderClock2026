@@ -12,9 +12,11 @@
 
 #include "SystemConfig.h"
 #include "AudioMonitor.h"
+#include "ImuManager.h"
 
 // global sensor obj
 extern AudioMonitor audioMonitor;
+extern ImuManager imuManager;
 
 // Bodies stay empty until their corresponding work is implemented.
 void acquisitionTask(void* argument);

@@ -6,7 +6,8 @@
  */
 #include "FirmwareTasks.h"
 
-void printSnapshot(const fw::Snapshot& snapshot);
+void printSnapshot(const fw::Snapshot& snapshot); 
+void printRawStrip(const fw::StripData& stripData);
 
 void acquisitionTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
@@ -26,19 +27,19 @@ void acquisitionTask(void*) {
 
 
     // env read
-    if (now - lastEnvTime >= envPeriod) {
+    if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
       lastEnvTime = now;
       // env read
     } 
 
     // audio read
-    if (now - lastAudioTime >= audioPeriod) {
+    if (now - lastAudioTime >= audioPeriod && SystemConfig::kInitAudio) {
       lastAudioTime = now;
       audioMonitor.read(snapshot.audioData);
     } 
 
     // heart read
-    if (now - lastHeartTime >= heartPeriod) {
+    if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
       lastHeartTime = now; 
       // heart read
     } 
@@ -48,20 +49,26 @@ void acquisitionTask(void*) {
     // push it through queue
 
     // temporary print to serial
-    printSnapshot(snapshot);
+    // printSnapshot(snapshot);
 
     vTaskDelayUntil(&lastWake, imuPeriod);
   }
 }
 
 void IMUTask(void*) {
+  TickType_t lastWake = xTaskGetTickCount();
+  const TickType_t imuPeriod = pdMS_TO_TICKS(1000);  
+
+  fw::StripData stripData{};
+
   while (true) {
-    // TODO(FW-AUDIO): acquire bounded I2S windows and publish relative-noise summaries.
 
     // imu read (100Hz)
     // push reading through queue
+    imuManager.read(stripData);
+    printRawStrip(stripData);
 
-    vTaskDelay(pdMS_TO_TICKS(SystemConfig::kAudioIdlePeriodMs));
+    vTaskDelayUntil(&lastWake, imuPeriod);
   }
 }
 
@@ -102,4 +109,19 @@ void printSnapshot(const fw::Snapshot& snapshot) {
 
     Serial.println("Audio");
     Serial.printf("  Loudness    : %7.2f dB relative\n", audio.relativeDb);
+}
+void printRawStrip(const fw::StripData& rawStrip) {
+    Serial.printf("\n=== Raw IMU data | timestamp: %lu ===\n",
+                  static_cast<unsigned long>(rawStrip.time));
+
+    unsigned index = 0;
+    for (const auto& imu : rawStrip.data) {
+        Serial.printf("  IMU[%u]\n", index++);
+        Serial.printf("    Accel  x=% .4f  y=% .4f  z=% .4f\n",
+                      imu.accel.x, imu.accel.y, imu.accel.z);
+        Serial.printf("    Gyro   x=% .4f  y=% .4f  z=% .4f\n",
+                      imu.gyro.x, imu.gyro.y, imu.gyro.z);
+        Serial.printf("    Magno  x=% .4f  y=% .4f  z=% .4f\n",
+                      imu.magno.x, imu.magno.y, imu.magno.z);
+    }
 }
