@@ -21,15 +21,25 @@ void acquisitionTask(void*) {
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
 
   fw::Snapshot snapshot{};
+  fw::StripData stripData{};
   
   while (true) {
     const TickType_t now = xTaskGetTickCount();
 
+    if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
 
-    // env read
-    if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
-      lastEnvTime = now;
       // env read
+      if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
+        lastEnvTime = now;
+        // env read
+      } 
+
+      // heart read
+      if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
+        lastHeartTime = now; 
+        // heart read
+      }
+      xSemaphoreGive(i2cMutex);
     } 
 
     // audio read
@@ -38,15 +48,13 @@ void acquisitionTask(void*) {
       audioMonitor.read(snapshot.audioData);
     } 
 
-    // heart read
-    if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
-      lastHeartTime = now; 
-      // heart read
-    } 
-
     // imu read from queue 20 (hz)
-    // sensor fusion to get quaternion
-    // push it through queue
+    if (xQueueReceive(imuToSnapshotQueue, &stripData, portMAX_DELAY) == pdTRUE) {
+      // sensor fusion to get q
+      // func(stripData, &Snapshot.stripData)
+      // put it in queue for telemetry
+      xQueueOverwrite(snapshotToTelemetryQueue, &snapshot);  
+    }
 
     // temporary print to serial
     // printSnapshot(snapshot);
@@ -57,18 +65,29 @@ void acquisitionTask(void*) {
 
 void IMUTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
-  const TickType_t imuPeriod = pdMS_TO_TICKS(1000);  
+  TickType_t lastImuToSnapshotTime = lastWake;
 
+  const TickType_t imuToTelemetryPeriod = pdMS_TO_TICKS(1000); // target: 100Hz 
+  const TickType_t imuToSnapshotPeriod = pdMS_TO_TICKS(2000);  // target: 20Hz 
+  
   fw::StripData stripData{};
 
   while (true) {
+    const TickType_t now = xTaskGetTickCount();
 
-    // imu read (100Hz)
-    // push reading through queue
-    imuManager.read(stripData);
-    printRawStrip(stripData);
+    if (xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {
+      imuManager.read(stripData);
+      xSemaphoreGive(i2cMutex);
+    }
 
-    vTaskDelayUntil(&lastWake, imuPeriod);
+    xQueueOverwrite(imuToTelemetryQueue, &stripData);    
+    if (now - lastImuToSnapshotTime >= imuToSnapshotPeriod) {
+      xQueueOverwrite(imuToSnapshotQueue, &stripData);    
+      lastImuToSnapshotTime = now;
+    }
+    // printRawStrip(stripData);
+
+    vTaskDelayUntil(&lastWake, imuToTelemetryPeriod);
   }
 }
 
@@ -78,6 +97,7 @@ void telemetryTask(void*) {
     vTaskDelay(pdMS_TO_TICKS(SystemConfig::kTelemetryPeriodMs));
   }
 }
+
 
 
 // temporary helper to print snapshot for debug
