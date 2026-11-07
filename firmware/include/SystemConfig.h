@@ -11,10 +11,13 @@ namespace SystemConfig {
 constexpr unsigned long kSerialBaud = 115200;
 constexpr bool kDebugEnabled = true;
 
-// Enable initialization and task shells as their implementations become useful.
+// sensor and telemetry ini 
 constexpr bool kInitImuStrip = false;
 constexpr bool kInitBLE = false;
-constexpr bool kStartAcquisitionTask = false;
+constexpr bool kInitAudio = true;
+
+// task ini
+constexpr bool kStartAcquisitionTask = true;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartAudioTask = false;
 constexpr bool kInitEnvironment = false;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
@@ -41,9 +44,9 @@ constexpr size_t kFifoBatchSize = 8;
 // -1 uses board defaults for Wire pins and leaves microphone pins unconfigured.
 constexpr int kSdaPin = -1;
 constexpr int kSclPin = -1;
-constexpr int kI2sBclkPin = -1;
-constexpr int kI2sWsPin = -1;
-constexpr int kI2sDataPin = -1;
+constexpr int kI2sBclkPin = 9;
+constexpr int kI2sWsPin = 10;
+constexpr int kI2sDataPin = 11;
 
 // Prototype mux defaults. Confirm wiring, placement and mounting before use.
 constexpr uint8_t kMuxAddress = 0x70;
