@@ -1,0 +1,42 @@
+{
+ "all_features": {
+  "n_features": 28,
+  "sensitivity": 0.9693,
+  "specificity": 0.9951,
+  "f1": 0.9813,
+  "macro_f1_3class": 0.9512,
+  "fa_per_hour_all_normal": 0.733
+ },
+ "multiphase_only": {
+  "n_features": 9,
+  "sensitivity": 0.9474,
+  "specificity": 0.9913,
+  "f1": 0.9676,
+  "macro_f1_3class": 0.9329,
+  "fa_per_hour_all_normal": 0.733
+ },
+ "posture_only_4_anchors": {
+  "n_features": 19,
+  "sensitivity": 0.8634,
+  "specificity": 0.9946,
+  "f1": 0.9233,
+  "macro_f1_3class": 0.8756,
+  "fa_per_hour_all_normal": 0.824
+ },
+ "real_anchors_only (no lumbar/thoracic, no cross-anchor)": {
+  "n_features": 16,
+  "sensitivity": 0.9686,
+  "specificity": 0.9951,
+  "f1": 0.981,
+  "macro_f1_3class": 0.9491,
+  "fa_per_hour_all_normal": 0.733
+ },
+ "pelvis_only": {
+  "n_features": 12,
+  "sensitivity": 0.9693,
+  "specificity": 0.9956,
+  "f1": 0.9817,
+  "macro_f1_3class": 0.9491,
+  "fa_per_hour_all_normal": 0.641
+ }
+}

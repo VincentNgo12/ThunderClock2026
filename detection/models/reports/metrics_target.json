@@ -1,0 +1,574 @@
+{
+ "profile": "target",
+ "device": {
+  "fs_hz": 100.0,
+  "acc_range_g": 16.0,
+  "gyro_range_dps": 2000.0,
+  "dlpf_hz": 44.0
+ },
+ "best_model": "gbt",
+ "stage1_fold_configs": {
+  "E101": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E102": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E103": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E104": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E105": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E106": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E107": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E108": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E109": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E110": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E203": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E204": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E205": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E206": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E207": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E208": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "E209": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V01": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V02": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V03": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V04": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V05": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V06": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V07": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V08": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V09": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V10": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V11": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V12": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  },
+  "V13": {
+   "freefall_g": 0.7,
+   "freefall_min_ms": 100,
+   "impact_g": 2.25,
+   "rotation_rad_s": 3.0,
+   "coincidence_window_ms": 1000,
+   "min_conditions": 2,
+   "impact_required": true,
+   "refractory_ms": 5000
+  }
+ },
+ "models": {
+  "logreg": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1404,
+    "fn": 60,
+    "fp": 10,
+    "tn": 1829,
+    "sensitivity": 0.959,
+    "sensitivity_ci95": [
+     0.9476,
+     0.968
+    ],
+    "specificity": 0.9946,
+    "specificity_ci95": [
+     0.99,
+     0.997
+    ],
+    "precision": 0.9929,
+    "f1": 0.9757
+   },
+   "any_event_detected_rate": 0.9484,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1357,
+     "near_fall": 20,
+     "fall_confirmed": 8
+    },
+    "near_fall": {
+     "normal": 51,
+     "near_fall": 401,
+     "fall_confirmed": 2
+    },
+    "fall_confirmed": {
+     "normal": 48,
+     "near_fall": 12,
+     "fall_confirmed": 1404
+    }
+   },
+   "macro_f1_3class": 0.945,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 8,
+    "fa_per_hour": 1.047,
+    "near_fall_flags": 20,
+    "stage1_triggers": 121,
+    "stage1_triggers_per_hour": 15.83
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 12,
+    "stage1_triggers": 126,
+    "stage1_triggers_per_hour": 38.45
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 8,
+    "fa_per_hour": 0.733,
+    "near_fall_flags": 32,
+    "stage1_triggers": 247,
+    "stage1_triggers_per_hour": 22.62
+   },
+   "stage1_recall_fall_confirmed": 0.972,
+   "stage1_recall_near_fall": 0.9009
+  },
+  "svm": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1414,
+    "fn": 50,
+    "fp": 9,
+    "tn": 1830,
+    "sensitivity": 0.9658,
+    "sensitivity_ci95": [
+     0.9553,
+     0.974
+    ],
+    "specificity": 0.9951,
+    "specificity_ci95": [
+     0.9907,
+     0.9974
+    ],
+    "precision": 0.9937,
+    "f1": 0.9796
+   },
+   "any_event_detected_rate": 0.9442,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1366,
+     "near_fall": 12,
+     "fall_confirmed": 7
+    },
+    "near_fall": {
+     "normal": 60,
+     "near_fall": 392,
+     "fall_confirmed": 2
+    },
+    "fall_confirmed": {
+     "normal": 47,
+     "near_fall": 3,
+     "fall_confirmed": 1414
+    }
+   },
+   "macro_f1_3class": 0.9487,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 7,
+    "fa_per_hour": 0.916,
+    "near_fall_flags": 12,
+    "stage1_triggers": 121,
+    "stage1_triggers_per_hour": 15.83
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 0,
+    "stage1_triggers": 126,
+    "stage1_triggers_per_hour": 38.45
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 7,
+    "fa_per_hour": 0.641,
+    "near_fall_flags": 12,
+    "stage1_triggers": 247,
+    "stage1_triggers_per_hour": 22.62
+   },
+   "stage1_recall_fall_confirmed": 0.972,
+   "stage1_recall_near_fall": 0.9009
+  },
+  "gbt": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1419,
+    "fn": 45,
+    "fp": 9,
+    "tn": 1830,
+    "sensitivity": 0.9693,
+    "sensitivity_ci95": [
+     0.9591,
+     0.9769
+    ],
+    "specificity": 0.9951,
+    "specificity_ci95": [
+     0.9907,
+     0.9974
+    ],
+    "precision": 0.9937,
+    "f1": 0.9813
+   },
+   "any_event_detected_rate": 0.9468,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1364,
+     "near_fall": 13,
+     "fall_confirmed": 8
+    },
+    "near_fall": {
+     "normal": 58,
+     "near_fall": 395,
+     "fall_confirmed": 1
+    },
+    "fall_confirmed": {
+     "normal": 44,
+     "near_fall": 1,
+     "fall_confirmed": 1419
+    }
+   },
+   "macro_f1_3class": 0.9512,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 8,
+    "fa_per_hour": 1.047,
+    "near_fall_flags": 13,
+    "stage1_triggers": 121,
+    "stage1_triggers_per_hour": 15.83
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 1,
+    "stage1_triggers": 126,
+    "stage1_triggers_per_hour": 38.45
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 8,
+    "fa_per_hour": 0.733,
+    "near_fall_flags": 14,
+    "stage1_triggers": 247,
+    "stage1_triggers_per_hour": 22.62
+   },
+   "stage1_recall_fall_confirmed": 0.972,
+   "stage1_recall_near_fall": 0.9009
+  },
+  "rule": {
+   "fall_confirmed_vs_rest": {
+    "tp": 1118,
+    "fn": 346,
+    "fp": 5,
+    "tn": 1834,
+    "sensitivity": 0.7637,
+    "sensitivity_ci95": [
+     0.7412,
+     0.7847
+    ],
+    "specificity": 0.9973,
+    "specificity_ci95": [
+     0.9937,
+     0.9988
+    ],
+    "precision": 0.9955,
+    "f1": 0.8643
+   },
+   "any_event_detected_rate": 0.9552,
+   "confusion_erciyes": {
+    "normal": {
+     "normal": 1290,
+     "near_fall": 90,
+     "fall_confirmed": 5
+    },
+    "near_fall": {
+     "normal": 45,
+     "near_fall": 409,
+     "fall_confirmed": 0
+    },
+    "fall_confirmed": {
+     "normal": 41,
+     "near_fall": 305,
+     "fall_confirmed": 1118
+    }
+   },
+   "macro_f1_3class": 0.8163,
+   "fa_erciyes_adl": {
+    "hours": 7.644,
+    "false_fall_confirmed": 5,
+    "fa_per_hour": 0.654,
+    "near_fall_flags": 116,
+    "stage1_triggers": 121,
+    "stage1_triggers_per_hour": 15.83
+   },
+   "fa_vtt_construction": {
+    "hours": 3.277,
+    "false_fall_confirmed": 0,
+    "fa_per_hour": 0.0,
+    "near_fall_flags": 126,
+    "stage1_triggers": 126,
+    "stage1_triggers_per_hour": 38.45
+   },
+   "fa_all_normal": {
+    "hours": 10.921,
+    "false_fall_confirmed": 5,
+    "fa_per_hour": 0.458,
+    "near_fall_flags": 242,
+    "stage1_triggers": 247,
+    "stage1_triggers_per_hour": 22.62
+   },
+   "stage1_recall_fall_confirmed": 0.972,
+   "stage1_recall_near_fall": 0.9009
+  }
+ }
+}

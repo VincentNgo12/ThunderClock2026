@@ -89,8 +89,10 @@ board axes, mounting and measured rotations with a jig. Axis-aligned identity
 defaults require physical verification. Backend owns later neutral-reference
 capture and relative posture interpretation.
 
-Six-axis fusion cannot observe absolute heading. Align sensor startup headings
-and measure stationary and relative-heading drift.
+All four sensors use six-axis fusion, which cannot observe absolute heading.
+Sensors start at a common heading during calibration. Firmware does not correct
+heading drift. The backend handles relative heading through neutral-reference
+capture. Measure stationary and relative-heading drift.
 
 ## Timing and ordering
 

@@ -1,0 +1,196 @@
+[target] stage-1 grid done in 49s
+[current] stage-1 grid done in 39s
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E101: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3477, test triggers 94
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E102: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3487, test triggers 115
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E103: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3488, test triggers 116
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E104: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3486, test triggers 106
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E105: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3488, test triggers 111
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E106: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3487, test triggers 103
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E107: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3461, test triggers 120
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E108: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3456, test triggers 124
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E109: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3451, test triggers 141
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E110: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3452, test triggers 126
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E203: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3491, test triggers 97
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E204: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3492, test triggers 103
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E205: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3469, test triggers 122
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E206: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3493, test triggers 106
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E207: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3488, test triggers 109
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E208: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3457, test triggers 126
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold E209: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3446, test triggers 135
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V01: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3649, test triggers 10
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V02: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3651, test triggers 7
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V03: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3644, test triggers 15
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V04: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3653, test triggers 6
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V05: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3646, test triggers 15
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V06: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3651, test triggers 9
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V07: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3647, test triggers 14
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V08: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3653, test triggers 6
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V09: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3650, test triggers 10
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V10: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3653, test triggers 5
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V11: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3651, test triggers 9
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V12: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3650, test triggers 11
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[target] fold V13: stage1 cfg #102 (ff<0.7 imp>2.25 rot>3.0 k=2), train rows 3650, test triggers 9
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E101: stage1 cfg #115 (ff<0.8 imp>1.9 rot>1.5 k=3), train rows 3510, test triggers 97
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E102: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3547, test triggers 115
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E103: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3545, test triggers 120
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E104: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3545, test triggers 111
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E105: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3546, test triggers 114
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E106: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3542, test triggers 106
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E107: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3510, test triggers 126
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E108: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3512, test triggers 123
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E109: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3512, test triggers 142
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E110: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3514, test triggers 128
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E203: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3547, test triggers 105
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E204: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3548, test triggers 108
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E205: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3527, test triggers 121
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E206: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3552, test triggers 110
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E207: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3542, test triggers 112
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E208: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3514, test triggers 127
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold E209: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3505, test triggers 135
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V01: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3708, test triggers 11
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V02: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3708, test triggers 10
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V03: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3702, test triggers 17
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V04: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3710, test triggers 10
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V05: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3702, test triggers 18
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V06: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3711, test triggers 9
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V07: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3707, test triggers 15
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V08: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3707, test triggers 12
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V09: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3711, test triggers 7
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V10: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3717, test triggers 1
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V11: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3716, test triggers 2
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V12: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3712, test triggers 7
+/Users/quanhoang/Documents/stormhacks/project/nathacks/research/fall_model/.venv/lib/python3.12/site-packages/sklearn/svm/_base.py:236: FutureWarning: The `probability` parameter was deprecated in 1.9 and will be removed in version 1.11. Use `CalibratedClassifierCV(SVC(), ensemble=False)` instead of `SVC(probability=True)`
+  warnings.warn(
+[current] fold V13: stage1 cfg #54 (ff<0.6 imp>1.9 rot>3.0 k=2), train rows 3710, test triggers 10
+[target] final: stage1 cfg {'freefall_g': 0.7, 'freefall_min_ms': 100, 'impact_g': 2.25, 'rotation_rad_s': 3.0, 'coincidence_window_ms': 1000, 'min_conditions': 2, 'impact_required': True, 'refractory_ms': 5000}, model gbt, rows 3673
+[current] final: stage1 cfg {'freefall_g': 0.6, 'freefall_min_ms': 100, 'impact_g': 1.9, 'rotation_rad_s': 3.0, 'coincidence_window_ms': 1000, 'min_conditions': 2, 'impact_required': True, 'refractory_ms': 5000}, model gbt, rows 3733
+
+=== target: best Stage-2 model = gbt
+  logreg  Se 0.959 Sp 0.995 Prec 0.993 F1 0.976 macroF1 0.945 FA/h all 0.73 (ADL 1.05, VTT 0.00) S1 recall 0.972
+  svm     Se 0.966 Sp 0.995 Prec 0.994 F1 0.980 macroF1 0.949 FA/h all 0.64 (ADL 0.92, VTT 0.00) S1 recall 0.972
+  gbt     Se 0.969 Sp 0.995 Prec 0.994 F1 0.981 macroF1 0.951 FA/h all 0.73 (ADL 1.05, VTT 0.00) S1 recall 0.972
+  rule    Se 0.764 Sp 0.997 Prec 0.996 F1 0.864 macroF1 0.816 FA/h all 0.46 (ADL 0.65, VTT 0.00) S1 recall 0.972
+
+=== current: best Stage-2 model = gbt
+  logreg  Se 0.958 Sp 0.995 Prec 0.994 F1 0.975 macroF1 0.943 FA/h all 0.73 (ADL 1.05, VTT 0.00) S1 recall 0.968
+  svm     Se 0.962 Sp 0.996 Prec 0.994 F1 0.978 macroF1 0.951 FA/h all 0.64 (ADL 0.92, VTT 0.00) S1 recall 0.968
+  gbt     Se 0.966 Sp 0.995 Prec 0.994 F1 0.980 macroF1 0.952 FA/h all 0.64 (ADL 0.92, VTT 0.00) S1 recall 0.968
+  rule    Se 0.772 Sp 0.997 Prec 0.995 F1 0.870 macroF1 0.819 FA/h all 0.55 (ADL 0.79, VTT 0.00) S1 recall 0.968

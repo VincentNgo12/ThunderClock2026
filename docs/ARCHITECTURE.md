@@ -22,7 +22,7 @@ and feature scope are in [PRODUCT.md](PRODUCT.md).
 
 ```mermaid
 flowchart LR
-  MPU[4 MPU-6050 IMUs] --> MUX[PCA9548 / TCA9548A]
+  IMU[2 ICM-20948 + 2 MPU-6050 IMUs] --> MUX[PCA9548 / TCA9548A]
   MUX --> ESP[Adafruit ESP32-S3 Feather]
   AHT[AHT21] --> ESP
   ENS[ENS160] --> ESP
@@ -84,7 +84,8 @@ values visible.
 
 ## Orientation and calibration
 
-1. Acquire four MPU-6050 accelerometer/gyro streams through the mux.
+1. Acquire four accelerometer/gyro streams (two ICM-20948, two MPU-6050) through
+   the mux as FIFO strips at least every 10 ms.
 2. Calibrate gyro bias and fuse each stream independently on the ESP32.
 3. Apply each confirmed sensor-to-segment mounting transform once.
 4. Send segment-local-to-world quaternions using the convention in
@@ -92,9 +93,11 @@ values visible.
 5. Capture neutral references and calculate relative segment posture on the laptop.
 6. Render measured anchors and interpolated geometry in the frontend.
 
-The MPU-6050 has no magnetometer. Absolute heading and long-term relative heading
-can drift. Physical placement, mounting remaps and common startup heading require
-measurement and confirmation before interpreting posture.
+Fusion is 6-axis on every sensor. The ICM-20948 magnetometer is not used. Absolute
+heading and long-term relative heading can drift. All sensors start at a common
+heading, and the backend's neutral-reference capture handles relative heading.
+Physical placement and mounting remaps require measurement and confirmation before
+interpreting posture.
 
 ## Decisions requiring implementation evidence
 

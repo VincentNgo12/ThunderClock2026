@@ -31,13 +31,14 @@ that inactive workers are being monitored.
 ### Wearable and posture
 
 - Adafruit ESP32-S3 Feather, product #5477, using PlatformIO and Arduino
-- Four simultaneously active MPU-6050 IMUs, with a fifth MPU-6050 as a spare
+- Four simultaneously active IMUs: ICM-20948 at the pelvis/root and upper
+  thoracic/shoulder region, MPU-6050 at the lumbar and thoracic. Remaining
+  MPU-6050 boards are spares.
 - PCA9548/TCA9548A I2C multiplexer
-- Planned measured anchors are pelvis/root, lumbar, thoracic, and upper
-  thoracic/shoulder region
 
-Each MPU-6050 provides a three-axis accelerometer and gyroscope, with no
-magnetometer. Accurate absolute yaw or twist is not a primary requirement. The
+All four IMUs use only their three-axis accelerometer and gyroscope. The
+ICM-20948 magnetometer is not used. Accurate absolute yaw or twist is not a
+primary requirement. The
 primary motion goals are forward flexion, backward extension, lateral bending,
 sustained poor posture, and sudden movement/fall/impact context.
 
@@ -84,7 +85,8 @@ signal-quality and artifact context, not a diagnosis.
 ### Hackathon MVP
 
 - One supervisor dashboard and one functional worker, `T'Worker 1`
-- Four active MPU-6050 anchors and a 3D posture approximation
+- Four active IMU anchors (two ICM-20948, two MPU-6050) and a 3D posture
+  approximation
 - Neutral calibration/recenter experience
 - FastAPI application-state aggregation and WebSocket delivery
 - Clearly labelled live, synthetic, or replay source state
