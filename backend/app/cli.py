@@ -62,6 +62,10 @@ def show_sample(sample, output):
             for name, value in asdict(sample.environment).items()
         )
         print(f"  environment: {readings}", file=output)
+    if sample.heart_rate_bpm is not None:
+        print(f"  heart rate: {sample.heart_rate_bpm:g} bpm", file=output)
+    if sample.spo2_percent is not None:
+        print(f"  SpO2: {sample.spo2_percent:g}%", file=output)
 
 
 def show_status(stream, stale_after, output):
@@ -109,8 +113,9 @@ async def run(arguments, *, scanner=None, client_factory=None, output=None) -> i
         async for sample in stream.updates(arguments.duration):
             if sample is not None and recording is not None:
                 row = asdict(sample)
-                if sample.environment is None:
-                    del row["environment"]
+                for field in ("environment", "heart_rate_bpm", "spo2_percent"):
+                    if row[field] is None:
+                        del row[field]
                 row.update(received_at=stream.received_at.isoformat(), units={"accel": "m/s²", "gyro": "rad/s", "time": "ms since boot", "quaternion": "w,x,y,z"})
                 recording.write(json.dumps(row, allow_nan=False) + "\n")
             now = time.monotonic()

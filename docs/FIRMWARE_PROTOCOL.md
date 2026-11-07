@@ -1,7 +1,7 @@
 # ThunderClock wearable device boundary
 
 The device encoding uses Protobuf with nanopb. The backend decodes the raw and
-quaternion schema, including v2 environment fields. Firmware encoding and BLE
+quaternion schema, including v2 environment and pulse oximeter fields. Firmware encoding and BLE
 publication remain planned.
 See [ORIENTATION.md](../protocol/ORIENTATION.md) for fields, units, coordinate
 conventions and packet bounds.
@@ -21,8 +21,8 @@ for the prototype profile. Both support READ and NOTIFY. Confirm the actual devi
 profile before connecting. Custom 128-bit UUIDs remain a team decision.
 
 Each notification carries one complete packet. The raw, quaternion v1 and
-telemetry v2 bounds are 150, 153 and 189 bytes. Supporting those bounds takes
-ATT MTU at least 153, 156 and 192 respectively. Verify the negotiated capacity
+telemetry v2 bounds are 150, 153 and 201 bytes. Supporting those bounds takes
+ATT MTU at least 153, 156 and 204 respectively. Verify the negotiated capacity
 on the target laptop.
 Suppress an oversized packet and report the condition.
 

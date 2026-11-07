@@ -1,7 +1,8 @@
 # ThunderClock BLE diagnostics
 
 The standalone CLI discovers a wearable, displays signed raw IMU readings and
-validates four orientation quaternions and any available v2 environment readings.
+validates four orientation quaternions and any available v2 environment,
+heart rate and SpO₂ readings.
 Use one process per device connection.
 
 ## Install and inspect fixtures
@@ -27,7 +28,7 @@ offline. The packets in `protocol/fixtures/` are synthetic.
 
 The prototype profile targets advertising name `THUNDER CLOCK`, service `AAAA`,
 and READ + NOTIFY characteristics `8888` for raw and `8889` for quaternions
-with optional v2 environment readings. Select `--format quaternion` for either
+with optional v2 sensor readings. Select `--format quaternion` for either
 version on 8889.
 Short UUIDs expand using the Bluetooth base UUID
 `0000xxxx-0000-1000-8000-00805f9b34fb`.
@@ -90,34 +91,51 @@ uses a separate clock. Radio transit time is unknown.
 | Partial quaternions | Sensor validity, mounting and stationary calibration |
 
 Each notification carries one complete message. The raw, quaternion v1 and
-telemetry v2 bounds are 150, 153 and 189 bytes. They require ATT MTU at least
-153, 156 and 192 respectively to fit the maximum.
+telemetry v2 bounds are 150, 153 and 201 bytes. They require ATT MTU at least
+153, 156 and 204 respectively to fit the maximum.
 See [the device contract](../protocol/ORIENTATION.md) and
 [the firmware acceptance checklist](../firmware/ORIENTATION.md).
 
 ## Optional API
 
-Export `DEVICE_ID` and `DEVICE_FORMAT` in the shell. The CLI uses flags and the
-API reads process environment variables. `.env.example` lists the two settings.
-Use one Uvicorn worker and stop CLI streaming before starting the API.
+Select `TELEMETRY_SOURCE=simulated` for a hardware-free demo. Hardware is the
+default. For hardware, export the exact `DEVICE_ID` from a scan and
+`DEVICE_FORMAT=quaternion` for posture or `raw` for raw diagnostics. Use one
+Uvicorn worker and stop CLI streaming before starting the hardware API.
 
 ```sh
 # From backend/ with the environment active
 python -m pip install -r requirements-api.txt
-DEVICE_ID="<exact OS id>" DEVICE_FORMAT=quaternion python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+TELEMETRY_SOURCE=simulated python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-In PowerShell, set `$env:DEVICE_ID` and `$env:DEVICE_FORMAT` before running the
-Uvicorn command. Startup resolves the wearable with a scan.
+In PowerShell, set `$env:TELEMETRY_SOURCE = "simulated"` before running the
+Uvicorn command. The simulation starts upright and repeats a 20-second cycle.
+It stays upright for the first 10 seconds of each cycle, then bends and returns.
+Hardware startup resolves the wearable with a scan and reports setup errors.
+
+To capture neutral, stand still in an upright pose or wait for the simulation's
+upright phase, then call the API.
+
+```sh
+curl -X POST http://127.0.0.1:8000/posture/calibrate
+```
+
+The response reports `status: "captured"` and the reference frame's receipt
+timestamp. HTTP 409 means the source lacks a fresh frame with all four valid
+orientations. Call the same endpoint to recenter. Set `POSTURE_WARNING_DEG`
+and `POSTURE_WARNING_SECONDS` to adjust the demo defaults of 20° and 2 seconds.
 
 `GET /health` reports service status and `GET /diagnostics` reports reader
 status and counters. `WS /ws/telemetry` publishes a shared latest snapshot at
-about 20 Hz with a one-second send deadline per client. The diagnostic mapping
-uses `WorkerTelemetry` 2.0. Raw mode leaves orientations unavailable. Fresh v2
-environment readings populate the environment object with nulls for missing
+about 20 Hz with a one-second send deadline per client. Both sources use
+`WorkerTelemetry` 2.0 and the same posture processing. Raw mode leaves
+orientations unavailable. Fresh v2 environment readings populate the
+environment object with nulls for missing
 fields. A stale or missing environment block maps to null. Device metadata and
-per-IMU acquisition times are null. Posture, fall state, EEG, heart rate and risk
-remain unavailable.
+per-IMU acquisition times are null. Fall state, EEG, heart rate and overall risk
+remain unavailable. See [application telemetry](../docs/TELEMETRY_PROTOCOL.md)
+for calibration, freshness and warning fields.
 
 ## Tests and generation
 

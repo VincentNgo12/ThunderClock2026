@@ -102,6 +102,29 @@ class ProtocolTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(PacketError):
                 decode(packet.SerializeToString(), 'quaternion')
 
+    def test_oximeter_readings_are_individually_optional_in_v2(self):
+        packet = wire.OrientationPacket.FromString((FIXTURES / 'telemetry_v2.bin').read_bytes())
+        sample = decode(packet.SerializeToString(), 'quaternion')
+        self.assertEqual(sample.heart_rate_bpm, 72)
+        self.assertEqual(sample.spo2_percent, 98)
+        packet.ClearField('heart_rate_bpm')
+        sample = decode(packet.SerializeToString(), 'quaternion')
+        self.assertIsNone(sample.heart_rate_bpm)
+        self.assertEqual(sample.spo2_percent, 98)
+        packet.ClearField('spo2_percent')
+        self.assertIsNone(decode(packet.SerializeToString(), 'quaternion').spo2_percent)
+
+        for version, field, value in (
+            (1, 'heart_rate_bpm', 72), (1, 'spo2_percent', 98),
+            (2, 'heart_rate_bpm', 0), (2, 'heart_rate_bpm', float('inf')),
+            (2, 'spo2_percent', 101), (2, 'spo2_percent', float('nan')),
+        ):
+            packet = orientation()
+            packet.version = version
+            setattr(packet, field, value)
+            with self.subTest(version=version, field=field, value=value), self.assertRaises(PacketError):
+                decode(packet.SerializeToString(), 'quaternion')
+
     def test_quaternion_validation(self):
         mutations = [
             lambda p: setattr(p, 'version', 3), lambda p: p.ClearField('version'),
@@ -131,7 +154,7 @@ class ProtocolTests(unittest.TestCase):
                     decode(payload[:length], packet_format)
             with self.assertRaises(PacketError):
                 decode(payload, 'quaternion' if packet_format == 'raw' else 'raw')
-        for payload in (b'\xff', b'x' * 200):
+        for payload in (b'\xff', b'x' * (QUATERNION_MAX_BYTES + 1)):
             with self.assertRaises(PacketError):
                 decode(payload, 'quaternion')
         with self.assertRaises(ValueError):

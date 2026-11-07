@@ -7,8 +7,8 @@
 #pragma once
 #include "FirmwareTypes.h"
 
-class AudioMonitor {
- public:
-  fw::Result begin();  // Future I2S setup using confirmed microphone pins.
-  fw::Result read(fw::AudioSummary& output);  // Future bounded relative-noise window.
-};
+// class AudioMonitor {
+//  public:
+//   fw::Result begin();  // Future I2S setup using confirmed microphone pins.
+//   fw::Result read(fw::AudioSummary& output);  // Future bounded relative-noise window.
+// };

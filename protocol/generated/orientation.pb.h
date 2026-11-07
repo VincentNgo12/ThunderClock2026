@@ -52,6 +52,10 @@ typedef struct _telemetry_orientation_v1_OrientationPacket {
     telemetry_orientation_v1_Orientation orientations[4];
     bool has_environment;
     telemetry_orientation_v1_Environment environment;
+    bool has_heart_rate_bpm;
+    float heart_rate_bpm;
+    bool has_spo2_percent;
+    float spo2_percent;
 } telemetry_orientation_v1_OrientationPacket;
 
 
@@ -63,11 +67,11 @@ extern "C" {
 #define telemetry_orientation_v1_Quaternion_init_default {0, 0, 0, 0}
 #define telemetry_orientation_v1_Orientation_init_default {false, 0, false, 0, false, telemetry_orientation_v1_Quaternion_init_default}
 #define telemetry_orientation_v1_Environment_init_default {false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
-#define telemetry_orientation_v1_OrientationPacket_init_default {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default}, false, telemetry_orientation_v1_Environment_init_default}
+#define telemetry_orientation_v1_OrientationPacket_init_default {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default}, false, telemetry_orientation_v1_Environment_init_default, false, 0, false, 0}
 #define telemetry_orientation_v1_Quaternion_init_zero {0, 0, 0, 0}
 #define telemetry_orientation_v1_Orientation_init_zero {false, 0, false, 0, false, telemetry_orientation_v1_Quaternion_init_zero}
 #define telemetry_orientation_v1_Environment_init_zero {false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
-#define telemetry_orientation_v1_OrientationPacket_init_zero {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero}, false, telemetry_orientation_v1_Environment_init_zero}
+#define telemetry_orientation_v1_OrientationPacket_init_zero {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero}, false, telemetry_orientation_v1_Environment_init_zero, false, 0, false, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define telemetry_orientation_v1_Quaternion_w_tag 1
@@ -88,6 +92,8 @@ extern "C" {
 #define telemetry_orientation_v1_OrientationPacket_sample_time_ms_tag 18
 #define telemetry_orientation_v1_OrientationPacket_orientations_tag 19
 #define telemetry_orientation_v1_OrientationPacket_environment_tag 20
+#define telemetry_orientation_v1_OrientationPacket_heart_rate_bpm_tag 21
+#define telemetry_orientation_v1_OrientationPacket_spo2_percent_tag 22
 
 /* Struct field encoding specification for nanopb */
 #define telemetry_orientation_v1_Quaternion_FIELDLIST(X, a) \
@@ -121,7 +127,9 @@ X(a, STATIC,   OPTIONAL, UINT32,   version,          16) \
 X(a, STATIC,   OPTIONAL, UINT32,   sequence,         17) \
 X(a, STATIC,   OPTIONAL, UINT32,   sample_time_ms,   18) \
 X(a, STATIC,   REPEATED, MESSAGE,  orientations,     19) \
-X(a, STATIC,   OPTIONAL, MESSAGE,  environment,      20)
+X(a, STATIC,   OPTIONAL, MESSAGE,  environment,      20) \
+X(a, STATIC,   OPTIONAL, FLOAT,    heart_rate_bpm,   21) \
+X(a, STATIC,   OPTIONAL, FLOAT,    spo2_percent,     22)
 #define telemetry_orientation_v1_OrientationPacket_CALLBACK NULL
 #define telemetry_orientation_v1_OrientationPacket_DEFAULT NULL
 #define telemetry_orientation_v1_OrientationPacket_orientations_MSGTYPE telemetry_orientation_v1_Orientation
@@ -141,7 +149,7 @@ extern const pb_msgdesc_t telemetry_orientation_v1_OrientationPacket_msg;
 /* Maximum encoded size of messages (where known) */
 #define TELEMETRY_ORIENTATION_V1_ORIENTATION_PB_H_MAX_SIZE telemetry_orientation_v1_OrientationPacket_size
 #define telemetry_orientation_v1_Environment_size 33
-#define telemetry_orientation_v1_OrientationPacket_size 189
+#define telemetry_orientation_v1_OrientationPacket_size 201
 #define telemetry_orientation_v1_Orientation_size 30
 #define telemetry_orientation_v1_Quaternion_size 20
 

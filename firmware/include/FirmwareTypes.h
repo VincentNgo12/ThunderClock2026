@@ -9,9 +9,10 @@
 #include <cstdint>
 
 namespace fw {
-using TimeUs = uint64_t;  // Microseconds since boot, independent of laptop UTC.
-constexpr size_t kImuCount = 4;
-enum class Region { Pelvis, Lumbar, Thoracic, UpperThoracic };
+
+// --------------------------------
+// RESULTS
+// --------------------------------
 
 // Only Ok permits using an operation's output.
 enum class Result {
@@ -24,82 +25,73 @@ enum class Result {
   Timeout,
   IoFailure
 };
-enum class Validity { Unavailable, Valid, Stale, Fault };
+// enum class Validity { Unavailable, Valid, Stale, Fault };
 
-struct Stamp {
-  TimeUs acquiredUs = 0;
-  Validity validity = Validity::Unavailable;
-};
+// --------------------------------
+// SENSOR DATA TYPES 
+// --------------------------------
+
 struct Vec3 {
-  float x = 0;
-  float y = 0;
-  float z = 0;
+  float x;
+  float y;
+  float z;
+}; 
+
+struct IMUData {
+  Vec3 accel;
+  Vec3 gyro;
+  Vec3 magno;
 };
+
+// unprocessed IMU data
+struct StripData {
+  uint32_t time;
+  IMUData data[4];
+};
+
 struct Quaternion {
-  float w = 0;
-  float x = 0;
-  float y = 0;
-  float z = 0;
-};  // A zero-filled, unavailable value must stay unavailable.
+  float w;
+  float x;
+  float y;
+  float z;
+};  
 
-struct ImuData {
-  Stamp stamp{};
-  Vec3 accel{};  // m/s² in sensor-board axes.
-  Vec3 gyro{};  // rad/s in sensor-board axes.
+// proccessed IMU data
+struct StripDataProcessed {
+  uint32_t time;
+  Quaternion data[4];
 };
-struct ImuStripData {
-  uint32_t time = 0;  // End-of-strip collection time in milliseconds since boot.
-  ImuData data[kImuCount]{};
-};
-struct Orientation {
-  Stamp stamp{};
-  Quaternion rotation{};  // w,x,y,z, segment-local to world, +X right/+Y up/+Z back.
-};
-// Slow sensor fields keep their own acquisition times.
-struct Reading {
-  Stamp stamp{};
-  float value = 0;
-};
-struct Environment {
-  Reading temperatureC{};
-  Reading humidityPercent{};
-  Reading eco2Ppm{};  // ENS160 estimate.
-  Reading tvocPpb{};
-  Reading ens160Aqi{};
-};
-struct AudioSummary {
-  Stamp stamp{};
-  float relativeDb = 0;  // Relative trend, requiring calibration for physical SPL.
-};
-struct TelemetrySnapshot {
-  ImuStripData raw{};
-  Orientation orientations[kImuCount]{};
-  Environment environment{};
-  AudioSummary audio{};
-};  // Encoder omits stale or unavailable readings using their acquisition stamps.
 
-struct HeartRate {
-  Stamp stamp{};
-  float bpm = 0;  // MAX30102 stretch feature.
+// MAX30102
+struct HeartData {
+  float bpm; 
+  float oxi;
 };
-struct WearableSnapshot {
-  ImuStripData stripData{};
-  Environment environment{};
-  AudioSummary audio{};
-  HeartRate heartRate{};
-};  // Internal shared state. Wire packets have their own schema.
 
-// Future control work tracks receipt, acceptance and completion separately.
-enum class CommandKind { GyroCalibration, ResetProcessing, Diagnostics };
-enum class CommandStage { Received, Accepted, Rejected, Completed, Failed };
-struct DeviceCommand {
-  uint32_t id = 0;
-  CommandKind kind = CommandKind::Diagnostics;
-  uint8_t imuMask = 0x0f;  // Bits 0..3 select pelvis through upper thoracic.
+// ENS160 + AHT21
+struct EnvData {
+  float temperature;
+  float humidity;
+  float air_quality_index;
+  float eco2_ppm;
+  float tvoc_ppb;
 };
-struct CommandResult {
-  uint32_t id = 0;
-  CommandStage stage = CommandStage::Received;
-  Result result = Result::NotImplemented;
+
+// INMP441
+struct AudioData {
+  float relativeDb;  // Relative trend, requiring calibration for physical SPL.
 };
+
+// --------------------------------
+// SNAPSHOT
+// --------------------------------
+
+struct Snapshot {
+  StripDataProcessed stripData;
+  EnvData envData;
+  HeartData heartData;
+  AudioData audioData;
+};
+
+
 }  // namespace fw

@@ -14,7 +14,7 @@ class EnvironmentManager {
   explicit EnvironmentManager(TwoWire& wire) : wire_(wire) {}
   fw::Result begin();  // Future sensor setup and warm-up handling.
   fw::Result startConversion();  // Request due readings without waiting.
-  fw::Result read(fw::Environment& output);  // Future individually stamped fields.
+  fw::Result read(fw::EnvData& output);  // Future individually stamped fields.
 
  private:
   TwoWire& wire_;

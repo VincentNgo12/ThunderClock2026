@@ -17,24 +17,24 @@
 #include "SystemConfig.h"
 
 namespace {
-ImuManager imuManager(Wire);
+// ImuManager imuManager(Wire);
 }
 
 void setup() {
   Serial.begin(SystemConfig::kSerialBaud);
   debugPrintln("ThunderClock firmware scaffold. Hardware modules are unimplemented.");
 
-  snapshotMutex = xSemaphoreCreateMutex();
-  if (snapshotMutex == nullptr) {
-    debugPrintln("Snapshot mutex allocation failed.");
-    return;
-  }
+//  snapshotMutex = xSemaphoreCreateMutex();
+//   if (snapshotMutex == nullptr) {
+//     debugPrintln("Snapshot mutex allocation failed.");
+//     return;
+//   }
 
   if (SystemConfig::kInitImuStrip) {
     Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin);
-    if (imuManager.begin() != fw::Result::Ok) {
-      debugPrintln("IMU initialization is unavailable.");
-    }
+//    if (imuManager.begin() != fw::Result::Ok) {
+//      debugPrintln("IMU initialization is unavailable.");
+//    }
   }
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
