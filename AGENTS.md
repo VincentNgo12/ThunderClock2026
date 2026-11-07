@@ -20,7 +20,7 @@ ThunderClock is a NatHacks 2026 multimodal worker-safety prototype.
 - Backend-to-frontend realtime communication uses WebSockets.
 - The frontend must work entirely from simulated telemetry.
 - ESP32 firmware owns IMU calibration and sensor fusion and will produce
-  quaternions from four MPU-6050 sensors.
+  quaternions from four IMUs (two ICM-20948, two MPU-6050) using 6-axis fusion.
 - Heavy posture interpretation and visualization remain on the laptop.
 - OpenBCI Cyton communicates independently with the laptop.
 - Do not make medical or clinically validated claims.
@@ -47,8 +47,11 @@ build a framework or application pipeline during scaffold work.
 
 ## Hardware scope
 
-Use the hardware inventory in `docs/PRODUCT.md`. Four MPU-6050 sensors are active,
-with a fifth as a spare. AHT21, ENS160 and INMP441 provide environmental inputs.
+Use the hardware inventory in `docs/PRODUCT.md`. Four IMUs are active: ICM-20948
+sensors at the pelvis and upper thoracic, and MPU-6050 sensors at the lumbar and
+thoracic. Remaining MPU-6050 boards are spares. Only accel and gyro are used. Do not
+read or record ICM-20948 magnetometer data. AHT21, ENS160 and INMP441 provide
+environmental inputs.
 MAX30102 is a supporting stretch feature. OpenBCI Cyton uses its own laptop dongle.
 Keep sensor requirements aligned across firmware, backend and dashboard documents.
 
