@@ -5,6 +5,8 @@
  * - Unassigned
  */
 #include "FirmwareTasks.h"
+#include "ImuManager.h"
+#include "OrientationProcessor.h"
 
 void printSnapshot(const fw::Snapshot& snapshot);
 
@@ -20,6 +22,9 @@ void acquisitionTask(void*) {
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
 
   fw::Snapshot snapshot{};
+  fw::StripData strip{};
+  OrientationProcessor orientationProcessor;
+  orientationProcessor.begin();
   
   while (true) {
     const TickType_t now = xTaskGetTickCount();
@@ -44,7 +49,8 @@ void acquisitionTask(void*) {
     } 
 
     // imu read from queue 20 (hz)
-    // sensor fusion to get quaternion
+    // Fuse every queued strip, not only the newest: each filter needs all 100 Hz samples.
+    orientationProcessor.update(strip, snapshot.stripData);
     // push it through queue
 
     // temporary print to serial
@@ -54,14 +60,21 @@ void acquisitionTask(void*) {
   }
 }
 
-void IMUTask(void*) {
+// argument is the ImuManager started in setup(). Reads all 4 IMUs every 10 ms.
+void IMUTask(void* argument) {
+  ImuManager* imuManager = static_cast<ImuManager*>(argument);
+  if (imuManager == nullptr) {
+    vTaskDelete(nullptr);
+    return;
+  }
+
+  fw::StripData strip{};
+  TickType_t lastWake = xTaskGetTickCount();
   while (true) {
-    // TODO(FW-AUDIO): acquire bounded I2S windows and publish relative-noise summaries.
-
-    // imu read (100Hz)
-    // push reading through queue
-
-    vTaskDelay(pdMS_TO_TICKS(SystemConfig::kAudioIdlePeriodMs));
+    vTaskDelayUntil(&lastWake, pdMS_TO_TICKS(SystemConfig::kAcquisitionPeriodMs));
+    if (imuManager->read(strip) == fw::Result::Ok && imuQueue != nullptr) {
+      xQueueSend(imuQueue, &strip, 0);  // Drop when full rather than stall the 100 Hz loop.
+    }
   }
 }
 
@@ -84,7 +97,11 @@ void printSnapshot(const fw::Snapshot& snapshot) {
 
     Serial.printf("IMU timestamp: %lu\n", static_cast<unsigned long>(strip.time));
     for (size_t i = 0; i < sizeof(strip.data) / sizeof(strip.data[0]); ++i) {
-        const auto& q = strip.data[i];
+        if (!strip.data[i].valid) {
+            Serial.printf("  IMU[%u]  INVALID\n", static_cast<unsigned>(i));
+            continue;
+        }
+        const auto& q = strip.data[i].rotation;
         Serial.printf("  IMU[%u]  w=% .4f  x=% .4f  y=% .4f  z=% .4f\n",
                       static_cast<unsigned>(i), q.w, q.x, q.y, q.z);
     }

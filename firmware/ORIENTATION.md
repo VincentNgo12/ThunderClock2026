@@ -30,8 +30,9 @@ Remaining MPU-6050 boards are spares.
 - ICM-20948 internal rates set near 100 Hz. The driver starts the magnetometer,
   but firmware never reads it.
 - 100 Hz strip reads and approximately 20 Hz snapshot publication.
-- Board-default I2C pins, 400 kHz bus and 10 ms transaction timeout. Confirm
-  wiring and pull-ups at that bus speed.
+- Board-default I2C pins, bus clock from `SystemConfig::kI2cClockHz` (100 kHz
+  for long harness wires) and 10 ms transaction timeout. Confirm one strip read
+  fits inside 10 ms at that speed.
 
 Drivers are Adafruit MPU6050 (vendored in `lib/`) and Adafruit ICM20X. Addresses,
 channels, ranges and filters live in `ImuManager`. Confirm actual board wiring
@@ -39,10 +40,10 @@ and register settings during bring-up.
 
 ## Strip acquisition
 
-After setup, acquisition owns I2C and mux selection. Every 10 ms the acquisition
-task reads the latest accel and gyro from all four sensors in turn and stores
-them together as one strip. A strip is the unit passed to fusion. The task uses
-a fixed 10 ms period, so a strip is produced every 10 ms.
+After setup, `IMUTask` owns IMU reads and mux selection. Every 10 ms it reads the
+latest accel and gyro from all four sensors in turn, stores them together as one
+strip and sends it to `imuQueue`. `acquisitionTask` runs every 20 ms and must
+pass every queued strip, in order, to `OrientationProcessor::update`.
 
 All four sensors are read together, so the strip carries one collection time in
 milliseconds. Sequential mux reads take a few milliseconds, so the readings are
@@ -58,17 +59,19 @@ sample through that sensor's filter before replacing a telemetry snapshot.
 
 ## Calibration and fusion
 
-Use x-io Fusion for the AHRS filter, with the no-magnetometer update on every
-sensor. Pin its version and preserve its license when adding the dependency.
-Keep an independent orientation and gyro-bias state per sensor.
+`OrientationProcessor` uses x-io Fusion v1.3.3, vendored in `lib/Fusion` with
+its MIT license, and the no-magnetometer update on every sensor. Each sensor has
+its own `FusionAhrs` filter and `FusionBias` gyro-offset estimator. Fusion takes
+gyro in deg/s and accel in g, so raw rad/s and m/s² are converted first.
 
-Proposed startup calibration averages two continuous stationary seconds of raw
-gyro offset, with gyro magnitude below 3 deg/s and stable acceleration near 1 g.
-Motion restarts averaging. Allow approximately three additional seconds for
-filter startup. Hold all sensors stationary with a common heading for at least
-six seconds after boot and verify readiness explicitly.
+Gyro calibration is Fusion's `FusionBias`: whenever a sensor's gyro stays below
+3 deg/s for 3 s, its offset is re-estimated, both after boot and later at rest.
+There is no separate startup averaging step. Each filter also runs Fusion's
+roughly 3 s startup phase, and its quaternion stays invalid until that ends.
+Hold all sensors stationary with a common heading for about six seconds after
+boot so the offset and startup both settle.
 
-Keep orientation unavailable until calibration and startup finish. A simple
+Keep orientation unavailable until startup finishes. A simple
 serial `c` command may reset all calibration/filter states. Recalibrate after
 reboot or mounting changes. Document the command when it is implemented.
 
@@ -101,9 +104,9 @@ neutral-reference capture. Record tilt and heading drift separately.
 Each strip carries one collection time in milliseconds from `millis()`. Fusion
 uses the time between strips as its update interval.
 
-Proposed reset conditions include a gap above 30 ms between valid samples for a
-sensor or repeated read failures. Reset the affected calibration/filter and
-expose a loss diagnostic. Nonfinite data, free fall, near-range clipping and
+A gap above 30 ms between valid samples for a sensor restarts that sensor's
+filter, including its startup phase; the gyro offset is kept. Repeated read
+failures and a loss diagnostic are still proposed. Nonfinite data, free fall, near-range clipping and
 failed reads also need explicit invalidation.
 
 Use a 50 ms local freshness target before encoding. Require finite unit

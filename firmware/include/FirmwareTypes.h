@@ -57,10 +57,16 @@ struct Quaternion {
   float z;
 };  
 
-// proccessed IMU data
+// One sensor's fused orientation in the protocol frame (+X right, +Y up, +Z posterior).
+struct OrientationData {
+  Quaternion rotation;  // Unit quaternion; identity when not valid.
+  bool valid;           // False until this sensor's filter has settled, or when its sample was invalid.
+};
+
+// proccessed IMU data: same slot order and time as the StripData it came from.
 struct StripDataProcessed {
   uint32_t time;
-  Quaternion data[4];
+  OrientationData data[4];
 };
 
 // MAX30102

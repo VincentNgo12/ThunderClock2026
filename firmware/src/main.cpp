@@ -59,9 +59,9 @@ void setup() {
   // INITIALIZE SENSORS & PERIPHERALS
   // -----------------------------------
   if (SystemConfig::kInitImuStrip) {
-  //    if (imuManager.begin() != fw::Result::Ok) {
-  //      debugPrintln("IMU initialization is unavailable.");
-  //    }
+    if (imuManager.begin() != fw::Result::Ok) {
+      debugPrintln("IMU initialization is unavailable.");
+    }
   }
 
   if (SystemConfig::kInitAudio) {
@@ -96,7 +96,7 @@ void setup() {
   }
   if (SystemConfig::kStartAudioTask) {
     if (xTaskCreate(IMUTask, "IMUTask", SystemConfig::kTaskStackBytes,
-                    nullptr, 1, nullptr) != pdPASS) {
+                    &imuManager, 1, nullptr) != pdPASS) {
       debugPrintln("Audio task creation failed.");
     }
   }
