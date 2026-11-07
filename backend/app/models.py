@@ -19,14 +19,26 @@ class Imu:
 
 
 @dataclass(frozen=True)
+class Environment:
+    temperature_c: float | None = None
+    humidity_percent: float | None = None
+    air_quality_index: int | None = None
+    eco2_ppm: int | None = None
+    tvoc_ppb: int | None = None
+    noise_relative_db: float | None = None
+
+
+@dataclass(frozen=True)
 class Sample:
     format: Literal["raw", "quaternion"]
     sample_time_ms: int  # Device uptime; never UTC or radio-transit age.
     imus: tuple[Imu, ...]
     sequence: int | None = None
+    environment: Environment | None = None
 
     @property
     def fully_usable(self) -> bool:
+        # Optional environment values do not affect IMU diagnostic health.
         return all(imu.valid for imu in self.imus)
 
 

@@ -12,6 +12,7 @@ import httpx
 
 from app.ble import DeviceStream
 from app.dashboard import snapshot
+from app.generated import orientation_pb2
 from app.main import create_app
 from test_ble_cli import Client, DEVICE, ADVERTISEMENT, FIXTURES
 
@@ -88,6 +89,24 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
         close = await asyncio.wait_for(outgoing.get(), 2)
         self.assertEqual(close['code'], 1013)
         await asyncio.wait_for(task, 1)
+
+    async def test_environment_keeps_present_zero_and_expires_with_packet(self):
+        packet = orientation_pb2.OrientationPacket.FromString((FIXTURES / 'telemetry_v2.bin').read_bytes())
+        packet.sequence = 1
+        packet.environment.ClearField('temperature_c')
+        self.clients[0].callback(None, packet.SerializeToString())
+        stream = self.app.state.stream
+        async with asyncio.timeout(1):
+            while stream.stats.decoded < 2:
+                await asyncio.sleep(0)
+
+        current = snapshot(stream, 1)
+        self.assertEqual(current['environment']['tvoc_ppb'], 0)
+        self.assertIsNone(current['environment']['temperature_c'])
+        self.assertEqual(current['freshness']['environment']['status'], 'valid')
+        stale = snapshot(stream, 2, stale_after=0)
+        self.assertIsNone(stale['environment'])
+        self.assertEqual(stale['freshness']['environment']['status'], 'stale')
 
     async def test_api_needs_explicit_settings(self):
         with patch.dict(os.environ, {'DEVICE_ID': '', 'DEVICE_FORMAT': ''}):

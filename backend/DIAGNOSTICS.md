@@ -1,7 +1,8 @@
 # ThunderClock BLE diagnostics
 
 The standalone CLI discovers a wearable, displays signed raw IMU readings and
-validates four orientation quaternions. Use one process per device connection.
+validates four orientation quaternions and any available v2 environment readings.
+Use one process per device connection.
 
 ## Install and inspect fixtures
 
@@ -15,6 +16,7 @@ python -m pip install -r requirements.txt
 python -m app.cli decode ../protocol/fixtures/raw_signed.bin --format raw
 python -m app.cli decode ../protocol/fixtures/quaternion_identity.bin --format quaternion
 python -m app.cli decode ../protocol/fixtures/quaternion_partial.bin --format quaternion
+python -m app.cli decode ../protocol/fixtures/telemetry_v2.bin --format quaternion
 ```
 
 On Windows PowerShell, activate the environment with
@@ -24,7 +26,9 @@ offline. The packets in `protocol/fixtures/` are synthetic.
 ## Scan and stream
 
 The prototype profile targets advertising name `THUNDER CLOCK`, service `AAAA`,
-and READ + NOTIFY characteristics `8888` for raw and `8889` for quaternions.
+and READ + NOTIFY characteristics `8888` for raw and `8889` for quaternions
+with optional v2 environment readings. Select `--format quaternion` for either
+version on 8889.
 Short UUIDs expand using the Bluetooth base UUID
 `0000xxxx-0000-1000-8000-00805f9b34fb`.
 
@@ -85,9 +89,9 @@ uses a separate clock. Radio transit time is unknown.
 | Dropped frames | Sender rate and terminal or recording pressure |
 | Partial quaternions | Sensor validity, mounting and stationary calibration |
 
-Each notification carries one complete message. The generated bounds are
-150 bytes for raw and 153 for quaternions, requiring ATT MTU at least 153 and
-156 respectively to fit the maximum. Check the actual negotiated capacity.
+Each notification carries one complete message. The raw, quaternion v1 and
+telemetry v2 bounds are 150, 153 and 189 bytes. They require ATT MTU at least
+153, 156 and 192 respectively to fit the maximum.
 See [the device contract](../protocol/ORIENTATION.md) and
 [the firmware acceptance checklist](../firmware/ORIENTATION.md).
 
@@ -109,9 +113,11 @@ Uvicorn command. Startup resolves the wearable with a scan.
 `GET /health` reports service status and `GET /diagnostics` reports reader
 status and counters. `WS /ws/telemetry` publishes a shared latest snapshot at
 about 20 Hz with a one-second send deadline per client. The diagnostic mapping
-uses `WorkerTelemetry` 2.0. Raw mode leaves orientations unavailable. Device
-metadata and per-IMU acquisition times are null. Posture, fall state,
-environment, EEG, heart rate, and risk remain unavailable.
+uses `WorkerTelemetry` 2.0. Raw mode leaves orientations unavailable. Fresh v2
+environment readings populate the environment object with nulls for missing
+fields. A stale or missing environment block maps to null. Device metadata and
+per-IMU acquisition times are null. Posture, fall state, EEG, heart rate and risk
+remain unavailable.
 
 ## Tests and generation
 

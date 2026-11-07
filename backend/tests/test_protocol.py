@@ -1,5 +1,5 @@
 # File: test_protocol.py
-# Purpose: Check exact raw compatibility, quaternion semantics and generated size bounds.
+# Purpose: Check wire compatibility, measurement presence and generated size bounds.
 # Contributors: Unassigned
 
 import hashlib
@@ -67,9 +67,44 @@ class ProtocolTests(unittest.TestCase):
         self.assertFalse(sample.imus[2].valid)
         self.assertIsNone(sample.imus[2].quaternion)
 
+    def test_environment_presence_and_version_compatibility(self):
+        self.assertIsNone(decode(orientation().SerializeToString(), 'quaternion').environment)
+        payload = (FIXTURES / 'telemetry_v2.bin').read_bytes()
+        sample = decode(payload, 'quaternion')
+        self.assertEqual(sample.environment.temperature_c, 23.5)
+        self.assertEqual(sample.environment.humidity_percent, 45)
+        self.assertEqual(sample.environment.air_quality_index, 2)
+        self.assertEqual(sample.environment.eco2_ppm, 630)
+        self.assertEqual(sample.environment.tvoc_ppb, 0)
+        self.assertEqual(sample.environment.noise_relative_db, -24.5)
+
+        packet = wire.OrientationPacket.FromString(payload)
+        packet.version = 1
+        with self.assertRaises(PacketError):
+            decode(packet.SerializeToString(), 'quaternion')
+        packet.version = 2
+        packet.environment.ClearField('temperature_c')
+        environment = decode(packet.SerializeToString(), 'quaternion').environment
+        self.assertIsNone(environment.temperature_c)
+        self.assertEqual(environment.tvoc_ppb, 0)
+        packet.environment.Clear()
+        self.assertIsNone(decode(packet.SerializeToString(), 'quaternion').environment)
+
+    def test_invalid_environment_values_are_rejected(self):
+        for field, value in (
+            ('temperature_c', float('nan')), ('humidity_percent', 101),
+            ('air_quality_index', 0), ('eco2_ppm', 399), ('tvoc_ppb', 65001),
+            ('noise_relative_db', float('inf')),
+        ):
+            packet = orientation()
+            packet.version = 2
+            setattr(packet.environment, field, value)
+            with self.subTest(field=field), self.assertRaises(PacketError):
+                decode(packet.SerializeToString(), 'quaternion')
+
     def test_quaternion_validation(self):
         mutations = [
-            lambda p: setattr(p, 'version', 2), lambda p: p.ClearField('version'),
+            lambda p: setattr(p, 'version', 3), lambda p: p.ClearField('version'),
             lambda p: p.ClearField('sequence'), lambda p: p.ClearField('sample_time_ms'),
             lambda p: p.orientations.pop(), lambda p: p.orientations.add(sensor_id=4, valid=False),
             lambda p: setattr(p.orientations[0], 'sensor_id', 0),
@@ -110,3 +145,6 @@ class ProtocolTests(unittest.TestCase):
         manifest = json.loads((FIXTURES / 'manifest.json').read_text())
         self.assertEqual(hashlib.sha256((ROOT / 'firmware/proto/telemetry.proto').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), manifest['raw_schema_sha256'])
         self.assertEqual(len((FIXTURES / 'quaternion_maximum.bin').read_bytes()), QUATERNION_MAX_BYTES)
+        firmware_header = (ROOT / 'firmware/include/TelemetryManager.h').read_text()
+        for symbol, bound in [('kRawMaxBytes', RAW_MAX_BYTES), ('kOrientationMaxBytes', QUATERNION_MAX_BYTES)]:
+            self.assertEqual(int(re.search(symbol + r'\s*=\s*(\d+)', firmware_header)[1]), bound)

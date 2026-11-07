@@ -12,6 +12,9 @@ PB_BIND(telemetry_orientation_v1_Quaternion, telemetry_orientation_v1_Quaternion
 PB_BIND(telemetry_orientation_v1_Orientation, telemetry_orientation_v1_Orientation, AUTO)
 
 
+PB_BIND(telemetry_orientation_v1_Environment, telemetry_orientation_v1_Environment, AUTO)
+
+
 PB_BIND(telemetry_orientation_v1_OrientationPacket, telemetry_orientation_v1_OrientationPacket, AUTO)
 
 

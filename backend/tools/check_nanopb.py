@@ -33,7 +33,7 @@ def main():
         expected = (fixtures / 'quaternion_identity.bin').read_bytes()
         if subprocess.check_output([str(executable), 'emit']) != expected:
             raise SystemExit('Independent C identity encoding differs from Python')
-        for name in ('raw_signed', 'quaternion_identity', 'quaternion_partial', 'quaternion_maximum'):
+        for name in ('raw_signed', 'quaternion_identity', 'quaternion_partial', 'telemetry_v2', 'quaternion_maximum'):
             data = (fixtures / f'{name}.bin').read_bytes()
             result = subprocess.check_output([str(executable), 'raw' if name.startswith('raw') else 'quaternion'], input=data)
             if result != data:

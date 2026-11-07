@@ -18,7 +18,8 @@ int main(int argc, char **argv) {
     _setmode(_fileno(stdin), _O_BINARY);
     _setmode(_fileno(stdout), _O_BINARY);
 #endif
-    uint8_t input[154], output[153];
+    uint8_t input[telemetry_orientation_v1_OrientationPacket_size + 1];
+    uint8_t output[telemetry_orientation_v1_OrientationPacket_size];
     telemetry_orientation_v1_OrientationPacket packet = telemetry_orientation_v1_OrientationPacket_init_zero;
     telemetry_ImuStripData raw = telemetry_ImuStripData_init_zero;
     const pb_msgdesc_t *fields = telemetry_orientation_v1_OrientationPacket_fields;

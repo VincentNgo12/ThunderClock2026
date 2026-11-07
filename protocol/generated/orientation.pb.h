@@ -26,6 +26,21 @@ typedef struct _telemetry_orientation_v1_Orientation {
     telemetry_orientation_v1_Quaternion rotation;
 } telemetry_orientation_v1_Orientation;
 
+typedef struct _telemetry_orientation_v1_Environment {
+    bool has_temperature_c;
+    float temperature_c;
+    bool has_humidity_percent;
+    float humidity_percent;
+    bool has_air_quality_index;
+    uint32_t air_quality_index;
+    bool has_eco2_ppm;
+    uint32_t eco2_ppm;
+    bool has_tvoc_ppb;
+    uint32_t tvoc_ppb;
+    bool has_noise_relative_db;
+    float noise_relative_db;
+} telemetry_orientation_v1_Environment;
+
 typedef struct _telemetry_orientation_v1_OrientationPacket {
     bool has_version;
     uint32_t version;
@@ -35,6 +50,8 @@ typedef struct _telemetry_orientation_v1_OrientationPacket {
     uint32_t sample_time_ms;
     pb_size_t orientations_count;
     telemetry_orientation_v1_Orientation orientations[4];
+    bool has_environment;
+    telemetry_orientation_v1_Environment environment;
 } telemetry_orientation_v1_OrientationPacket;
 
 
@@ -45,10 +62,12 @@ extern "C" {
 /* Initializer values for message structs */
 #define telemetry_orientation_v1_Quaternion_init_default {0, 0, 0, 0}
 #define telemetry_orientation_v1_Orientation_init_default {false, 0, false, 0, false, telemetry_orientation_v1_Quaternion_init_default}
-#define telemetry_orientation_v1_OrientationPacket_init_default {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default}}
+#define telemetry_orientation_v1_Environment_init_default {false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
+#define telemetry_orientation_v1_OrientationPacket_init_default {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default, telemetry_orientation_v1_Orientation_init_default}, false, telemetry_orientation_v1_Environment_init_default}
 #define telemetry_orientation_v1_Quaternion_init_zero {0, 0, 0, 0}
 #define telemetry_orientation_v1_Orientation_init_zero {false, 0, false, 0, false, telemetry_orientation_v1_Quaternion_init_zero}
-#define telemetry_orientation_v1_OrientationPacket_init_zero {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero}}
+#define telemetry_orientation_v1_Environment_init_zero {false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
+#define telemetry_orientation_v1_OrientationPacket_init_zero {false, 0, false, 0, false, 0, 0, {telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero, telemetry_orientation_v1_Orientation_init_zero}, false, telemetry_orientation_v1_Environment_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define telemetry_orientation_v1_Quaternion_w_tag 1
@@ -58,10 +77,17 @@ extern "C" {
 #define telemetry_orientation_v1_Orientation_sensor_id_tag 1
 #define telemetry_orientation_v1_Orientation_valid_tag 2
 #define telemetry_orientation_v1_Orientation_rotation_tag 3
+#define telemetry_orientation_v1_Environment_temperature_c_tag 1
+#define telemetry_orientation_v1_Environment_humidity_percent_tag 2
+#define telemetry_orientation_v1_Environment_air_quality_index_tag 3
+#define telemetry_orientation_v1_Environment_eco2_ppm_tag 4
+#define telemetry_orientation_v1_Environment_tvoc_ppb_tag 5
+#define telemetry_orientation_v1_Environment_noise_relative_db_tag 6
 #define telemetry_orientation_v1_OrientationPacket_version_tag 16
 #define telemetry_orientation_v1_OrientationPacket_sequence_tag 17
 #define telemetry_orientation_v1_OrientationPacket_sample_time_ms_tag 18
 #define telemetry_orientation_v1_OrientationPacket_orientations_tag 19
+#define telemetry_orientation_v1_OrientationPacket_environment_tag 20
 
 /* Struct field encoding specification for nanopb */
 #define telemetry_orientation_v1_Quaternion_FIELDLIST(X, a) \
@@ -80,27 +106,42 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  rotation,          3)
 #define telemetry_orientation_v1_Orientation_DEFAULT NULL
 #define telemetry_orientation_v1_Orientation_rotation_MSGTYPE telemetry_orientation_v1_Quaternion
 
+#define telemetry_orientation_v1_Environment_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, FLOAT,    temperature_c,     1) \
+X(a, STATIC,   OPTIONAL, FLOAT,    humidity_percent,   2) \
+X(a, STATIC,   OPTIONAL, UINT32,   air_quality_index,   3) \
+X(a, STATIC,   OPTIONAL, UINT32,   eco2_ppm,          4) \
+X(a, STATIC,   OPTIONAL, UINT32,   tvoc_ppb,          5) \
+X(a, STATIC,   OPTIONAL, FLOAT,    noise_relative_db,   6)
+#define telemetry_orientation_v1_Environment_CALLBACK NULL
+#define telemetry_orientation_v1_Environment_DEFAULT NULL
+
 #define telemetry_orientation_v1_OrientationPacket_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, UINT32,   version,          16) \
 X(a, STATIC,   OPTIONAL, UINT32,   sequence,         17) \
 X(a, STATIC,   OPTIONAL, UINT32,   sample_time_ms,   18) \
-X(a, STATIC,   REPEATED, MESSAGE,  orientations,     19)
+X(a, STATIC,   REPEATED, MESSAGE,  orientations,     19) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  environment,      20)
 #define telemetry_orientation_v1_OrientationPacket_CALLBACK NULL
 #define telemetry_orientation_v1_OrientationPacket_DEFAULT NULL
 #define telemetry_orientation_v1_OrientationPacket_orientations_MSGTYPE telemetry_orientation_v1_Orientation
+#define telemetry_orientation_v1_OrientationPacket_environment_MSGTYPE telemetry_orientation_v1_Environment
 
 extern const pb_msgdesc_t telemetry_orientation_v1_Quaternion_msg;
 extern const pb_msgdesc_t telemetry_orientation_v1_Orientation_msg;
+extern const pb_msgdesc_t telemetry_orientation_v1_Environment_msg;
 extern const pb_msgdesc_t telemetry_orientation_v1_OrientationPacket_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define telemetry_orientation_v1_Quaternion_fields &telemetry_orientation_v1_Quaternion_msg
 #define telemetry_orientation_v1_Orientation_fields &telemetry_orientation_v1_Orientation_msg
+#define telemetry_orientation_v1_Environment_fields &telemetry_orientation_v1_Environment_msg
 #define telemetry_orientation_v1_OrientationPacket_fields &telemetry_orientation_v1_OrientationPacket_msg
 
 /* Maximum encoded size of messages (where known) */
 #define TELEMETRY_ORIENTATION_V1_ORIENTATION_PB_H_MAX_SIZE telemetry_orientation_v1_OrientationPacket_size
-#define telemetry_orientation_v1_OrientationPacket_size 153
+#define telemetry_orientation_v1_Environment_size 33
+#define telemetry_orientation_v1_OrientationPacket_size 189
 #define telemetry_orientation_v1_Orientation_size 30
 #define telemetry_orientation_v1_Quaternion_size 20
 

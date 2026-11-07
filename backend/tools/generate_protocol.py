@@ -45,17 +45,32 @@ def main():
     partial.sample_time_ms = 100
     partial.orientations[2].valid = False
     partial.orientations[2].ClearField("rotation")
+    full = orientation.OrientationPacket()
+    full.CopyFrom(identity)
+    full.version = 2
+    full.environment.temperature_c = 23.5
+    full.environment.humidity_percent = 45
+    full.environment.air_quality_index = 2
+    full.environment.eco2_ppm = 630
+    full.environment.tvoc_ppb = 0  # Explicit presence must survive a round trip.
+    full.environment.noise_relative_db = -24.5
+
+    # Exercise allocation bounds with uint32 values outside the valid sensor ranges.
     maximum = orientation.OrientationPacket(version=0xFFFFFFFF, sequence=0xFFFFFFFF, sample_time_ms=0xFFFFFFFF)
     for _ in range(4):
         item = maximum.orientations.add(sensor_id=0xFFFFFFFF, valid=True)
         item.rotation.w = item.rotation.x = item.rotation.y = item.rotation.z = 0.5
+    maximum.environment.CopyFrom(full.environment)
+    maximum.environment.air_quality_index = 0xFFFFFFFF
+    maximum.environment.eco2_ppm = 0xFFFFFFFF
+    maximum.environment.tvoc_ppb = 0xFFFFFFFF
     strip = raw.ImuStripData(time=1234)
     for index in range(1, 5):
         item = strip.data.add()
         item.accel.x, item.accel.y, item.accel.z = -1.25 * index, 2.5 * index, 9.75
         item.gyro.x, item.gyro.y, item.gyro.z = -0.125 * index, 0.25 * index, -0.5 * index
     fixtures = {"raw_signed": strip, "quaternion_identity": identity,
-                "quaternion_partial": partial, "quaternion_maximum": maximum}
+                "quaternion_partial": partial, "telemetry_v2": full, "quaternion_maximum": maximum}
     manifest = {"synthetic_fixtures_not_hardware": True,
                 "raw_schema_sha256": hashlib.sha256((ROOT / 'firmware/proto/telemetry.proto').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), "fixtures": {}}
     for name, packet in fixtures.items():

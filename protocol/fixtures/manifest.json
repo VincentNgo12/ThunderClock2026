@@ -131,8 +131,54 @@
         ]
       }
     },
+    "telemetry_v2": {
+      "bytes": 90,
+      "packet": {
+        "version": 2,
+        "sequence": 0,
+        "sample_time_ms": 0,
+        "orientations": [
+          {
+            "sensor_id": 1,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 2,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 3,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          },
+          {
+            "sensor_id": 4,
+            "valid": true,
+            "rotation": {
+              "w": 1.0
+            }
+          }
+        ],
+        "environment": {
+          "temperature_c": 23.5,
+          "humidity_percent": 45.0,
+          "air_quality_index": 2,
+          "eco2_ppm": 630,
+          "tvoc_ppb": 0,
+          "noise_relative_db": -24.5
+        }
+      }
+    },
     "quaternion_maximum": {
-      "bytes": 153,
+      "bytes": 189,
       "packet": {
         "version": 4294967295,
         "sequence": 4294967295,
@@ -178,7 +224,15 @@
               "z": 0.5
             }
           }
-        ]
+        ],
+        "environment": {
+          "temperature_c": 23.5,
+          "humidity_percent": 45.0,
+          "air_quality_index": 4294967295,
+          "eco2_ppm": 4294967295,
+          "tvoc_ppb": 4294967295,
+          "noise_relative_db": -24.5
+        }
       }
     }
   }
