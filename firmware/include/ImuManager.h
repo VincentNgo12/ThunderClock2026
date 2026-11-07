@@ -23,9 +23,9 @@ class ImuManager {
   fw::Result read(fw::StripData& output);
   bool available(size_t slot) const;
 
- private:
   fw::Result setChannel(uint8_t channel);
 
+private:
   TwoWire& wire_;
   uint8_t muxAddress = 0x70;
   // Mux channel i: pelvis, lumbar, thoracic, upper thoracic.
