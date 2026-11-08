@@ -19,3 +19,8 @@ the shared I2C mutex. Both return `fw::Result`. `read()` returns `Ok` whenever a
 least one fresh reading is available; missing fields remain `NaN`. It schedules
 one measurement cycle per `kEnvironmentPeriodMs` and checks completed AHT21
 conversions on later calls, without a conversion wait inside the mutex.
+
+`begin()` requires both sensors to initialize. ENS160 samples pass through during
+warm-up, initial startup and invalid-quality states, including zero values; the
+existing packet has no environment-validity field. Measurement quality is left
+to the backend.

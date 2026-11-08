@@ -15,10 +15,10 @@
 class EnvironmentManager {
  public:
   explicit EnvironmentManager(TwoWire& wire) : wire_(wire) {}
-  fw::Result begin();  // Ok when at least one of the two sensors answered.
+  fw::Result begin();  // Ok only when both AHT21 and ENS160 initialize.
   // Never waits for a conversion. Ok when any fresh reading is available,
-  // including cached readings. Missing, stale or warming-up fields are NaN.
-  // NotReady means no usable readings yet; other failures use fw::Result.
+  // including cached readings. ENS160 quality flags do not suppress readings.
+  // Missing or stale fields are NaN. NotReady means no readings yet.
   fw::Result read(fw::EnvData& output);
 
  private:

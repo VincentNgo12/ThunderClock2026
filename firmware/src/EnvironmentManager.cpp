@@ -67,7 +67,7 @@ fw::Result EnvironmentManager::begin() {
   ens160Present_ = beginEns160() == fw::Result::Ok;
   debugPrintln(aht21Present_ ? "AHT21 ready." : "AHT21 not found.");
   debugPrintln(ens160Present_ ? "ENS160 ready; warming up (about 3 min)." : "ENS160 not found.");
-  return (aht21Present_ || ens160Present_) ? fw::Result::Ok : fw::Result::IoFailure;
+  return (aht21Present_ && ens160Present_) ? fw::Result::Ok : fw::Result::IoFailure;
 }
 
 fw::Result EnvironmentManager::selectChannel() {
@@ -164,8 +164,8 @@ fw::Result EnvironmentManager::read(fw::EnvData& output) {
   }
 
   fillOutput(nowMs, output);
-  // Like ImuManager, one usable sensor is enough for Ok; unavailable fields
-  // stay NaN. Cached readings remain usable until their original time expires.
+  // One received sensor reading is enough for Ok; unavailable fields stay NaN.
+  // ENS160 measurement quality is interpreted by the backend.
   if (std::isfinite(output.temperature) || std::isfinite(output.air_quality_index)) {
     return fw::Result::Ok;
   }
@@ -229,14 +229,7 @@ fw::Result EnvironmentManager::readEns160(uint32_t nowMs) {
   if (readRegister(SystemConfig::kEns160Address, kEnsDataStatus, &status, 1) != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
-  // Validity flag, bits 3:2: 0 normal, 1 warm-up, 2 initial start-up, 3 invalid.
-  const uint8_t validityFlag = (status >> 2) & 0x03;
-  if (validityFlag != 0) {
-    latest_.air_quality_index = NAN;
-    latest_.eco2_ppm = NAN;
-    latest_.tvoc_ppb = NAN;
-    return fw::Result::NotReady;
-  }
+  // Forward new samples even during warm-up or when ENS160 marks them invalid.
   if ((status & kEnsNewDataBit) == 0) {
     return fw::Result::NoNewSample;
   }

@@ -15,6 +15,7 @@ class TwoWire {
   bool ensPresent = true;
   bool ahtReadFails = false;
   uint8_t ensStatus = 0x02;
+  std::vector<uint8_t> ensData{2, 0, 0, 0x76, 0x02};  // AQI 2, TVOC 0, eCO2 630.
   uint8_t selectedChannel = 0;
   unsigned conversions = 0;
   unsigned transactions = 0;
@@ -76,7 +77,7 @@ class TwoWire {
       } else if (ensRegister_ == 0x20) {
         response_ = {ensStatus};
       } else if (ensRegister_ == 0x21) {
-        response_ = {2, 0, 0, 0x76, 0x02};  // AQI 2, TVOC 0, eCO2 630.
+        response_ = ensData;
       }
     }
     return static_cast<uint8_t>(response_.size());

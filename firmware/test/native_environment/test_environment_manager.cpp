@@ -63,30 +63,46 @@ static void testPartialSensorsAndWarmup() {
   testMillis = 1000;
   TwoWire wire;
   wire.ensStatus = 0x06;  // ENS160 warm-up, even with new data.
+  wire.ensData = {0, 0, 0, 0, 0};  // Forward zeros too; backend handles their meaning.
   EnvironmentManager manager(wire);
   assert(manager.begin() == fw::Result::Ok);
   const uint32_t started = testMillis;
   fw::EnvData data;
-  assert(manager.read(data) == fw::Result::NotReady);
-  assertUnavailable(data);
+  assert(manager.read(data) == fw::Result::Ok);
+  assert(std::isnan(data.temperature));
+  assert(data.air_quality_index == 0);
+  assert(data.eco2_ppm == 0);
+  assert(data.tvoc_ppb == 0);
   testMillis += SystemConfig::kAht21ConversionMs;
   assert(manager.read(data) == fw::Result::Ok);
   assert(data.temperature == 25);
-  assert(std::isnan(data.air_quality_index));
+  assert(data.air_quality_index == 0);
 
+  wire.ensData = {2, 0, 0, 0x76, 0x02};
   wire.ensStatus = 0x02;
   testMillis = started + SystemConfig::kEnvironmentPeriodMs;
   assert(manager.read(data) == fw::Result::Ok);
   assert(data.air_quality_index == 2);
-  wire.ensStatus = 0x04;  // Warm-up must invalidate cached AQI even without new data.
+  wire.ensStatus = 0x04;  // Without a new sample, keep the previous reading.
   testMillis += SystemConfig::kEnvironmentPeriodMs;
   assert(manager.read(data) == fw::Result::Ok);
-  assert(std::isnan(data.air_quality_index));
+  assert(data.air_quality_index == 2);
+
+  // Each nonzero ENS160 validity flag must still allow new values through.
+  for (uint8_t validity = 1; validity <= 3; ++validity) {
+    wire.ensStatus = 0x02 | (validity << 2);
+    wire.ensData = {validity, validity, 0, validity, 0};
+    testMillis += SystemConfig::kEnvironmentPeriodMs;
+    assert(manager.read(data) == fw::Result::Ok);
+    assert(data.air_quality_index == validity);
+    assert(data.tvoc_ppb == validity);
+    assert(data.eco2_ppm == validity);
+  }
 
   TwoWire ahtOnly;
   ahtOnly.ensPresent = false;
   EnvironmentManager temperature(ahtOnly);
-  assert(temperature.begin() == fw::Result::Ok);
+  assert(temperature.begin() == fw::Result::IoFailure);
   assert(temperature.read(data) == fw::Result::NotReady);
   testMillis += SystemConfig::kAht21ConversionMs;
   assert(temperature.read(data) == fw::Result::Ok);
@@ -96,7 +112,7 @@ static void testPartialSensorsAndWarmup() {
   TwoWire ensOnly;
   ensOnly.ahtPresent = false;
   EnvironmentManager air(ensOnly);
-  assert(air.begin() == fw::Result::Ok);
+  assert(air.begin() == fw::Result::IoFailure);
   assert(air.read(data) == fw::Result::Ok);
   assert(std::isnan(data.temperature));
   assert(data.eco2_ppm == 630);
@@ -110,7 +126,7 @@ static void testFailuresAndRetry() {
   fw::EnvData data{1, 2, 3, 4, 5};
   assert(manager.read(data) == fw::Result::NotReady);
   assertUnavailable(data);
-  assert(manager.begin() == fw::Result::Ok);
+  assert(manager.begin() == fw::Result::IoFailure);
   const uint32_t started = testMillis;
   assert(manager.read(data) == fw::Result::NotReady);
   wire.ahtFrame[0] |= 0x80;
