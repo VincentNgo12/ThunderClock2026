@@ -1,0 +1,44 @@
+---
+description: Efficiency and redundancy review for ImuManager and OrientationProcessor
+globs: firmware/src/ImuManager.cpp,firmware/include/ImuManager.h,firmware/src/OrientationProcessor.cpp,firmware/include/OrientationProcessor.h
+alwaysApply: false
+---
+
+# IMU and orientation review
+
+Whenever you edit, build or run code that touches these files, review the
+ImuManager and OrientationProcessor files before finishing. Report findings
+briefly under "IMU/orientation review". Note issues by default. Fix them only
+when the user asks, or when the fix is a trivial compile error.
+
+## Efficiency (budget: four IMU reads plus fusion inside the 10 ms period)
+
+- Count I2C transactions per `read()`. Flag extra probes, register reads or
+  bytes beyond accel and gyro. For example, Adafruit ICM-20948 `getEvent()`
+  reads 23 bytes, including magnetometer data the project must not read.
+- Flag mux writes when the channel is already selected, and per-sample
+  library calls that only need to happen once in `begin()`.
+- In fusion, flag per-sample `sqrt`, divisions or settings calls that could be
+  computed once or replaced by a squared comparison.
+- Flag millisecond timestamps used as fusion sample periods. `millis()`
+  quantization adds about 10% period jitter at 100 Hz, while `micros()` doesn't.
+
+## Redundancy
+
+- Flag constants duplicated between files, such as the gyro range (1000 deg/s),
+  sample rate, mux address or g-to-m/s² conversion. These belong in
+  `SystemConfig.h` or the library, for example `FusionRadiansToDegrees`.
+- Flag repeated branches that do the same thing, such as setting the same
+  default sample period in several paths.
+- Flag state initialized in both the header and `begin()` without a reason.
+
+## Correctness checks to keep running
+
+- `setChannel` stays public because the environment, heart-rate and bus-scan
+  modules share the mux.
+- Every strip must reach `OrientationProcessor::update()` in order. Flag
+  callers that drop strips, skip draining the queue or pass an unfilled strip.
+- Units stay explicit: accel in m/s² including gravity, gyro in rad/s in
+  `IMUData`, and deg/s and g only at the Fusion boundary.
+- Each slot's `valid` flag reflects its own read or filter state.
+- Confirm the firmware still builds with `pio run -d firmware`.

@@ -1,51 +1,39 @@
 /**
  * File: ImuManager.h
- * Purpose: Raw MPU6050 reads for four regions, called by acquisition.
+ * Purpose: Accel and gyro reads from the four mux-connected IMUs, called by acquisition.
  * Contributors:
  * - Unassigned
  */
+#pragma once
+#include <Adafruit_ICM20948.h>
+#include <Adafruit_MPU6050.h>
+#include <Arduino.h>
+#include <Wire.h>
 
- // status : working 
+#include "FirmwareTypes.h"
 
-<<<<<<< HEAD
- #pragma once
- #include <Arduino.h>
- #include <Wire.h>
- #include "FirmwareTypes.h"
- #include <Adafruit_MPU6050.h>
- 
- 
- class ImuManager {
-   public:
-     explicit ImuManager(TwoWire& wire) : wire_(wire) {}
-     fw::Result begin();  // Future per-sensor setup and identity checks.
-     // Only Ok permits using output; each real sample carries its original acquisition time.
-     fw::Result read(fw::ImuStripData& output);
- 
-   private:
-     Adafruit_MPU6050 imuSensors[4];
-     uint8_t muxAddress = 0x70;
-     TwoWire& wire_;
-     fw::Result setChannel(uint8_t channel);
- };
- 
-=======
-// struct ImuBatch {
-//   fw::ImuData samples[SystemConfig::kFifoBatchSize]{};
-//   size_t count = 0;
-// };
-// 
-// class ImuManager {
-//  public:
-//   explicit ImuManager(TwoWire& wire) : wire_(wire) {}
-//   fw::Result begin();  // Future per-sensor configuration and identity checks.
-//   // Only Ok exposes count usable entries for the requested sensor index.
-//   fw::Result readBatch(size_t sensor, ImuBatch& output);
-//   uint32_t losses(size_t sensor) const;
-//   bool available(size_t sensor) const;
-// 
-//  private:
-//   TwoWire& wire_;
-// };
-// 
->>>>>>> origin/main
+class ImuManager {
+ public:
+  static constexpr size_t kSlotCount = 4;
+
+  explicit ImuManager(TwoWire& wire) : wire_(wire) {}
+  // Ok when at least one sensor starts. A failed sensor stays unavailable and reads as invalid.
+  fw::Result begin();
+  // Ok when at least one slot is valid. Each slot's valid flag reports its own read.
+  fw::Result read(fw::StripData& output);
+  bool available(size_t slot) const;
+  // Selects a mux channel. Shared with the environment and heart-rate modules on the same bus.
+  fw::Result setChannel(uint8_t channel);
+
+
+private:
+  bool readIcm(fw::IMUData& output);  // Accel + gyro only from the ICM on the selected channel.
+
+  TwoWire& wire_;
+  uint8_t muxAddress = 0x70;
+  // Mux channel i: pelvis, lumbar, thoracic, upper thoracic.
+  bool isIcm[kSlotCount] = {true, false, false, true};
+  Adafruit_ICM20948 icmSensors[kSlotCount];  // Only slots where isIcm is true.
+  Adafruit_MPU6050 mpuSensors[kSlotCount];   // Only slots where isIcm is false.
+  bool slotAvailable[kSlotCount] = {};
+};

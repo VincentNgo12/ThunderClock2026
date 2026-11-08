@@ -3,8 +3,8 @@
 The BLE diagnostic CLI discovers the wearable, streams signed raw readings or
 quaternions, and inspects synthetic packets offline. The optional FastAPI service
 processes live BLE or explicitly selected synthetic telemetry. It captures a
-neutral reference and publishes joint angles and sustained-bend warnings over
-WebSockets.
+neutral reference and publishes joint quaternions, angles and sustained-bend
+warnings over WebSockets.
 
 Use Python 3.11 or later. Install `requirements.txt` for the CLI,
 `requirements-api.txt` for the optional API, or `requirements-dev.txt` for the
@@ -34,3 +34,9 @@ python -m app.cli stream --device "<exact OS id>" --format quaternion --duration
 
 See [DIAGNOSTICS.md](DIAGNOSTICS.md) for setup, the posture demo, and hardware
 acceptance.
+
+Use `DEVICE_FORMAT=raw_fusion` to estimate posture on the laptop from raw BLE
+packets. [Setup and mounting checks](DIAGNOSTICS.md#laptop-fusion-from-raw-ble)
+
+Frontend integration uses the [API and WebSocket contract](../docs/TELEMETRY_PROTOCOL.md)
+and [complete JSON examples](../docs/telemetry-examples.json).

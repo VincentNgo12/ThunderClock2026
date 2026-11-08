@@ -38,14 +38,16 @@ struct Vec3 {
 }; 
 
 struct IMUData {
-  Vec3 accel;
-  Vec3 gyro;
-  Vec3 magno;
+  Vec3 accel;  // m/s² in sensor-board axes.
+  Vec3 gyro;   // rad/s in sensor-board axes.
+  Vec3 magno;  // Unused. The magnetometer is not read.
+  bool valid;  // False when this sensor failed to start or read.
 };
 
 // unprocessed IMU data
 struct StripData {
-  uint32_t time;
+  uint32_t time;    // ms, collection time for telemetry.
+  uint32_t timeUs;  // µs, collection time used by fusion for its update interval.
   IMUData data[4];
 };
 
@@ -56,10 +58,16 @@ struct Quaternion {
   float z;
 };  
 
-// proccessed IMU data
+// One sensor's fused orientation in the protocol frame (+X right, +Y up, +Z posterior).
+struct OrientationData {
+  Quaternion rotation;  // Unit quaternion; identity when not valid.
+  bool valid;           // False until this sensor's filter has settled, or when its sample was invalid.
+};
+
+// proccessed IMU data: same slot order and time as the StripData it came from.
 struct StripDataProcessed {
   uint32_t time;
-  Quaternion data[4];
+  OrientationData data[4];
 };
 
 // MAX30102

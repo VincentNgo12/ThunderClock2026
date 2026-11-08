@@ -7,8 +7,9 @@ Build the scaffold from the repository root with `pio run -d firmware`.
 The pinned esptool 5.0.0 requires Click below 8.2 in the PlatformIO Python
 environment. A `get_metavar` error during image generation indicates a version
 mismatch to check in that environment.
-`ImuManager` has bring-up MPU-6050 reads through the mux. ICM-20948 reads,
-fusion, audio, encoding and BLE operations report NotImplemented or are absent.
+`ImuManager` reads all four IMUs through the mux, and `acquisitionTask` prints
+strips at about 10 Hz for testing. Fusion, audio, encoding and BLE operations
+report NotImplemented or are absent.
 `SystemConfig.h` disables hardware initialization and all task shells by default.
 `setup()` creates the shared snapshot mutex before optional task startup.
 The raw schema in `proto/` awaits code-generation integration.
@@ -19,11 +20,11 @@ The raw schema in `proto/` awaits code-generation integration.
   Mark unconfirmed mux channels, physical placements and mounting explicitly.
 - `main.cpp` initializes Wire and starts enabled tasks. Keep optional task bodies
   in `FirmwareTasks.cpp`.
-- Acquisition owns the I2C bus and mux after setup. Keep sensor reads and checked
-  FIFO transfers in `ImuManager`. It drives two sensor types: ICM-20948 at pelvis
-  and upper thoracic, and MPU-6050 at lumbar and thoracic. Only accel and gyro are
-  read. It assembles four-sensor strips at least every 10 ms. Each sample carries
-  its own timestamp and validity.
+- Acquisition owns the I2C bus and mux after setup. Keep sensor reads in
+  `ImuManager`. It drives two sensor types: ICM-20948 at pelvis and upper
+  thoracic, and MPU-6050 at lumbar and thoracic. Only accel and gyro are read.
+  `acquisitionTask` reads one four-sensor strip every 10 ms. Each sample carries
+  a validity flag, and the strip carries one collection time.
 - `OrientationProcessor` owns per-sensor gyro calibration and 6-axis fusion. It
   must consume each acquired sample before telemetry can replace a display
   snapshot.

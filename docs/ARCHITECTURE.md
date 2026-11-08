@@ -63,9 +63,10 @@ Fusion and gravity subtraction remain firmware concerns.
 
 The optional FastAPI service uses one explicitly selected source. BLE and
 synthetic samples share the same posture processor. It owns neutral capture,
-relative joint angles and sustained bend warnings. It publishes
+neutral-relative joint quaternions, angles and sustained bend warnings. It publishes
 `WorkerTelemetry` over `/ws/telemetry` at about 20 Hz with per-IMU freshness
 and source labels. Raw mode leaves orientations unavailable.
+[Frontend contract and rig instructions](TELEMETRY_PROTOCOL.md)
 
 Fall/impact, EEG and combined risk are separate future work. Add NumPy, SciPy or
 BrainFlow when their implementation needs them.
@@ -85,11 +86,11 @@ values visible.
 ## Orientation and calibration
 
 1. Acquire four accelerometer/gyro streams (two ICM-20948, two MPU-6050) through
-   the mux as FIFO strips at least every 10 ms.
+   the mux as one strip every 10 ms.
 2. Calibrate gyro bias and fuse each stream independently on the ESP32.
-3. Apply each confirmed sensor-to-segment mounting transform once.
-4. Send segment-local-to-world quaternions using the convention in
+3. Send board-local-to-world quaternions using the convention in
    [ORIENTATION.md](../protocol/ORIENTATION.md).
+4. Apply each sensor-to-segment mounting transform once in the backend.
 5. Capture neutral references and calculate relative segment posture on the laptop.
 6. Render measured anchors and interpolated geometry in the frontend.
 
