@@ -17,7 +17,7 @@ from app.generated import orientation_pb2 as wire
 
 FIXTURES = Path(__file__).resolve().parents[2] / 'protocol/fixtures'
 DEVICE = SimpleNamespace(address='opaque-os-identifier', name='THUNDER CLOCK')
-ADVERTISEMENT = SimpleNamespace(local_name='THUNDER CLOCK', service_uuids=[SERVICE_UUID])
+ADVERTISEMENT = SimpleNamespace(local_name='ThunderClock', service_uuids=[SERVICE_UUID])
 
 
 async def discover(**kwargs):
@@ -194,7 +194,7 @@ class BleCliTests(unittest.IsolatedAsyncioTestCase):
             client.payloads = [payload]
             clients.append(client)
             return client
-        args = parser().parse_args(['stream', '--device', DEVICE.address, '--format', 'raw', '--duration', '.02'])
+        args = parser().parse_args(['stream', '--format', 'raw', '--duration', '.02'])
         output = io.StringIO()
         self.assertEqual(await run(args, scanner=discover, client_factory=factory, output=output), 0)
         self.assertIn('ax=-1.2500', output.getvalue())
@@ -213,6 +213,22 @@ class BleCliTests(unittest.IsolatedAsyncioTestCase):
         output = io.StringIO()
         self.assertEqual(await run(args, scanner=discover, client_factory=Client, output=output), 3)
         self.assertIn('SILENCE', output.getvalue())
+
+    async def test_cli_requires_a_unique_device_name(self):
+        other = SimpleNamespace(address='second-os-identifier', name='Other')
+
+        async def missing(**kwargs):
+            return {DEVICE.address: (DEVICE, SimpleNamespace(local_name='Other'))}
+
+        async def duplicate(**kwargs):
+            return {DEVICE.address: (DEVICE, ADVERTISEMENT),
+                    other.address: (other, SimpleNamespace(local_name='THUNDER CLOCK'))}
+
+        args = parser().parse_args(['stream', '--format', 'raw'])
+        with self.assertRaisesRegex(ValueError, 'ThunderClock not found.*--device'):
+            await run(args, scanner=missing)
+        with self.assertRaisesRegex(ValueError, 'Multiple ThunderClock devices.*--device'):
+            await run(args, scanner=duplicate)
 
     async def test_normal_cleanup_delay_does_not_turn_good_capture_into_failure(self):
         def factory(*args, **kwargs):

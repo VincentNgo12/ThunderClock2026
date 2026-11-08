@@ -15,6 +15,8 @@ from .ble import DeviceStream, SERVICE_UUID, scan, select_device, uuid
 from .models import REGIONS
 from .protocol import decode
 
+DEVICE_NAMES = ("ThunderClock", "THUNDER CLOCK")
+
 
 def positive(value: str) -> float:
     number = float(value)
@@ -28,8 +30,8 @@ def parser() -> argparse.ArgumentParser:
     commands = result.add_subparsers(dest="command", required=True)
     scanner = commands.add_parser("scan", help="list OS device IDs, names and advertised services")
     scanner.add_argument("--timeout", type=positive, default=5)
-    stream = commands.add_parser("stream", help="connect to the exact selected OS identifier")
-    stream.add_argument("--device", required=True)
+    stream = commands.add_parser("stream", help="discover ThunderClock and stream BLE diagnostics")
+    stream.add_argument("--device", help="exact OS ID (default: discover ThunderClock by name)")
     stream.add_argument("--format", choices=("raw", "quaternion"), required=True)
     stream.add_argument("--service", type=uuid, default=SERVICE_UUID)
     stream.add_argument("--characteristic", type=uuid, help="default: raw 8888, quaternion 8889")
@@ -100,7 +102,16 @@ async def run(arguments, *, scanner=None, client_factory=None, output=None) -> i
         if not devices:
             print("No devices advertised during this scan; check OS Bluetooth and wearable advertising.", file=output)
         return 0
-    device = select_device(devices, arguments.device)
+    if arguments.device is None:
+        matches = [device for device, advertisement in devices
+                   if (advertisement.local_name or device.name) in DEVICE_NAMES]
+        if not matches:
+            raise ValueError("ThunderClock not found; check that it is advertising or run scan and use --device")
+        if len(matches) > 1:
+            raise ValueError("Multiple ThunderClock devices found; run scan and use --device with the exact OS ID")
+        device = matches[0]
+    else:
+        device = select_device(devices, arguments.device)
     stream = DeviceStream(device, arguments.format, service=arguments.service,
                           characteristic=arguments.characteristic, timeout=arguments.timeout,
                           client_factory=client_factory)

@@ -22,15 +22,16 @@ python -m app.cli decode ../protocol/fixtures/raw_signed.bin --format raw
 python -m app.cli decode ../protocol/fixtures/telemetry_v2.bin --format quaternion
 ```
 
-For a live wearable check, stop any API session using the wearable, then
-scan and copy its exact OS device ID. Run the stream command for the format
-your firmware exposes.
+For a live wearable check, stop any API session using the wearable and select
+the format your firmware exposes. The CLI discovers ThunderClock automatically.
 
 ```sh
-python -m app.cli scan --timeout 5
-python -m app.cli stream --device "<exact OS id>" --format raw --duration 10
-python -m app.cli stream --device "<exact OS id>" --format quaternion --duration 15
+python -m app.cli stream --format raw --duration 10
+python -m app.cli stream --format quaternion --duration 15
 ```
+
+To select a specific board, run `python -m app.cli scan --timeout 5` and pass
+its exact OS ID with `--device`.
 
 See [DIAGNOSTICS.md](DIAGNOSTICS.md) for setup, the posture demo, and hardware
 acceptance.

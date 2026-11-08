@@ -33,25 +33,25 @@ version on 8889.
 Short UUIDs expand using the Bluetooth base UUID
 `0000xxxx-0000-1000-8000-00805f9b34fb`.
 
-Use a wearable build that implements the selected profile. Copy the exact OS ID
-from discovery. macOS may use an opaque UUID. The stream command rescans to
-resolve the ID to a native BLE device.
+Use a wearable build that implements the selected profile. `stream` scans for a
+single device named `ThunderClock` or `THUNDER CLOCK`.
 
 ```sh
-python -m app.cli scan --timeout 5
-python -m app.cli stream --device "<exact OS id>" --format raw --duration 10
-python -m app.cli stream --device "<exact OS id>" --format quaternion --duration 15
-python -m app.cli stream --device "<exact OS id>" --format raw --duration 10 --record capture.jsonl
+python -m app.cli stream --format raw --duration 10
+python -m app.cli stream --format quaternion --duration 15
+python -m app.cli stream --format raw --duration 10 --record capture.jsonl
 ```
 
+For multiple boards or a different advertising name, run `python -m app.cli
+scan --timeout 5` and pass the exact OS ID with `--device "<exact OS id>"`.
 Use `--service` and `--characteristic` to override UUIDs for a known profile.
 Recording writes the decoded samples the consumer receives. Check the drop
 counter when using JSONL captures.
 
 The default queue holds eight notifications, with 200 ms status polling and a
 500 ms terminal refresh interval. The local freshness limit is 500 ms. Override
-refresh or freshness with `--refresh` or `--stale-after` in seconds. Connect,
-subscribe and cleanup each have a 10 s default timeout set by `--timeout`.
+refresh or freshness with `--refresh` or `--stale-after` in seconds. Discovery,
+connect, subscribe and cleanup each use a 10 s default timeout set by `--timeout`.
 The stream duration starts after subscription. Ctrl+C closes the connection.
 
 | Exit code | Meaning |
@@ -65,7 +65,7 @@ An empty device list is a valid scan result.
 
 ## Follow a notification
 
-1. `ble.scan()` and `select_device()` resolve the native device by exact ID.
+1. `ble.scan()` discovers native devices. The CLI selects by name or explicit OS ID.
 2. `DeviceStream.updates()` connects, checks the profile and subscribes.
 3. The callback queues bounded bytes with monotonic and UTC receipt times.
    If the queue fills, it drops the oldest item and increments the drop counter.
