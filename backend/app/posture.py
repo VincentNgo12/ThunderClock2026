@@ -27,7 +27,7 @@ def multiply(a, b):
 
 
 def unit(q):
-    # Wire quaternions can have a small norm error. Derived rotations use unit length.
+    # Wire quaternions can be scaled. Derived rotations use unit length.
     length = math.hypot(*q)
     return tuple(component / length for component in q)
 

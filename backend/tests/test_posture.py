@@ -67,8 +67,8 @@ class PostureTests(unittest.TestCase):
         root = rotation((1, 0, 0), -22)
         bends = [self.forward, rotation((0, 0, 1), 9), IDENTITY]
         current_world = world_chain(root, [multiply(n, d) for n, d in zip(neutral_joints, bends)])
-        # The BLE decoder accepts small norm errors. Derived quaternions stay unit length.
-        self.posture.update(frame(*(tuple(1.0003 * c for c in q) for q in current_world)), 0.1)
+        # Derived quaternions stay unit length even when the input is scaled.
+        self.posture.update(frame(*(tuple(2 * c for c in q) for q in current_world)), 0.1)
         reconstructed = root
         for index, name in enumerate(("lumbar", "thoracic", "upper_thoracic")):
             delta = self.posture.joint_deltas[name]

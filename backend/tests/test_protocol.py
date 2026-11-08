@@ -10,6 +10,7 @@ import struct
 import unittest
 
 from app.generated import orientation_pb2 as wire, telemetry_pb2 as raw
+from app.models import Environment
 from app.protocol import decode, PacketError, QUATERNION_MAX_BYTES, RAW_MAX_BYTES
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -67,6 +68,14 @@ class ProtocolTests(unittest.TestCase):
         self.assertFalse(sample.imus[2].valid)
         self.assertIsNone(sample.imus[2].quaternion)
 
+    def test_firmware_valid_non_unit_quaternion_is_preserved(self):
+        packet = orientation()
+        packet.orientations[0].rotation.w = 2
+        packet.orientations[0].rotation.x = 1
+        sample = decode(packet.SerializeToString(), 'quaternion')
+        self.assertTrue(sample.fully_usable)
+        self.assertEqual(sample.imus[0].quaternion, (2, 1, 0, 0))
+
     def test_environment_presence_and_version_compatibility(self):
         self.assertIsNone(decode(orientation().SerializeToString(), 'quaternion').environment)
         payload = (FIXTURES / 'telemetry_v2.bin').read_bytes()
@@ -90,17 +99,22 @@ class ProtocolTests(unittest.TestCase):
         packet.environment.Clear()
         self.assertIsNone(decode(packet.SerializeToString(), 'quaternion').environment)
 
-    def test_invalid_environment_values_are_rejected(self):
+    def test_invalid_environment_values_are_unavailable(self):
+        packet = orientation()
+        packet.version = 2
         for field, value in (
             ('temperature_c', float('nan')), ('humidity_percent', 101),
             ('air_quality_index', 0), ('eco2_ppm', 399), ('tvoc_ppb', 65001),
             ('noise_relative_db', float('inf')),
         ):
-            packet = orientation()
-            packet.version = 2
             setattr(packet.environment, field, value)
-            with self.subTest(field=field), self.assertRaises(PacketError):
-                decode(packet.SerializeToString(), 'quaternion')
+        sample = decode(packet.SerializeToString(), 'quaternion')
+        self.assertTrue(sample.fully_usable)
+        self.assertIsNone(sample.environment)
+        packet.environment.tvoc_ppb = 0
+        sample = decode(packet.SerializeToString(), 'quaternion')
+        self.assertTrue(sample.fully_usable)
+        self.assertEqual(sample.environment, Environment(tvoc_ppb=0))
 
     def test_oximeter_readings_are_individually_optional_in_v2(self):
         packet = wire.OrientationPacket.FromString((FIXTURES / 'telemetry_v2.bin').read_bytes())
@@ -114,15 +128,23 @@ class ProtocolTests(unittest.TestCase):
         packet.ClearField('spo2_percent')
         self.assertIsNone(decode(packet.SerializeToString(), 'quaternion').spo2_percent)
 
-        for version, field, value in (
-            (1, 'heart_rate_bpm', 72), (1, 'spo2_percent', 98),
-            (2, 'heart_rate_bpm', 0), (2, 'heart_rate_bpm', float('inf')),
-            (2, 'spo2_percent', 101), (2, 'spo2_percent', float('nan')),
+        for field, value, expected in (
+            ('heart_rate_bpm', 0, (None, 98)), ('heart_rate_bpm', float('inf'), (None, 98)),
+            ('spo2_percent', 101, (72, None)), ('spo2_percent', float('nan'), (72, None)),
+            ('spo2_percent', 0, (72, 0)),
         ):
+            with self.subTest(field=field, value=value):
+                packet.heart_rate_bpm, packet.spo2_percent = 72, 98
+                setattr(packet, field, value)
+                sample = decode(packet.SerializeToString(), 'quaternion')
+                self.assertTrue(sample.fully_usable)
+                self.assertEqual((sample.heart_rate_bpm, sample.spo2_percent), expected)
+
+    def test_v1_rejects_vital_sign_fields(self):
+        for field, value in (('heart_rate_bpm', 72), ('spo2_percent', 98)):
             packet = orientation()
-            packet.version = version
             setattr(packet, field, value)
-            with self.subTest(version=version, field=field, value=value), self.assertRaises(PacketError):
+            with self.subTest(field=field), self.assertRaises(PacketError):
                 decode(packet.SerializeToString(), 'quaternion')
 
     def test_quaternion_validation(self):
@@ -135,7 +157,6 @@ class ProtocolTests(unittest.TestCase):
             lambda p: p.orientations[0].ClearField('valid'),
             lambda p: p.orientations[0].ClearField('rotation'),
             lambda p: setattr(p.orientations[0].rotation, 'w', 0),
-            lambda p: setattr(p.orientations[0].rotation, 'w', 2),
             lambda p: setattr(p.orientations[0].rotation, 'x', float('inf')),
             lambda p: setattr(p.orientations[0].rotation, 'z', float('nan')),
             lambda p: setattr(p.orientations[0], 'valid', False),

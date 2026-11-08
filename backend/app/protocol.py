@@ -13,7 +13,6 @@ from .models import Environment, Imu, REGIONS, Sample
 RAW_MAX_BYTES = 150
 ORIENTATION_V1_MAX_BYTES = 153
 QUATERNION_MAX_BYTES = 201
-NORM_TOLERANCE = 0.001
 
 
 class PacketError(ValueError):
@@ -21,12 +20,8 @@ class PacketError(ValueError):
 
 
 def decode_environment(message: orientation_pb2.Environment) -> Environment | None:
-    # ListFields includes explicitly present zeros and excludes missing values.
-    values = {field.name: value for field, value in message.ListFields()}
-    if not values:
-        return None
-    if not all(math.isfinite(value) for value in values.values()):
-        raise PacketError("Environment readings must be finite")
+    # Keep each usable reading, including zeros explicitly present on the wire.
+    values = {field.name: value for field, value in message.ListFields() if math.isfinite(value)}
     for field, minimum, maximum in (
         ("humidity_percent", 0, 100),
         ("air_quality_index", 1, 5),
@@ -34,8 +29,8 @@ def decode_environment(message: orientation_pb2.Environment) -> Environment | No
         ("tvoc_ppb", 0, 65000),
     ):
         if field in values and not minimum <= values[field] <= maximum:
-            raise PacketError(f"{field} must be in the range {minimum}–{maximum}")
-    return Environment(**values)
+            del values[field]
+    return Environment(**values) if values else None
 
 
 def decode(payload: bytes, packet_format: str) -> Sample:
@@ -88,17 +83,18 @@ def decode(payload: bytes, packet_format: str) -> Sample:
                 raise PacketError("Quaternion values must be finite, even for unavailable sensors")
         if not item.valid and rotation is not None:
             raise PacketError("Unavailable sensors must omit rotation")
-        if item.valid:
-            if rotation is None or abs(math.hypot(*rotation) - 1) > NORM_TOLERANCE:
-                raise PacketError("Valid orientation needs a unit quaternion (norm tolerance 0.001)")
+        # Trust firmware validity. A nonzero rotation can be normalized for posture.
+        if item.valid and (rotation is None or not any(rotation)):
+            raise PacketError("Valid orientation needs a present, nonzero quaternion")
         imus.append(Imu(item.sensor_id, quaternion=rotation if item.valid else None, valid=item.valid))
 
+    # Optional vital signs are independent of IMU validity and of each other.
     heart_rate = message.heart_rate_bpm if message.HasField("heart_rate_bpm") else None
     if heart_rate is not None and (not math.isfinite(heart_rate) or heart_rate <= 0):
-        raise PacketError("Heart rate must be finite and positive")
+        heart_rate = None
     spo2 = message.spo2_percent if message.HasField("spo2_percent") else None
     if spo2 is not None and not 0 <= spo2 <= 100:
-        raise PacketError("SpO2 must be between 0 and 100 percent")
+        spo2 = None
 
     return Sample(
         "quaternion",

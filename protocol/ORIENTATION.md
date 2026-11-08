@@ -36,6 +36,8 @@ Heart rate and SpO₂ are independently optional in v2 and absent in v1.
 Omit a reading when it is unavailable, invalid or stale. In nanopb, set
 `has_heart_rate_bpm` and `has_spo2_percent` only for usable values. The
 snapshot timestamp applies to both readings.
+The backend treats invalid optional environmental and vital-sign values as
+unavailable while keeping the orientations and other usable readings.
 
 Use explicit presence for header scalars, sensor ID and validity. Nanopb
 `has_*` flags must be set even for sequence/time zero or valid=false.
@@ -46,8 +48,9 @@ once and order is irrelevant. Mux channels 0–3 are the planned acquisition slo
 Confirm physical placement before using these names for posture.
 
 For an unavailable sensor send `valid=false` and omit rotation while retaining
-the ID slot. A valid rotation must be present, finite and unit length within
-0.001. Backend validation must reject arbitrary non-unit inputs.
+the ID slot. Firmware should send unit quaternions within 0.001. The backend
+honors `valid=true` for present, finite, nonzero rotations and keeps the received
+components. Posture processing normalizes its derived rotations.
 
 Quaternion component order is `[w, x, y, z]`. Proto3 scalar components may use
 zero defaults. An absent rotation has different meaning from identity.
