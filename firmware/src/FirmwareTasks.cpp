@@ -10,7 +10,12 @@
 
 void printSnapshot(const fw::Snapshot& snapshot); 
 void printRawStrip(const fw::StripData& stripData);
-void encodeIMUData(telemetry_ImuStripData &message, fw::StripData &stripData);
+
+void makeIMUFieldsAvailable(telemetry_ImuStripData& message); 
+void makeSnapshotFieldsAvailable(telemetry_orientation_v1_OrientationPacket& packet);
+
+void fillOrientationPacket(const fw::Snapshot& snapshot, telemetry_orientation_v1_OrientationPacket& packet); 
+void fillIMUMessage(telemetry_ImuStripData &message, fw::StripData &stripData);
 
 
 void acquisitionTask(void*) {
@@ -28,10 +33,20 @@ void acquisitionTask(void*) {
   fw::StripData stripData{};
   OrientationProcessor orientationProcessor;
   orientationProcessor.begin();
+
+  // protobuff settings
+  telemetry_orientation_v1_OrientationPacket packet =
+    telemetry_orientation_v1_OrientationPacket_init_zero;
+  makeSnapshotFieldsAvailable(packet);
+  packet.version = 2;
+  uint32_t sequence = 0;
+  uint8_t buffer[514]; // this is where encoded snapshot is held
+
   
   while (true) {
     const TickType_t now = xTaskGetTickCount();
 
+    // env + heart read with mutex safety
     if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
 
       // env read
@@ -45,6 +60,7 @@ void acquisitionTask(void*) {
         lastHeartTime = now; 
         // heart read
       }
+
       xSemaphoreGive(i2cMutex);
     } 
 
@@ -55,18 +71,25 @@ void acquisitionTask(void*) {
     } 
 
     // imu read from queue 20 (hz)
-
-
     if (xQueueReceive(imuToSnapshotQueue, &stripData, portMAX_DELAY) == pdTRUE) {
       // sensor fusion to get q
       orientationProcessor.update(stripData, snapshot.stripData);
-      // put it in queue for telemetry
-      xQueueOverwrite(snapshotToTelemetryQueue, &snapshot);  
+
+      // protobuff encoding
+      packet.sequence = sequence++;
+      fillOrientationPacket(snapshot, packet);
+      pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+      if (pb_encode(&stream, telemetry_orientation_v1_OrientationPacket_fields, &packet)) Serial.println("succesful snapshot encoding");;
+      size_t length = stream.bytes_written;
+      Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
+
+      // send data ble
+      pCharSnapshot->setValue(buffer, length);
+      pCharSnapshot->notify();
     }
 
-
     // temporary print to serial
-    printSnapshot(snapshot);
+    // printSnapshot(snapshot);
 
     vTaskDelayUntil(&lastWake, imuPeriod);
   }
@@ -85,10 +108,7 @@ void IMUTask(void*) {
   // protobuf settings 
   telemetry_ImuStripData message = telemetry_ImuStripData_init_zero; // message representing imuStrip 
   message.data_count = 4; // set message repeated data field to 4 (4 imus)
-  for (int i = 0; i < 4; ++i) {
-     message.data[i].has_accel = true;
-     message.data[i].has_gyro = true;
-  } // set has fields of protobut to true so that it gets encoded
+  makeIMUFieldsAvailable(message);
   uint8_t buffer[300]; // this is where encoded snapshot is held
 
   while (true) {
@@ -100,9 +120,9 @@ void IMUTask(void*) {
     }
     
     // encode data
-    encodeIMUData(message, stripData);
+    fillIMUMessage(message, stripData);
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    if (pb_encode(&stream, telemetry_ImuStripData_fields, &message)) Serial.println("succesful encoding");;
+    if (pb_encode(&stream, telemetry_ImuStripData_fields, &message)) Serial.println("succesful imu encoding");;
     size_t length = stream.bytes_written;
     Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
     // send data ble
@@ -113,6 +133,7 @@ void IMUTask(void*) {
       xQueueOverwrite(imuToSnapshotQueue, &stripData);    
       lastImuToSnapshotTime = now;
     }
+
     // printRawStrip(stripData);
 
     vTaskDelayUntil(&lastWake, imuToTelemetryPeriod);
@@ -126,8 +147,44 @@ void telemetryTask(void*) {
   }
 }
 
-// encoding helper functions
-void encodeIMUData(telemetry_ImuStripData &message, fw::StripData &stripData) {
+
+
+// set fields to available
+void makeIMUFieldsAvailable(telemetry_ImuStripData& message) {
+  for (int i = 0; i < 4; ++i) {
+    message.data[i].has_accel = true;
+    message.data[i].has_gyro = true;
+  } // set has fields of protobut to true so that it gets encoded
+}
+
+// set fields to available
+void makeSnapshotFieldsAvailable(telemetry_orientation_v1_OrientationPacket& packet) {
+    packet.has_version = true;
+    packet.has_sequence = true;
+    packet.has_sample_time_ms = true;
+    packet.has_environment = true;
+    packet.has_heart_rate_bpm = true;
+    packet.has_spo2_percent = true;
+
+    auto& env = packet.environment;
+    env.has_temperature_c = true;
+    env.has_humidity_percent = true;
+    env.has_air_quality_index = true;
+    env.has_eco2_ppm = true;
+    env.has_tvoc_ppb = true;
+    env.has_noise_relative_db = true;
+
+    packet.orientations_count = 4;
+    for (auto& orientation : packet.orientations) {
+        orientation.has_sensor_id = true;
+        orientation.has_valid = true;
+        orientation.valid = true;
+        orientation.has_rotation = true;
+    }
+}
+
+// fill IMU message 
+void fillIMUMessage(telemetry_ImuStripData &message, fw::StripData &stripData) {
   message.time = stripData.time;
   for (int i = 0; i < 4; ++i) {
     message.data[i].accel.x = stripData.data[i].accel.x;
@@ -140,6 +197,40 @@ void encodeIMUData(telemetry_ImuStripData &message, fw::StripData &stripData) {
   }
 }
 
+// fill orientation packet
+void fillOrientationPacket(const fw::Snapshot& snapshot,
+    telemetry_orientation_v1_OrientationPacket& packet) {
+
+    packet.version = 2;
+    packet.sample_time_ms = snapshot.stripData.time;
+
+    for (pb_size_t i = 0; i < packet.orientations_count; ++i) {
+        const auto& imu = snapshot.stripData.data[i];
+        auto& orientation = packet.orientations[i];
+
+        orientation.sensor_id = i + 1;
+        orientation.valid = imu.valid;
+        orientation.has_rotation = imu.valid;
+        orientation.rotation = {};
+
+        if (imu.valid) {
+            const auto& q = imu.rotation;
+            orientation.rotation = {q.w, q.x, q.y, q.z};
+        }
+    }
+
+    const auto& env = snapshot.envData;
+    packet.environment.temperature_c = env.temperature;
+    packet.environment.humidity_percent = env.humidity;
+    packet.environment.air_quality_index =
+        static_cast<uint32_t>(env.air_quality_index);
+    packet.environment.eco2_ppm = static_cast<uint32_t>(env.eco2_ppm);
+    packet.environment.tvoc_ppb = static_cast<uint32_t>(env.tvoc_ppb);
+    packet.environment.noise_relative_db = snapshot.audioData.relativeDb;
+
+    packet.heart_rate_bpm = snapshot.heartData.bpm;
+    packet.spo2_percent = snapshot.heartData.oxi;
+}
 
 // temporary helper to print snapshot for debug
 void printSnapshot(const fw::Snapshot& snapshot) {

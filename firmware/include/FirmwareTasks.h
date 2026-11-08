@@ -17,6 +17,7 @@
 #include "BLEManager.h"
 
 #include "telemetry.pb.h"
+#include "orientation.pb.h"
 #include <pb_encode.h>
 
 // global mutexes and queues
