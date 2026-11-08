@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .ble import DEVICE_FORMATS, DeviceStream, scan, select_device
 from .dashboard import snapshot
+from .fusion import RawFusion
 from .models import Sample, STREAMING_STATES
 from .posture import Posture
 from .simulated import SimulatedStream
@@ -29,20 +30,26 @@ def create_app(*, on_raw_sample: Callable[[Sample], None] | None = None):
             warning_seconds=float(os.getenv("POSTURE_WARNING_SECONDS", "2")),
         )
         source = os.getenv("TELEMETRY_SOURCE", "hardware")
+        fusion = None
         if source == "simulated":
             stream = SimulatedStream()
         elif source == "hardware":
             device_id = os.getenv("DEVICE_ID")
             packet_format = os.getenv("DEVICE_FORMAT")
-            if not device_id or packet_format not in DEVICE_FORMATS:
-                raise ValueError("Set DEVICE_ID and DEVICE_FORMAT=raw, quaternion or both for hardware mode")
-            stream = DeviceStream(select_device(await scan(), device_id), packet_format)
+            if not device_id or packet_format not in (*DEVICE_FORMATS, "raw_fusion"):
+                raise ValueError("Set DEVICE_ID and DEVICE_FORMAT=raw, quaternion, both or raw_fusion for hardware mode")
+            stream = DeviceStream(select_device(await scan(), device_id),
+                                  "raw" if packet_format == "raw_fusion" else packet_format)
+            if packet_format == "raw_fusion":
+                fusion = RawFusion(stream.stats, os.getenv("RAW_IMU_AXES"))
         else:
             raise ValueError("Set TELEMETRY_SOURCE=hardware or simulated")
         app.state.source = source
         app.state.stream = stream
+        pose_stream = stream if fusion is None else fusion
+        app.state.pose_stream = pose_stream
         app.state.posture = posture
-        app.state.latest = json.dumps(snapshot(stream, 0, source=source, posture=posture))
+        app.state.latest = json.dumps(snapshot(pose_stream, 0, source=source, posture=posture))
 
         async def acquire():
             resets = stream.stats.resets
@@ -58,12 +65,14 @@ def create_app(*, on_raw_sample: Callable[[Sample], None] | None = None):
                             except Exception:
                                 logging.getLogger(__name__).exception("Raw IMU consumer disabled for this session")
                                 raw_consumer = None
-                        continue
+                        if fusion is None or not fusion.update(sample, stream.received_monotonic, stream.received_at):
+                            continue
+                        sample = fusion.latest
                     if stream.stats.resets != resets:
-                        # A restarted wearable may have established a new orientation frame.
+                        # A restarted wearable or estimator may establish a new orientation frame.
                         posture.reset()
                         resets = stream.stats.resets
-                    posture.update(sample, stream.received_monotonic)
+                    posture.update(sample, pose_stream.received_monotonic)
             except Exception as error:
                 # Keep HTTP diagnostics available after a device/setup failure; never substitute a source.
                 stream.stats.state = "error"
@@ -73,7 +82,7 @@ def create_app(*, on_raw_sample: Callable[[Sample], None] | None = None):
         async def publish():
             sequence = 1  # The initial snapshot already uses sequence zero.
             while True:
-                state = snapshot(stream, sequence, source=source, posture=posture)
+                state = snapshot(pose_stream, sequence, source=source, posture=posture)
                 app.state.latest = json.dumps(state, allow_nan=False)
                 sequence += 1
                 await asyncio.sleep(0.05)
@@ -108,7 +117,7 @@ def create_app(*, on_raw_sample: Callable[[Sample], None] | None = None):
 
     @app.post("/posture/calibrate")
     async def calibrate():
-        stream = app.state.stream
+        stream = app.state.pose_stream
         if stream.stats.state not in STREAMING_STATES:
             raise HTTPException(status_code=409, detail="Neutral capture requires an active telemetry source")
         posture = app.state.posture

@@ -7,14 +7,7 @@ JSON schema version is independent of the BLE packet version.
 
 ## Connect and try the demo
 
-<<<<<<< HEAD
 From `backend/` with Python 3.11 or later and a virtual environment active:
-=======
-The BLE reader accepts bounded Protobuf packets. Version 2 of the fused packet
-adds optional environment readings to the four orientations. Firmware owns calibration,
-fusion and device validity. Backend code owns receipt, decoding, validation and
-sensor-to-segment mounting transforms.
->>>>>>> main
 
 ```sh
 python -m pip install -r requirements-api.txt
@@ -35,12 +28,15 @@ The default HTTP CORS origins are `http://localhost:5173` and
 `http://127.0.0.1:5173` for GET and POST. The local API has no login or token.
 
 For hardware, use `TELEMETRY_SOURCE=hardware` (the default), the exact scan
-`DEVICE_ID`, and `DEVICE_FORMAT=quaternion` or `both`. Raw-only mode supplies
-diagnostics while posture is unavailable. Startup errors such as a missing
+`DEVICE_ID`, and `DEVICE_FORMAT=quaternion` or `both` for wearable orientations.
+`DEVICE_FORMAT=raw_fusion` estimates orientations on the laptop from 8888 and
+publishes the same posture fields with source `hardware`. Plain `raw` mode
+supplies diagnostics while posture is unavailable. Startup errors such as a missing
 device ID or an unresolved scan prevent the API from starting. A connection
 or subscription failure after startup is visible in diagnostics and
 telemetry. Switching to simulation requires selecting it at startup.
 [Hardware setup and BLE checks](../backend/DIAGNOSTICS.md#optional-api)
+[Laptop fusion setup](../backend/DIAGNOSTICS.md#laptop-fusion-from-raw-ble)
 
 ## HTTP and WebSocket endpoints
 

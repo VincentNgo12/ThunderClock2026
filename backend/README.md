@@ -35,5 +35,8 @@ python -m app.cli stream --device "<exact OS id>" --format quaternion --duration
 See [DIAGNOSTICS.md](DIAGNOSTICS.md) for setup, the posture demo, and hardware
 acceptance.
 
+Use `DEVICE_FORMAT=raw_fusion` to estimate posture on the laptop from raw BLE
+packets. [Setup and mounting checks](DIAGNOSTICS.md#laptop-fusion-from-raw-ble)
+
 Frontend integration uses the [API and WebSocket contract](../docs/TELEMETRY_PROTOCOL.md)
 and [complete JSON examples](../docs/telemetry-examples.json).
