@@ -6,9 +6,9 @@
 #include "BLEManager.h"
 
 const char* const DEVICE_NAME = "THUNDER CLOCK";
-const char* const SERVICE_UUID = "OIIO";
-const char* const CHARACTERISTIC_UUID_IMU = "8888";
-const char* const CHARACTERISTIC_UUID_Snapshot = "8889";
+const char* const SERVICE_UUID = "AAAA";
+const char* const CHARACTERISTIC_UUID_IMU = "00008888-0000-1000-8000-00805f9b34fb";
+const char* const CHARACTERISTIC_UUID_Snapshot = "00008889-0000-1000-8000-00805f9b34fb";
 
 NimBLECharacteristic *pCharIMU = nullptr;
 NimBLECharacteristic *pCharSnapshot = nullptr;

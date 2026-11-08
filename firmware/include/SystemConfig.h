@@ -15,10 +15,10 @@ constexpr bool kDebugEnabled = true;
 constexpr bool kInitImuStrip = true;
 constexpr bool kInitBLE = true;
 constexpr bool kInitEnv = false;
-constexpr bool kInitAudio = false;
+constexpr bool kInitAudio = true;
 
 // task ini
-constexpr bool kStartAcquisitionTask = false;
+constexpr bool kStartAcquisitionTask = true;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartIMUTask = true;
 
