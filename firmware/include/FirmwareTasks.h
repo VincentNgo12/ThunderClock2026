@@ -14,6 +14,10 @@
 #include "SystemConfig.h"
 #include "AudioMonitor.h"
 #include "ImuManager.h"
+#include "BLEManager.h"
+
+#include "telemetry.pb.h"
+#include <pb_encode.h>
 
 // global mutexes and queues
 extern SemaphoreHandle_t i2cMutex;

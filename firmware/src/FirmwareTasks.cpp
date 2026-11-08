@@ -10,6 +10,8 @@
 
 void printSnapshot(const fw::Snapshot& snapshot); 
 void printRawStrip(const fw::StripData& stripData);
+void encodeIMUData(telemetry_ImuStripData &message, fw::StripData &stripData);
+
 
 void acquisitionTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
@@ -70,6 +72,7 @@ void acquisitionTask(void*) {
   }
 }
 
+
 void IMUTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
   TickType_t lastImuToSnapshotTime = lastWake;
@@ -79,6 +82,15 @@ void IMUTask(void*) {
   
   fw::StripData stripData{};
 
+  // protobuf settings 
+  telemetry_ImuStripData message = telemetry_ImuStripData_init_zero; // message representing imuStrip 
+  message.data_count = 4; // set message repeated data field to 4 (4 imus)
+  for (int i = 0; i < 4; ++i) {
+     message.data[i].has_accel = true;
+     message.data[i].has_gyro = true;
+  } // set has fields of protobut to true so that it gets encoded
+  uint8_t buffer[300]; // this is where encoded snapshot is held
+
   while (true) {
     const TickType_t now = xTaskGetTickCount();
 
@@ -86,8 +98,17 @@ void IMUTask(void*) {
       imuManager.read(stripData);
       xSemaphoreGive(i2cMutex);
     }
+    
+    // encode data
+    encodeIMUData(message, stripData);
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+    if (pb_encode(&stream, telemetry_ImuStripData_fields, &message)) Serial.println("succesful encoding");;
+    size_t length = stream.bytes_written;
+    Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
+    // send data ble
+    pCharIMU->setValue(buffer, length);
+    pCharIMU->notify();
 
-    xQueueOverwrite(imuToTelemetryQueue, &stripData);    
     if (now - lastImuToSnapshotTime >= imuToSnapshotPeriod) {
       xQueueOverwrite(imuToSnapshotQueue, &stripData);    
       lastImuToSnapshotTime = now;
@@ -95,7 +116,6 @@ void IMUTask(void*) {
     // printRawStrip(stripData);
 
     vTaskDelayUntil(&lastWake, imuToTelemetryPeriod);
-
   }
 }
 
@@ -106,6 +126,19 @@ void telemetryTask(void*) {
   }
 }
 
+// encoding helper functions
+void encodeIMUData(telemetry_ImuStripData &message, fw::StripData &stripData) {
+  message.time = stripData.time;
+  for (int i = 0; i < 4; ++i) {
+    message.data[i].accel.x = stripData.data[i].accel.x;
+    message.data[i].accel.y = stripData.data[i].accel.y;
+    message.data[i].accel.z = stripData.data[i].accel.z;
+
+    message.data[i].gyro.x = stripData.data[i].gyro.x;
+    message.data[i].gyro.y = stripData.data[i].gyro.y;
+    message.data[i].gyro.z = stripData.data[i].gyro.z;
+  }
+}
 
 
 // temporary helper to print snapshot for debug

@@ -5,9 +5,14 @@
  * - Unassigned
  */
 #pragma once
+
+#include <Arduino.h>
+#include <NimBLEDevice.h>
 #include "FirmwareTypes.h"
 
-fw::Result bleBegin();  // Future GATT setup and advertising.
-// Telemetry supplies complete encoded packets for the agreed characteristics.
-fw::Result blePublish(const uint8_t* raw, size_t rawLength,
-                      const uint8_t* orientations, size_t orientationLength);
+extern NimBLECharacteristic* pCharIMU;
+extern NimBLECharacteristic* pCharSnapshot;
+extern bool deviceConnected;
+
+fw::Result bleBegin();
+

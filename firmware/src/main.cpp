@@ -85,8 +85,9 @@ void setup() {
 
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
-      debugPrintln("BLE initialization is unavailable.");
+      Serial.println("ble stack failed to ini");
     }
+    Serial.println("ble stack ini succesful");
   }
 
   // -----------------------------------
