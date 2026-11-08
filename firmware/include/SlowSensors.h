@@ -1,6 +1,6 @@
 /**
  * File: SlowSensors.h
- * Purpose: Schedules environment and heart-rate polling for whichever code owns I2C.
+ * Purpose: Heart-rate polling and I2C bus-scan helpers for bring-up.
  * Contributors:
  * - Suvir Duggal
  */
@@ -10,8 +10,8 @@
 #include "FirmwareTypes.h"
 #include "ImuManager.h"
 
-// Call once after Wire.begin(). Sensors disabled in SystemConfig are skipped.
-// mux is the IMU manager, whose setChannel() selects channels 4 and 5 for us.
+// Call once after Wire.begin(). Skipped when heart rate is disabled in SystemConfig.
+// mux is the IMU manager, whose setChannel() selects the heart-rate channel.
 void slowSensorsBegin(TwoWire& wire, ImuManager& mux);
 
 // Prints every responding address on each mux channel. Bring-up only: it blocks.
@@ -24,4 +24,4 @@ void slowSensorsPoll();
 
 // Thread-safe copy of the latest readings for telemetry. NaN means unavailable,
 // so the encoder should omit that field. Safe to call from any task.
-void slowSensorsLatest(fw::EnvData& environment, fw::HeartData& heart);
+void slowSensorsLatest(fw::HeartData& heart);

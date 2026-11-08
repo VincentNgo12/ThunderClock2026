@@ -8,6 +8,8 @@
 #include "ImuManager.h"
 #include "OrientationProcessor.h"
 
+#include <cmath>
+
 void printSnapshot(const fw::Snapshot& snapshot); 
 void printRawStrip(const fw::StripData& stripData);
 
@@ -20,16 +22,17 @@ void fillIMUMessage(telemetry_ImuStripData &message, fw::StripData &stripData);
 
 void acquisitionTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
-  TickType_t lastEnvTime = lastWake;
   TickType_t lastAudioTime = lastWake;
   TickType_t lastHeartTime = lastWake;
 
   const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.02 s, 50 Hz
-  const TickType_t envPeriod = pdMS_TO_TICKS(1000);    // 1s
   const TickType_t audioPeriod = pdMS_TO_TICKS(100);   // 0.1s
   const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
 
   fw::Snapshot snapshot{};
+  snapshot.envData = {NAN, NAN, NAN, NAN, NAN};
+  snapshot.heartData = {NAN, NAN};
+  snapshot.audioData = {NAN};
   fw::StripData stripData{};
   OrientationProcessor orientationProcessor;
   orientationProcessor.begin();
@@ -46,14 +49,31 @@ void acquisitionTask(void*) {
   while (true) {
     const TickType_t now = xTaskGetTickCount();
 
-    // env + heart read with mutex safety
+    // The manager schedules conversions internally. Poll each pass without
+    // waiting for the AHT21 conversion while holding the shared bus.
     if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
 
-      // env read
-      if (now - lastEnvTime >= envPeriod && SystemConfig::kInitEnv) {
-        lastEnvTime = now;
-        // env read
-      } 
+      if (SystemConfig::kInitEnvironment) {
+        fw::EnvData environment;
+        if (environmentManager.read(environment) == fw::Result::Ok) {
+          // Keep each last-known value between reads, including partial reads.
+          if (std::isfinite(environment.temperature)) {
+            snapshot.envData.temperature = environment.temperature;
+          }
+          if (std::isfinite(environment.humidity)) {
+            snapshot.envData.humidity = environment.humidity;
+          }
+          if (std::isfinite(environment.air_quality_index)) {
+            snapshot.envData.air_quality_index = environment.air_quality_index;
+          }
+          if (std::isfinite(environment.eco2_ppm)) {
+            snapshot.envData.eco2_ppm = environment.eco2_ppm;
+          }
+          if (std::isfinite(environment.tvoc_ppb)) {
+            snapshot.envData.tvoc_ppb = environment.tvoc_ppb;
+          }
+        }
+      }
 
       // heart read
       if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
@@ -162,17 +182,7 @@ void makeSnapshotFieldsAvailable(telemetry_orientation_v1_OrientationPacket& pac
     packet.has_version = true;
     packet.has_sequence = true;
     packet.has_sample_time_ms = true;
-    packet.has_environment = true;
-    packet.has_heart_rate_bpm = true;
-    packet.has_spo2_percent = true;
-
-    auto& env = packet.environment;
-    env.has_temperature_c = true;
-    env.has_humidity_percent = true;
-    env.has_air_quality_index = true;
-    env.has_eco2_ppm = true;
-    env.has_tvoc_ppb = true;
-    env.has_noise_relative_db = true;
+    // Optional readings get their presence flags when the snapshot is filled.
 
     packet.orientations_count = 4;
     for (auto& orientation : packet.orientations) {
@@ -220,16 +230,44 @@ void fillOrientationPacket(const fw::Snapshot& snapshot,
     }
 
     const auto& env = snapshot.envData;
-    packet.environment.temperature_c = env.temperature;
-    packet.environment.humidity_percent = env.humidity;
-    packet.environment.air_quality_index =
-        static_cast<uint32_t>(env.air_quality_index);
-    packet.environment.eco2_ppm = static_cast<uint32_t>(env.eco2_ppm);
-    packet.environment.tvoc_ppb = static_cast<uint32_t>(env.tvoc_ppb);
-    packet.environment.noise_relative_db = snapshot.audioData.relativeDb;
+    auto& environment = packet.environment;
+    environment = {};
+    // Snapshot values persist between sensor reads, so these flags stay on
+    // after each field's first usable reading.
+    environment.has_temperature_c = std::isfinite(env.temperature);
+    environment.has_humidity_percent = std::isfinite(env.humidity);
+    environment.has_air_quality_index = std::isfinite(env.air_quality_index);
+    environment.has_eco2_ppm = std::isfinite(env.eco2_ppm);
+    environment.has_tvoc_ppb = std::isfinite(env.tvoc_ppb);
+    environment.has_noise_relative_db = std::isfinite(snapshot.audioData.relativeDb);
 
-    packet.heart_rate_bpm = snapshot.heartData.bpm;
-    packet.spo2_percent = snapshot.heartData.oxi;
+    if (environment.has_temperature_c) {
+        environment.temperature_c = env.temperature;
+    }
+    if (environment.has_humidity_percent) {
+        environment.humidity_percent = env.humidity;
+    }
+    // Never cast an unavailable (NaN) reading to an integer or send it over BLE.
+    if (environment.has_air_quality_index) {
+        environment.air_quality_index = static_cast<uint32_t>(env.air_quality_index);
+    }
+    if (environment.has_eco2_ppm) {
+        environment.eco2_ppm = static_cast<uint32_t>(env.eco2_ppm);
+    }
+    if (environment.has_tvoc_ppb) {
+        environment.tvoc_ppb = static_cast<uint32_t>(env.tvoc_ppb);
+    }
+    if (environment.has_noise_relative_db) {
+        environment.noise_relative_db = snapshot.audioData.relativeDb;
+    }
+    packet.has_environment = environment.has_temperature_c || environment.has_humidity_percent ||
+        environment.has_air_quality_index || environment.has_eco2_ppm ||
+        environment.has_tvoc_ppb || environment.has_noise_relative_db;
+
+    packet.has_heart_rate_bpm = std::isfinite(snapshot.heartData.bpm) && snapshot.heartData.bpm > 0;
+    packet.has_spo2_percent = std::isfinite(snapshot.heartData.oxi);
+    packet.heart_rate_bpm = packet.has_heart_rate_bpm ? snapshot.heartData.bpm : 0;
+    packet.spo2_percent = packet.has_spo2_percent ? snapshot.heartData.oxi : 0;
 }
 
 // temporary helper to print snapshot for debug

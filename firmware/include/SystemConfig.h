@@ -14,7 +14,7 @@ constexpr bool kDebugEnabled = true;
 // sensor and telemetry ini 
 constexpr bool kInitImuStrip = true;
 constexpr bool kInitBLE = true;
-constexpr bool kInitEnv = false;
+constexpr bool kInitEnvironment = true;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
 constexpr bool kInitAudio = true;
 
 // task ini
@@ -22,7 +22,6 @@ constexpr bool kStartAcquisitionTask = true;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartIMUTask = true;
 
-constexpr bool kInitEnvironment = false;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
 constexpr bool kInitHeartRate = false;  // MAX30102 on kHeartRateMuxChannel.
 constexpr bool kRunI2cScanAtBoot = false;  // Bring-up aid: lists devices on every mux channel.
 constexpr bool kPrintHeartRateRaw = false;  // Prints "IR red" samples for the Serial Plotter.

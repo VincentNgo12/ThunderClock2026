@@ -11,6 +11,7 @@
 
 #include "BLEManager.h"
 #include "Debug.h"
+#include "EnvironmentManager.h"
 #include "FirmwareTasks.h"
 #include "ImuManager.h"
 #include "SharedData.h"
@@ -32,6 +33,7 @@ AudioMonitor audioMonitor{
   SystemConfig::kI2sDataPin
 }; 
 ImuManager imuManager(Wire);
+EnvironmentManager environmentManager(Wire);
 
 void setup() {
   Serial.begin(SystemConfig::kSerialBaud);
@@ -83,6 +85,14 @@ void setup() {
     Serial.println("audio sensor ini succesful");
   }
 
+  if (SystemConfig::kInitEnvironment) {
+    if (environmentManager.begin() != fw::Result::Ok) {
+      Serial.println("env sensor failed to ini");
+      while (true) delay(1000);
+    }
+    Serial.println("env sensor ini succesful");
+  }
+
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
       Serial.println("ble stack failed to ini");
@@ -115,10 +125,17 @@ void setup() {
 }
 
 void loop() {
-  // Until the acquisition task owns I2C, loop() polls the slow sensors.
-  // TODO(FW-ACQUISITION): move this call into acquisitionTask when it is enabled.
+  // Support sensor bring-up without the acquisition task. The IMU task may
+  // still be running, so mux selection and reads share its I2C mutex.
   if (!SystemConfig::kStartAcquisitionTask) {
-    slowSensorsPoll();
+    if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+      if (SystemConfig::kInitEnvironment) {
+        fw::EnvData environment;
+        environmentManager.read(environment);
+      }
+      slowSensorsPoll();
+      xSemaphoreGive(i2cMutex);
+    }
   }
   delay(SystemConfig::kSlowSensorPollMs);
 }
