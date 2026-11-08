@@ -21,8 +21,8 @@ constexpr bool kInitAudio = true;
 constexpr bool kStartAcquisitionTask = true;
 constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartIMUTask = true;
+constexpr bool kInitHeartRate = true;  // MAX30102 on kHeartRateMuxChannel.
 
-constexpr bool kInitHeartRate = false;  // MAX30102 on kHeartRateMuxChannel.
 constexpr bool kRunI2cScanAtBoot = false;  // Bring-up aid: lists devices on every mux channel.
 constexpr bool kPrintHeartRateRaw = false;  // Prints "IR red" samples for the Serial Plotter.
 

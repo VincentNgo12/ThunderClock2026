@@ -28,7 +28,7 @@ void acquisitionTask(void*) {
 
   const TickType_t imuPeriod = pdMS_TO_TICKS(20);      // 0.02 s, 50 Hz
   const TickType_t audioPeriod = pdMS_TO_TICKS(100);   // 0.1s
-  const TickType_t heartPeriod = pdMS_TO_TICKS(1000);  // 1s
+  const TickType_t heartPeriod = pdMS_TO_TICKS(SystemConfig::kSlowSensorPollMs);  // Drain FIFO every 50 ms.
 
   fw::Snapshot snapshot{};
   snapshot.envData = {NAN, NAN, NAN, NAN, NAN};
@@ -79,10 +79,18 @@ void acquisitionTask(void*) {
         }
       }
 
-      // heart read
+      // Keep the last successful readings in every snapshot, as with environment.
       if (now - lastHeartTime >= heartPeriod && SystemConfig::kInitHeartRate) {
-        lastHeartTime = now; 
-        // heart read
+        lastHeartTime = now;
+        fw::HeartData heart;
+        if (heartRateMonitor.read(heart) == fw::Result::Ok) {
+          if (std::isfinite(heart.bpm)) {
+            snapshot.heartData.bpm = heart.bpm;
+          }
+          if (std::isfinite(heart.oxi)) {
+            snapshot.heartData.oxi = heart.oxi;
+          }
+        }
       }
 
       xSemaphoreGive(i2cMutex);

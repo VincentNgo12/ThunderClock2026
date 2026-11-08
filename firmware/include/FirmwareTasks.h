@@ -14,6 +14,7 @@
 #include "SystemConfig.h"
 #include "AudioMonitor.h"
 #include "EnvironmentManager.h"
+#include "HeartRateMonitor.h"
 #include "ImuManager.h"
 #include "BLEManager.h"
 
@@ -32,6 +33,7 @@ extern QueueHandle_t snapshotToTelemetryQueue;
 extern AudioMonitor audioMonitor;
 extern ImuManager imuManager;
 extern EnvironmentManager environmentManager;
+extern HeartRateMonitor heartRateMonitor;
 
 // fw::StripData items from IMUTask. Created by the queue owner before IMUTask starts.
 //extern QueueHandle_t imuQueue;

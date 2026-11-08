@@ -45,7 +45,7 @@ uint32_t sample18(const uint8_t* bytes) {
 }  // namespace
 
 fw::Result HeartRateMonitor::begin() {
-  if (mux_.setChannel(SystemConfig::kHeartRateMuxChannel) != fw::Result::Ok) {
+  if (selectChannel() != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
   uint8_t partId = 0;
@@ -80,18 +80,24 @@ fw::Result HeartRateMonitor::begin() {
   return fw::Result::Ok;
 }
 
+fw::Result HeartRateMonitor::selectChannel() {
+  wire_.beginTransmission(SystemConfig::kMuxAddress);
+  wire_.write(1 << SystemConfig::kHeartRateMuxChannel);
+  return wire_.endTransmission() == 0 ? fw::Result::Ok : fw::Result::IoFailure;
+}
+
 void HeartRateMonitor::resetSignal() {
   detector_.reset();
   spo2_.reset();
 }
 
-fw::Result HeartRateMonitor::poll(fw::HeartData& output) {
+fw::Result HeartRateMonitor::read(fw::HeartData& output) {
   output.bpm = NAN;
   output.oxi = NAN;
   if (!present_) {
     return fw::Result::NotReady;
   }
-  if (mux_.setChannel(SystemConfig::kHeartRateMuxChannel) != fw::Result::Ok) {
+  if (selectChannel() != fw::Result::Ok) {
     return fw::Result::IoFailure;
   }
 
@@ -101,7 +107,6 @@ fw::Result HeartRateMonitor::poll(fw::HeartData& output) {
   }
   size_t pending = (pointers[0] - pointers[2]) & (kFifoDepth - 1);
   if (pointers[1] != 0) {
-    overflows_ += pointers[1];
     pending = kFifoDepth;  // Full; samples were lost, so restart detection cleanly.
     resetSignal();
   }
@@ -115,7 +120,6 @@ fw::Result HeartRateMonitor::poll(fw::HeartData& output) {
     for (size_t i = 0; i < batch; i++) {
       const uint32_t red = sample18(&buffer[i * kBytesPerSample]);
       const uint32_t ir = sample18(&buffer[i * kBytesPerSample + 3]);
-      lastIr_ = ir;
       if (SystemConfig::kPrintHeartRateRaw) {
         Serial.printf("%lu %lu\n", static_cast<unsigned long>(ir), static_cast<unsigned long>(red));
       }

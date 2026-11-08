@@ -13,6 +13,7 @@
 #include "Debug.h"
 #include "EnvironmentManager.h"
 #include "FirmwareTasks.h"
+#include "HeartRateMonitor.h"
 #include "ImuManager.h"
 #include "SharedData.h"
 #include "SlowSensors.h"
@@ -34,6 +35,7 @@ AudioMonitor audioMonitor{
 }; 
 ImuManager imuManager(Wire);
 EnvironmentManager environmentManager(Wire);
+HeartRateMonitor heartRateMonitor(Wire);
 
 void setup() {
   Serial.begin(SystemConfig::kSerialBaud);
@@ -64,7 +66,6 @@ void setup() {
   if (SystemConfig::kRunI2cScanAtBoot) {
     slowSensorsScanBus(Wire, imuManager);
   }
-  slowSensorsBegin(Wire, imuManager);
 
   // -----------------------------------
   // INITIALIZE SENSORS & PERIPHERALS
@@ -91,6 +92,12 @@ void setup() {
       while (true) delay(1000);
     }
     Serial.println("env sensor ini succesful");
+  }
+
+  if (SystemConfig::kInitHeartRate) {
+    if (heartRateMonitor.begin() != fw::Result::Ok) {
+      debugPrintln("heart-rate sensor failed to initialize.");
+    }
   }
 
   if (SystemConfig::kInitBLE) {
@@ -133,7 +140,10 @@ void loop() {
         fw::EnvData environment;
         environmentManager.read(environment);
       }
-      slowSensorsPoll();
+      if (SystemConfig::kInitHeartRate) {
+        fw::HeartData heart;
+        heartRateMonitor.read(heart);
+      }
       xSemaphoreGive(i2cMutex);
     }
   }
