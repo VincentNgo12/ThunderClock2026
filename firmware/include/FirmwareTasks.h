@@ -10,6 +10,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/queue.h>
+#include <math.h>
 
 #include "SystemConfig.h"
 #include "AudioMonitor.h"
@@ -21,7 +22,6 @@
 #include "telemetry.pb.h"
 #include "orientation.pb.h"
 #include <pb_encode.h>
-#include <math.h>
 
 // global mutexes and queues
 extern SemaphoreHandle_t i2cMutex;
@@ -32,9 +32,6 @@ extern AudioMonitor audioMonitor;
 extern ImuManager imuManager;
 extern EnvironmentManager environmentManager;
 extern HeartRateMonitor heartRateMonitor;
-
-// fw::StripData items from IMUTask. Created by the queue owner before IMUTask starts.
-//extern QueueHandle_t imuQueue;
 
 // rtos tasks
 void acquisitionTask(void* argument);
