@@ -7,8 +7,8 @@
 
 const char* const DEVICE_NAME = "THUNDER CLOCK";
 const char* const SERVICE_UUID = "OIIO";
-const char* const CHARACTERISTIC_UUID_IMU = "7777";
-const char* const CHARACTERISTIC_UUID_Snapshot = "8888";
+const char* const CHARACTERISTIC_UUID_IMU = "8888";
+const char* const CHARACTERISTIC_UUID_Snapshot = "8889";
 
 NimBLECharacteristic *pCharIMU = nullptr;
 NimBLECharacteristic *pCharSnapshot = nullptr;

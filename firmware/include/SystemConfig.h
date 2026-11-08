@@ -12,15 +12,15 @@ constexpr unsigned long kSerialBaud = 115200;
 constexpr bool kDebugEnabled = true;
 
 // sensor and telemetry ini 
+constexpr bool kInitImuStrip = true;
+constexpr bool kInitBLE = true;
 constexpr bool kInitEnv = false;
-constexpr bool kInitImuStrip = false;
-constexpr bool kInitBLE = false;
 constexpr bool kInitAudio = false;
 
 // task ini
-constexpr bool kStartAcquisitionTask = true;
+constexpr bool kStartAcquisitionTask = false;
 constexpr bool kStartTelemetryTask = false;
-constexpr bool kStartIMUTask = false;
+constexpr bool kStartIMUTask = true;
 
 constexpr bool kInitEnvironment = false;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
 constexpr bool kInitHeartRate = false;  // MAX30102 on kHeartRateMuxChannel.
