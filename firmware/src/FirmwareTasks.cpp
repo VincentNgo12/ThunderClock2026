@@ -183,14 +183,6 @@ void IMUTask(void*) {
   }
 }
 
-void telemetryTask(void*) {
-  while (true) {
-    // TODO(FW-TELEMETRY): copy shared data under the mutex, then encode/send outside it.
-    vTaskDelay(pdMS_TO_TICKS(SystemConfig::kTelemetryPeriodMs));
-  }
-}
-
-
 
 // set fields to available
 void makeIMUFieldsAvailable(telemetry_ImuStripData& message) {

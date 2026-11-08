@@ -25,9 +25,7 @@
 
 // global mutexes and queues
 extern SemaphoreHandle_t i2cMutex;
-extern QueueHandle_t imuToTelemetryQueue;
 extern QueueHandle_t imuToSnapshotQueue;
-extern QueueHandle_t snapshotToTelemetryQueue;
 
 // global sensor obj
 extern AudioMonitor audioMonitor;
@@ -38,7 +36,6 @@ extern HeartRateMonitor heartRateMonitor;
 // fw::StripData items from IMUTask. Created by the queue owner before IMUTask starts.
 //extern QueueHandle_t imuQueue;
 
-// Bodies stay empty until their corresponding work is implemented.
+// rtos tasks
 void acquisitionTask(void* argument);
 void IMUTask(void* argument);
-void telemetryTask(void* argument);

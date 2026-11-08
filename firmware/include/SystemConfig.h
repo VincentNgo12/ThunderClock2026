@@ -23,7 +23,6 @@ constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartIMUTask = true;
 constexpr bool kInitHeartRate = true;  // MAX30102 on kHeartRateMuxChannel.
 
-constexpr bool kRunI2cScanAtBoot = false;  // Bring-up aid: lists devices on every mux channel.
 constexpr bool kPrintHeartRateRaw = false;  // Prints "IR red" samples for the Serial Plotter.
 
 constexpr uint32_t kAcquisitionPeriodMs = 10;  // Target 100 Hz.
@@ -58,7 +57,7 @@ constexpr uint8_t kImuAddress = 0x68;
 // constexpr int kImuMuxChannels[fw::kImuCount] = {0, 1, 2, 3};
 // TODO(FW-IMU): confirm each board's sensor-to-segment mounting transform.
 
-// Datasheet default addresses. Confirm with kRunI2cScanAtBoot during bring-up.
+// I2C timing, sensor addresses and mux channels.
 constexpr uint32_t kI2cClockHz = 100000;  // Long harness wires: stay at 100 kHz.
 constexpr uint16_t kI2cTimeoutMs = 10;
 constexpr int kHeartRateMuxChannel = 4;  // TODO(FW-HR): confirm wiring.
