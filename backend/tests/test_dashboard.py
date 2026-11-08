@@ -4,6 +4,7 @@
 
 import asyncio
 import json
+import math
 import os
 import unittest
 from unittest.mock import patch
@@ -176,6 +177,60 @@ class DashboardTests(unittest.IsolatedAsyncioTestCase):
             self.assertIsNone(partial['posture'])
             self.assertIsNone(partial['imus'][2]['orientation'])
             self.assertEqual(partial['imus'][2]['freshness']['status'], 'unavailable')
+
+    async def test_backend_fusion_calibrates_and_streams_from_raw_only(self):
+        samples = []
+        with patch.dict(os.environ, {'DEVICE_FORMAT': 'raw_fusion',
+                                     'RAW_IMU_AXES': '-y,z,-x;-y,z,-x;-y,z,-x;-y,z,-x'}):
+            app = create_app(on_raw_sample=samples.append)
+            async with app.router.lifespan_context(app):
+                stream = app.state.stream
+                async with asyncio.timeout(1):
+                    while stream.stats.state != 'subscribed':
+                        await asyncio.sleep(0)
+                client = self.clients[-1]
+                self.assertEqual(set(client.callbacks), {NOTIFY_UUID})
+                packet = telemetry_pb2.ImuStripData()
+                for _ in range(4):
+                    imu = packet.data.add()
+                    imu.accel.z = 9.80665
+                    imu.gyro.SetInParent()
+
+                async def send_raw(time_ms):
+                    packet.time = time_ms
+                    expected = stream.stats.decoded + 1
+                    client.callbacks[NOTIFY_UUID](None, packet.SerializeToString())
+                    async with asyncio.timeout(1):
+                        while stream.stats.decoded < expected:
+                            await asyncio.sleep(0)
+
+                async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as http:
+                    self.assertEqual((await http.post('/posture/calibrate')).status_code, 409)
+                    for time_ms in range(0, 501, 10):
+                        await send_raw(time_ms)
+                    self.assertEqual((await http.post('/posture/calibrate')).status_code, 200)
+                    for step in range(1, 11):
+                        angle = -math.pi * step / 200
+                        packet.data[1].accel.x = 9.80665 * math.sin(angle)
+                        packet.data[1].accel.z = 9.80665 * math.cos(angle)
+                        packet.data[1].gyro.y = math.pi / 2
+                        await send_raw(500 + step * 10)
+
+                    _task, outgoing = await self.socket(app=app)
+                    async with asyncio.timeout(1):
+                        while True:
+                            message = json.loads((await outgoing.get())['text'])
+                            if message['posture'] is not None and message['posture']['lumbar_flexion_deg'] > 8.5:
+                                break
+                    self.assertEqual(message['connection']['source'], 'hardware')
+                    self.assertAlmostEqual(message['posture']['lumbar_flexion_deg'], 9, delta=0.5)
+                    self.assertLess(message['posture']['joint_rotations']['lumbar']['x'], 0)
+                    self.assertEqual(samples[-1].format, 'raw')
+                    self.assertAlmostEqual(samples[-1].imus[1].gyro[1], math.pi / 2, places=6)
+
+                    await send_raw(800)
+                    self.assertEqual((await http.post('/posture/calibrate')).status_code, 409)
+                    self.assertEqual(app.state.posture.calibration['status'], 'uncalibrated')
 
     async def test_explicit_simulation_publishes_calibrated_posture(self):
         with patch.dict(os.environ, {'TELEMETRY_SOURCE': 'simulated'}), patch(

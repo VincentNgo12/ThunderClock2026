@@ -139,6 +139,47 @@ per-IMU acquisition times are null. Fall state, EEG, heart rate and overall risk
 remain unavailable. See [application telemetry](../docs/TELEMETRY_PROTOCOL.md)
 for endpoint responses, joint quaternions, freshness and warning fields.
 
+### Laptop fusion from raw BLE
+
+For a wearable that streams raw packets on 8888, use the explicit laptop demo
+mode. From `backend/` with the API dependencies installed:
+
+```sh
+TELEMETRY_SOURCE=hardware DEVICE_ID="<exact OS id>" DEVICE_FORMAT=raw_fusion python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+In PowerShell, set `$env:TELEMETRY_SOURCE`, `$env:DEVICE_ID`, and
+`$env:DEVICE_FORMAT` before running the same Uvicorn command. Stop CLI
+streaming first. The backend subscribes to 8888 and uses the device timestamp
+to process each raw frame. The dashboard still receives the same JSON on
+`ws://127.0.0.1:8000/ws/telemetry` at about 20 Hz.
+
+1. Start with the wearable upright and still for at least half a second.
+   The estimator uses this interval to estimate gyro bias and align tilt with
+   gravity. Wait until the dashboard has four valid orientations.
+2. Capture the frontend's neutral pose while still upright. Use
+   `POST /posture/calibrate`, or the dashboard's calibration control.
+3. Bend slowly forward and sideways to confirm each segment moves in the
+   expected direction. If axes differ by board, set `RAW_IMU_AXES` and
+   restart the backend. The setting takes four semicolon-separated maps in
+   pelvis, lumbar, thoracic, upper thoracic order. Each map lists the raw axes
+   for wearer-right, up, and posterior.
+
+The default map for each board is `-y,z,-x`, matching the firmware's assumed
+forward/left/up board convention. For boards whose raw axes already match the
+wearer frame, use `RAW_IMU_AXES="x,y,z;x,y,z;x,y,z;x,y,z"`. Check that an upright
+board maps gravity to about `(0, +9.8, 0)` m/s². The map must be right-handed.
+Confirm mounting alignment with a slow bend, since the stationary reading
+alone cannot determine heading.
+
+This six-axis estimate uses gyro integration with a gentle gravity correction.
+Heading can drift and quick motion can disturb the tilt estimate. A raw
+timestamp gap over 100 ms, a device restart, or loss of an initialized sensor
+clears the neutral reference. Hold still again and recapture. If the pose stays
+unavailable, check `GET /diagnostics` and confirm that device timestamps
+advance and all four sensors provide usable readings.
+[Complementary-filter reference](https://users.cecs.anu.edu.au/~Robert.Mahony/Mahony_Robert/2006_MahHamPfl-C68.pdf)
+
 ### Raw IMU handoff for detector code
 
 With `DEVICE_FORMAT=both`, the usual `GET /diagnostics` counters track fused
