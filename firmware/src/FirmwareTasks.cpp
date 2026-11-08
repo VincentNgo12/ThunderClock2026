@@ -12,6 +12,7 @@
 
 void printSnapshot(const fw::Snapshot& snapshot); 
 void printRawStrip(const fw::StripData& stripData);
+void printStripOrientation(const fw::StripDataProcessed& stripData);
 
 void makeIMUFieldsAvailable(telemetry_ImuStripData& message); 
 void makeSnapshotFieldsAvailable(telemetry_orientation_v1_OrientationPacket& packet);
@@ -44,6 +45,9 @@ void acquisitionTask(void*) {
   packet.version = 2;
   uint32_t sequence = 0;
   uint8_t buffer[514]; // this is where encoded snapshot is held
+
+  // leave this here for testing q to roll, pitch, yaw
+  // uint32_t t = 0;
 
   
   while (true) {
@@ -95,13 +99,22 @@ void acquisitionTask(void*) {
       // sensor fusion to get q
       orientationProcessor.update(stripData, snapshot.stripData);
 
+      // leave this here for testing q to roll,pitch,yaw
+      // if (t >= 20) {
+      //   printStripOrientation(snapshot.stripData);
+      //   t = 0;
+      // }
+      // t++;
+
       // protobuff encoding
       packet.sequence = sequence++;
       fillOrientationPacket(snapshot, packet);
       pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-      if (pb_encode(&stream, telemetry_orientation_v1_OrientationPacket_fields, &packet)) Serial.println("succesful snapshot encoding");;
+      if (pb_encode(&stream, telemetry_orientation_v1_OrientationPacket_fields, &packet)) {
+        // Serial.println("succesful snapshot encoding");;
+      }
       size_t length = stream.bytes_written;
-      Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
+      // Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
 
       // send data ble
       pCharSnapshot->setValue(buffer, length);
@@ -142,9 +155,11 @@ void IMUTask(void*) {
     // encode data
     fillIMUMessage(message, stripData);
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    if (pb_encode(&stream, telemetry_ImuStripData_fields, &message)) Serial.println("succesful imu encoding");;
+    if (pb_encode(&stream, telemetry_ImuStripData_fields, &message)) {
+      // Serial.println("succesful imu encoding");;
+    }
     size_t length = stream.bytes_written;
-    Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
+    // Serial.printf("Encoded %zu bytes\n", length); // print # of bytes encoded
     // send data ble
     pCharIMU->setValue(buffer, length);
     pCharIMU->notify();
@@ -315,5 +330,39 @@ void printRawStrip(const fw::StripData& rawStrip) {
                       imu.accel.x, imu.accel.y, imu.accel.z);
         Serial.printf("    Gyro   x=% .4f  y=% .4f  z=% .4f\n",
                       imu.gyro.x, imu.gyro.y, imu.gyro.z);
+    }
+}
+void printStripOrientation(const fw::StripDataProcessed& stripData) {
+    constexpr float radToDeg = 57.2957795f;
+
+    for (unsigned i = 0; i < 4; ++i) {
+        const auto& orientation = stripData.data[i];
+
+        if (!orientation.valid) {
+            Serial.printf("IMU %u: orientation unavailable\n", i);
+            continue;
+        }
+
+        const auto& q = orientation.rotation;
+        const float normSq = q.w*q.w + q.x*q.x + q.y*q.y + q.z*q.z;
+
+        if (normSq <= 0.0f || !isfinite(normSq)) {
+            Serial.printf("IMU %u: invalid quaternion\n", i);
+            continue;
+        }
+
+        const float roll = atan2f(
+            2.0f * (q.w*q.x + q.y*q.z),
+            normSq - 2.0f * (q.x*q.x + q.y*q.y));
+
+        const float sinPitch = 2.0f * (q.w*q.y - q.z*q.x) / normSq;
+        const float pitch = asinf(fminf(1.0f, fmaxf(-1.0f, sinPitch)));
+
+        const float yaw = atan2f(
+            2.0f * (q.w*q.z + q.x*q.y),
+            normSq - 2.0f * (q.y*q.y + q.z*q.z));
+
+        Serial.printf("IMU %u (deg): roll=%.2f, pitch=%.2f, yaw=%.2f\n",
+                      i, roll * radToDeg, pitch * radToDeg, yaw * radToDeg);
     }
 }

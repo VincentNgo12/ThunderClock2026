@@ -20,6 +20,7 @@
 #include "telemetry.pb.h"
 #include "orientation.pb.h"
 #include <pb_encode.h>
+#include <math.h>
 
 // global mutexes and queues
 extern SemaphoreHandle_t i2cMutex;
