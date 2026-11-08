@@ -8,19 +8,46 @@ All figures are for the United States unless stated otherwise.
 
 ## TL;DR: numbers for the pitch
 
+### The risk
+
 | Claim | Figure | Ref |
 |---|---|---|
 | Construction workers killed on the job (2024) | **1,034**, the most of any industry | [1] |
 | Construction fatality rate vs. all workers (2024) | **9.2 vs. 3.3** per 100,000 FTE (about 2.8× *(our calculation)*) | [1], [2] |
-| Employers' direct workers' comp cost, all industries | **more than $1 billion per week** | [5] |
-| Construction's costliest injury cause | Falls to a lower level: **$2.64B/yr, 26.1%** of construction's serious-injury costs (implies ~$10.1B/yr total *(our calculation)*) | [4] |
-| Indirect cost multiplier on top of each claim | **1.1× to 4.5×** the direct claim cost (smaller claims carry a higher multiplier) | [6] |
-| Max OSHA fine, serious violation / willful or repeat | **$16,550 / $165,514** per violation | [7] |
-| Average construction contract dispute (U.S., 2025) | **$56.0 million**, lasting **12.2 months** | [13] |
-| Contractor excess liability premium changes (mid-2026) | **+5% to +30%** | [11] |
+| Recorded injuries vs. the estimated real number (private industry) | **~3.1 million recorded** vs. an estimated **5.0 to 7.5 million** | [21] |
+
+### What companies lose
+
+Grouped by the cost categories in `Pitch.md`.
+
+| Pitch category | Claim | Figure | Ref |
+|---|---|---|---|
+| **Safety insurance** | Construction's yearly cost of serious, nonfatal injuries | **~$10.1 billion/yr** *(our calculation: falls to a lower level are $2.64B, 26.1% of the total)* | [4] |
+| | Direct workers' comp cost, all employers | **more than $1 billion per week**, i.e. $52B+ a year *(our calculation)* | [5] |
+| | Extra legally required benefit cost of a construction worker vs. the average worker | **$4.42 vs. $3.40 per hour**. That is **$1.02/hr more, about $2,100 per full-time worker per year** *(our calculation, 2,080 hrs)* | [8] |
+| | Contractor excess liability renewals (mid-2026) | **+5% to +30%** a year, steeper for high-hazard trades | [11] |
+| | New York, where owners and GCs carry absolute liability for falls | Insuring a high-rise costs **~9% of construction value vs. 3–3.5% in Pennsylvania**; the GL deductible is **$2M vs. $250K** | [14] |
+| **Administrative overhead** (supervisors, incident reports, downtime) | Indirect cost on top of every claim | **1.1× to 4.5×** the claim; the smallest claims carry the highest multiplier | [6] |
+| | Example: one minor $2,500 claim | **~$13,750 total** once indirect costs are counted *(our calculation)* | [6] |
+| | Total direct + indirect cost of disabling injuries, all employers | **$177 billion to $354 billion a year** | [21] |
+| **Legal fees and exposure** | Jury verdicts of $10M+ against companies (2025) | **nearly 200 verdicts, more than $25.6 billion total**, up 40.7% from 2024 | [12] |
+| | Average U.S. construction contract dispute (2025, all causes) | **$56.0 million**, taking **12.2 months** to resolve | [13] |
+| | Maximum OSHA fine, serious / willful or repeat | **$16,550 / $165,514** per violation | [7] |
+| | Average federal OSHA penalty actually issued for a serious violation (FY2025) | **$4,678** (fines are small next to insurance and litigation) | [21] |
+| **Return on prevention** | Payback on injury prevention (CFO survey) | **$2 or more back for every $1** | [5] |
+| | After Cal/OSHA inspections | **9.4% fewer injury claims, 26% lower workers' comp costs** | [5] |
+
+*Active monitoring and maintenance of hazards:* I found no verified industry figure for this, so the table leaves it out.
+
+### What workers lose
+
+| Claim | Figure | Ref |
+|---|---|---|
 | Share of injury costs that workers' comp actually pays | **About 21%**. Workers, their families and their private insurance pay **~63%**, taxpayers **~16%** | [15] |
 | Injured worker's earnings loss even with workers' comp | **~$31,000 (15%) less over 10 years** | [15] |
+| Wage replacement while off work (California example) | **2/3 of gross pay**, capped at **$1,764.11/week** in 2026 | [18], [19] |
 | Eligible injured workers who apply for workers' comp | **Fewer than 40%** | [15] |
+| Deadline to file a retaliation complaint with OSHA | **30 days** | [28] |
 | Median federal OSHA penalty for a worker's death (FY2025) | **$16,550** | [21] |
 | How often federal OSHA can inspect a given workplace | **Once every 191 years** | [21] |
 | Pay a misclassified construction worker loses | **$13,186 to $20,399 per year** | [23] |
