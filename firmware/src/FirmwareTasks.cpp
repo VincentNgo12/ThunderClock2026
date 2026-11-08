@@ -64,7 +64,7 @@ void acquisitionTask(void*) {
 
 
     // temporary print to serial
-    // printSnapshot(snapshot);
+    printSnapshot(snapshot);
 
     vTaskDelayUntil(&lastWake, imuPeriod);
   }
@@ -74,8 +74,8 @@ void IMUTask(void*) {
   TickType_t lastWake = xTaskGetTickCount();
   TickType_t lastImuToSnapshotTime = lastWake;
 
-  const TickType_t imuToTelemetryPeriod = pdMS_TO_TICKS(1000); // target: 100Hz 
-  const TickType_t imuToSnapshotPeriod = pdMS_TO_TICKS(2000);  // target: 20Hz 
+  const TickType_t imuToTelemetryPeriod = pdMS_TO_TICKS(10); // target: 100Hz 
+  const TickType_t imuToSnapshotPeriod = pdMS_TO_TICKS(50);  // target: 20Hz 
   
   fw::StripData stripData{};
 

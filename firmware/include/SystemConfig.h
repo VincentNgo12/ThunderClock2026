@@ -38,7 +38,7 @@ constexpr uint32_t kTaskStackBytes = 4096;  // ESP32 FreeRTOS uses bytes.
 
 constexpr float kImuRateHz = 100.0f;
 constexpr uint32_t kImuSamplePeriodUs = 10000;
-constexpr uint32_t kMaxSampleGapUs = 100000;  // Longer gap restarts that sensor's filter.
+constexpr uint32_t kMaxSampleGapUs = 5000000;  // 5 s. Longer gap restarts that sensor's filter.
 // IMU ranges used for scaling and fusion. ImuManager's register settings must match.
 constexpr float kImuAccelRangeG = 8.0f;
 constexpr float kImuGyroRangeDps = 1000.0f;

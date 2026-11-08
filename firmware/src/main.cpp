@@ -35,8 +35,8 @@ ImuManager imuManager(Wire);
 
 void setup() {
   Serial.begin(SystemConfig::kSerialBaud);
-  while (!Serial) delay(500);
-  debugPrintln("ThunderClock firmware scaffold. Hardware modules are unimplemented.");
+  //while (!Serial) delay(500);
+  //debugPrintln("ThunderClock firmware scaffold. Hardware modules are unimplemented.");
 
   // -----------------------------------
   // INITIALIZE MUTEX & QUEUE 

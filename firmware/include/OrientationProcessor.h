@@ -20,7 +20,7 @@ class OrientationProcessor {
   fw::Result update(const fw::StripData& input, fw::StripDataProcessed& output);
 
  private:
-  void restartSlot(size_t slot);
+  void restartSlot(size_t slot, uint32_t gapUs);
 
   FusionAhrs ahrs[kSlotCount]; //gyro orientation filters (turn it into quaternion)
   FusionBias bias[kSlotCount]; // gyro offset estimation

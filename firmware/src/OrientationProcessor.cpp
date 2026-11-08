@@ -6,6 +6,7 @@
  */
 #include "OrientationProcessor.h"
 
+#include <Arduino.h>
 #include <cmath>
 
 #include "SystemConfig.h"
@@ -13,6 +14,9 @@
 namespace {
 constexpr float kStandardGravity = 9.80665f;  // m/s² per g.
 constexpr float kUnitNormTolerance = 0.001f;
+// A gyro reading only describes rotation at that instant, so a long gap is
+// integrated as at most this step; the accelerometer corrects the remaining tilt.
+constexpr uint32_t kMaxIntegrationStepUs = 100000;
 
 FusionVector toFusionVector(const fw::Vec3& value, float scale) {
   FusionVector result;
@@ -88,10 +92,11 @@ fw::Result OrientationProcessor::update(const fw::StripData& input,
         alreadyFused = true;
       } else if (gapUs > SystemConfig::kMaxSampleGapUs) {
         // Too long without a sample means the old orientation can't be trusted.
-        restartSlot(slot);
+        restartSlot(slot, gapUs);
         FusionAhrsSetSamplePeriod(&ahrs[slot], 1.0f / SystemConfig::kImuRateHz);
       } else {
-        FusionAhrsSetSamplePeriod(&ahrs[slot], gapUs / 1e6f);
+        const uint32_t stepUs = (gapUs < kMaxIntegrationStepUs) ? gapUs : kMaxIntegrationStepUs;
+        FusionAhrsSetSamplePeriod(&ahrs[slot], stepUs / 1e6f);
       }
     } else {
       FusionAhrsSetSamplePeriod(&ahrs[slot], 1.0f / SystemConfig::kImuRateHz);
@@ -126,8 +131,13 @@ fw::Result OrientationProcessor::update(const fw::StripData& input,
   return fw::Result::Ok;
 }
 
-// Restarts one slot's filter, including its ~3 s startup phase. Gyro offset is kept.
-void OrientationProcessor::restartSlot(size_t slot) {
+// Restarts one slot's filter, including its startup phase. Gyro offset is kept.
+// gapUs is the time since this slot's last valid sample, for the debug note.
+void OrientationProcessor::restartSlot(size_t slot, uint32_t gapUs) {
+  if (SystemConfig::kDebugEnabled) {
+    Serial.printf("IMU[%u] restarting: no valid sample for %lu ms\n",
+                  static_cast<unsigned>(slot), static_cast<unsigned long>(gapUs / 1000));
+  }
   FusionAhrsRestart(&ahrs[slot]);
   hasPreviousSample[slot] = false;
 }

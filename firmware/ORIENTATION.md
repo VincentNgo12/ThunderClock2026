@@ -105,8 +105,12 @@ Each strip carries its collection time in milliseconds (`time`, from `millis()`)
 for telemetry and in microseconds (`timeUs`, from `micros()`). Fusion uses the
 `timeUs` difference between strips as its update interval.
 
-A gap above 100 ms (`SystemConfig::kMaxSampleGapUs`) between valid samples for a sensor restarts that sensor's
-filter, including its startup phase; the gyro offset is kept. Repeated read
+A gap above 5 s (`SystemConfig::kMaxSampleGapUs`) between valid samples for a
+sensor restarts that sensor's filter, including its startup phase; the gyro
+offset is kept. When this happens, Serial prints
+`IMU[n] restarting: no valid sample for ... ms`. A shorter gap is integrated as
+at most 100 ms so one late strip does not rotate the quaternion as if the gyro
+ran the whole time. Repeated read
 failures and a loss diagnostic are still proposed. Nonfinite data, free fall, near-range clipping and
 failed reads also need explicit invalidation.
 
