@@ -1,0 +1,896 @@
+{
+ "100style_heavyset_fw": {
+  "source": "100style",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 124.38,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "100style_neutral_fw": {
+  "source": "100style",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 131.58,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "100style_neutral_id": {
+  "source": "100style",
+  "tags": [
+   "idle"
+  ],
+  "seconds": 35.03,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_female1_a01_stand": {
+  "source": "accad",
+  "tags": [
+   "idle"
+  ],
+  "seconds": 3.0,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_female1_a05_pickupbox": {
+  "source": "accad",
+  "tags": [
+   "pickup"
+  ],
+  "seconds": 6.26,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_female1_a06_liftbox": {
+  "source": "accad",
+  "tags": [
+   "pickup",
+   "carry"
+  ],
+  "seconds": 8.36,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_female1_a07_crouch": {
+  "source": "accad",
+  "tags": [
+   "squat"
+  ],
+  "seconds": 5.06,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_female1_b03_walk1": {
+  "source": "accad",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 7.63,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_female1_a06_liftbox"
+ },
+ "accad_female1_b19_walktopickupbox": {
+  "source": "accad",
+  "tags": [
+   "walk",
+   "pickup"
+  ],
+  "seconds": 6.9,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_female1_a06_liftbox"
+ },
+ "accad_female1_b20_walkwithbox": {
+  "source": "accad",
+  "tags": [
+   "walk",
+   "carry",
+   "load"
+  ],
+  "seconds": 4.26,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_female1_a06_liftbox"
+ },
+ "accad_female1_b21_putdownboxtowalk": {
+  "source": "accad",
+  "tags": [
+   "putdown",
+   "walk"
+  ],
+  "seconds": 9.43,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_female1_a06_liftbox"
+ },
+ "accad_male1_a10_lietocrouch": {
+  "source": "accad",
+  "tags": [
+   "get_up"
+  ],
+  "seconds": 6.5,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_a11_crawlforward": {
+  "source": "accad",
+  "tags": [
+   "crawl"
+  ],
+  "seconds": 10.66,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_a1_stand": {
+  "source": "accad",
+  "tags": [
+   "idle"
+  ],
+  "seconds": 6.2,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_a2_sway": {
+  "source": "accad",
+  "tags": [
+   "idle"
+  ],
+  "seconds": 9.36,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_a4_lookaround": {
+  "source": "accad",
+  "tags": [
+   "idle"
+  ],
+  "seconds": 15.93,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_a5_pickupbox": {
+  "source": "accad",
+  "tags": [
+   "pickup"
+  ],
+  "seconds": 4.7,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_a6_liftbox": {
+  "source": "accad",
+  "tags": [
+   "pickup",
+   "carry"
+  ],
+  "seconds": 4.93,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_a7_crouch": {
+  "source": "accad",
+  "tags": [
+   "squat"
+  ],
+  "seconds": 5.96,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_a8_crouchtolie": {
+  "source": "accad",
+  "tags": [
+   "lie"
+  ],
+  "seconds": 6.6,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_a9_liedown": {
+  "source": "accad",
+  "tags": [
+   "lie"
+  ],
+  "seconds": 8.26,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_b19_walktopickupbox_working": {
+  "source": "accad",
+  "tags": [
+   "walk",
+   "pickup"
+  ],
+  "seconds": 9.16,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_b20_walkwithbox": {
+  "source": "accad",
+  "tags": [
+   "walk",
+   "carry",
+   "load"
+  ],
+  "seconds": 5.66,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_b21_putdownboxtowalk": {
+  "source": "accad",
+  "tags": [
+   "putdown",
+   "walk"
+  ],
+  "seconds": 6.96,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "accad_male1_b24_walktocrouch": {
+  "source": "accad",
+  "tags": [
+   "walk",
+   "squat"
+  ],
+  "seconds": 8.5,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_b25_crouchtowalk": {
+  "source": "accad",
+  "tags": [
+   "squat",
+   "walk"
+  ],
+  "seconds": 8.66,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "accad_male1_b3_walk": {
+  "source": "accad",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 6.06,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in accad_male1_a4_lookaround"
+ },
+ "cml_27movingobject_000008": {
+  "source": "cml",
+  "tags": [
+   "carry"
+  ],
+  "seconds": 33.6,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cml_27movingobject_000009": {
+  "source": "cml",
+  "tags": [
+   "carry"
+  ],
+  "seconds": 18.433,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_07_01": {
+  "source": "cmu",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 2.62,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_07_12": {
+  "source": "cmu",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 2.03,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_08_02": {
+  "source": "cmu",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 2.56,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_09_01": {
+  "source": "cmu",
+  "tags": [
+   "run"
+  ],
+  "seconds": 1.22,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_115_01": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "stoop"
+  ],
+  "seconds": 3.9,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_115_02": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "stoop"
+  ],
+  "seconds": 3.32,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_115_06": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "squat"
+  ],
+  "seconds": 2.96,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in cmu_115_01"
+ },
+ "cmu_115_07": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "squat"
+  ],
+  "seconds": 3.45,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_137_27": {
+  "source": "cmu",
+  "tags": [
+   "pickup"
+  ],
+  "seconds": 9.66,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_137_40": {
+  "source": "cmu",
+  "tags": [
+   "pickup"
+  ],
+  "seconds": 16.97,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_13_33": {
+  "source": "cmu",
+  "tags": [
+   "ladder"
+  ],
+  "seconds": 12.48,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_13_34": {
+  "source": "cmu",
+  "tags": [
+   "ladder"
+  ],
+  "seconds": 11.8,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_143_10": {
+  "source": "cmu",
+  "tags": [
+   "walk",
+   "pickup"
+  ],
+  "seconds": 4.78,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_143_11": {
+  "source": "cmu",
+  "tags": [
+   "walk",
+   "pickup"
+  ],
+  "seconds": 5.46,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_143_32": {
+  "source": "cmu",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 6.49,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in cmu_143_11"
+ },
+ "cmu_143_37": {
+  "source": "cmu",
+  "tags": [
+   "ladder"
+  ],
+  "seconds": 4.58,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in cmu_143_11"
+ },
+ "cmu_14_33": {
+  "source": "cmu",
+  "tags": [
+   "ladder"
+  ],
+  "seconds": 11.55,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_14_34": {
+  "source": "cmu",
+  "tags": [
+   "ladder"
+  ],
+  "seconds": 11.92,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "subject reference: standing still in cmu_14_33"
+ },
+ "cmu_16_15": {
+  "source": "cmu",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 3.91,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_16_35": {
+  "source": "cmu",
+  "tags": [
+   "run"
+  ],
+  "seconds": 1.34,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_23_03": {
+  "source": "cmu",
+  "tags": [
+   "kneel"
+  ],
+  "seconds": 6.75,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_26_10": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "stoop"
+  ],
+  "seconds": 5.8,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_35_01": {
+  "source": "cmu",
+  "tags": [
+   "walk"
+  ],
+  "seconds": 2.97,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_62_07": {
+  "source": "cmu",
+  "tags": [
+   "hammer"
+  ],
+  "seconds": 18.55,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_62_08": {
+  "source": "cmu",
+  "tags": [
+   "hammer"
+  ],
+  "seconds": 14.91,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_62_10": {
+  "source": "cmu",
+  "tags": [
+   "hammer"
+  ],
+  "seconds": 33.66,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_69_69": {
+  "source": "cmu",
+  "tags": [
+   "walk",
+   "pickup",
+   "carry"
+  ],
+  "seconds": 6.66,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_69_70": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "squat",
+   "putdown"
+  ],
+  "seconds": 8.69,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_69_73": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "stoop",
+   "putdown"
+  ],
+  "seconds": 9.08,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_69_75": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "squat",
+   "putdown"
+  ],
+  "seconds": 9.16,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "cmu_70_03": {
+  "source": "cmu",
+  "tags": [
+   "hold",
+   "carry",
+   "load"
+  ],
+  "seconds": 15.43,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_70_10": {
+  "source": "cmu",
+  "tags": [
+   "walk",
+   "carry",
+   "load"
+  ],
+  "seconds": 6.65,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_79_25": {
+  "source": "cmu",
+  "tags": [
+   "pickup",
+   "carry"
+  ],
+  "seconds": 10.03,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "cmu_86_13": {
+  "source": "cmu",
+  "tags": [
+   "walk",
+   "ladder"
+  ],
+  "seconds": 51.83,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "standing still"
+ },
+ "niosh_s1_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 14.04,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s1_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 11.65,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s1_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 11.69,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s2_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 14.5,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s2_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 13.93,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s2_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 13.76,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s3_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 16.3,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s3_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 17.39,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s3_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 17.14,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s4_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 15.33,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s4_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 14.46,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s4_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 14.21,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s5_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 15.99,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s5_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 17.19,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s5_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 15.53,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s6_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 14.57,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s6_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 15.45,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s6_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 15.38,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s7_t0": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 11.74,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s7_t1": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 11.41,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ },
+ "niosh_s7_t2": {
+  "source": "niosh_roofing",
+  "tags": [
+   "kneel",
+   "kneel_work"
+  ],
+  "seconds": 11.38,
+  "status": "canonical",
+  "licence_class": "A",
+  "neutral": "fallback: no still standing window, most upright and slowest 0.5 s"
+ }
+}

@@ -1,0 +1,2320 @@
+{
+ "stage": "S6 payload",
+ "fps": 50,
+ "carry_walk": {
+  "procedural (mocap off)": {
+   "gates": {
+    "bones": {
+     "value": 0.000131,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.0964,
+      "hands_m": 0.0097
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": null,
+      "legs_share": 0.0216
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.1836,
+      "median_mps": 0.0,
+      "stances": 341
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "FAIL"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 76.5,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -34.0,
+      "max_deg": 49.5
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "FAIL"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 4.2,
+      "heel_p90_ms": 12.2,
+      "strikes": 164
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [
+    "skate",
+    "hip"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2"
+   ],
+   "frames": 5048
+  },
+  "accad_male1_b20_walkwithbox": {
+   "gates": {
+    "bones": {
+     "value": 0.00012,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.0977,
+      "hands_m": 0.0097
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": null,
+      "legs_share": 0.0012
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0004,
+      "median_mps": 0.0,
+      "stances": 336
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 72.8,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -26.8,
+      "max_deg": 40.4
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.8,
+      "heel_p90_ms": 20.0,
+      "strikes": 165
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2"
+   ],
+   "frames": 5048
+  }
+ },
+ "hammer": {
+  "procedural (mocap off)": {
+   "gates": {
+    "bones": {
+     "value": 0.00015,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.2461
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "FAIL"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 63.7,
+      "max_deg": 135.1
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "tool_median_ms": 11.6,
+      "tool_p90_ms": 15.1,
+      "strikes": 275
+     },
+     "limit": "tool strike to impulse: median < 20 ms (p90 reported)",
+     "result": "PASS"
+    }
+   },
+   "failed": [
+    "pops"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2"
+   ],
+   "frames": 4000
+  },
+  "cmu_62_07": {
+   "gates": {
+    "bones": {
+     "value": 0.000138,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0226
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 62.1,
+      "max_deg": 107.7
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "tool_median_ms": 8.6,
+      "tool_p90_ms": 17.4,
+      "strikes": 275
+     },
+     "limit": "tool strike to impulse: median < 20 ms (p90 reported)",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2"
+   ],
+   "frames": 4000
+  },
+  "cmu_62_08": {
+   "gates": {
+    "bones": {
+     "value": 0.000141,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0264
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 61.6,
+      "max_deg": 107.4
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "tool_median_ms": 6.9,
+      "tool_p90_ms": 13.5,
+      "strikes": 275
+     },
+     "limit": "tool strike to impulse: median < 20 ms (p90 reported)",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2"
+   ],
+   "frames": 4000
+  },
+  "cmu_62_10": {
+   "gates": {
+    "bones": {
+     "value": 0.00013,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0336
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 63.5,
+      "max_deg": 114.2
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "tool_median_ms": 7.1,
+      "tool_p90_ms": 17.2,
+      "strikes": 275
+     },
+     "limit": "tool strike to impulse: median < 20 ms (p90 reported)",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2"
+   ],
+   "frames": 4000
+  }
+ },
+ "kneel_work": {
+  "procedural (mocap off)": {
+   "gates": {
+    "bones": {
+     "value": 0.000122,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0139
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 3.6,
+      "max_deg": 40.5
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.9933,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "FAIL"
+    },
+    "deck": {
+     "value": 0.0,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 0,
+      "matched_to_clip_wrist_events": 0
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [
+    "reach"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s1_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000144,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0594
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 127.8
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.684,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 11
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s1_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000143,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.12
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 21.5,
+      "max_deg": 127.8
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.644,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 25
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s1_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000139,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.066
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 119.9
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.717,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 21
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s2_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000143,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0663
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 132.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.832,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 30
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s2_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000142,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0832
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 135.0
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.817,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 22
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s2_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000139,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.1149
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 130.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.786,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 25
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s3_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000139,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0989
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 122.4
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.942,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 12
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s3_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000136,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0808
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 131.1
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.807,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 16
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s3_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000145,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0863
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 125.2
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.873,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 27
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s4_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000135,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0548
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 127.2
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.766,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 27
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s4_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000146,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0608
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 125.2
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.806,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 29
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s4_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000134,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0654
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 130.3
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.809,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 28
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s5_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000137,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.095
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 124.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.775,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 19
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s5_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000155,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0532
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 128.9
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.764,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 19
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s5_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000147,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0745
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 123.4
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.762,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 19
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s6_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000132,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0709
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 125.0
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.888,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 25
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s6_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000135,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0599
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 126.3
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.845,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 21
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s6_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000146,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.0603
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 125.9
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.839,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 25
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s7_t0": {
+   "gates": {
+    "bones": {
+     "value": 0.000141,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.088
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 126.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.729,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 22
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s7_t1": {
+   "gates": {
+    "bones": {
+     "value": 0.000148,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.1143
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.5,
+      "max_deg": 125.5
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.8,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 22
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  },
+  "niosh_s7_t2": {
+   "gates": {
+    "bones": {
+     "value": 0.000141,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": null,
+      "hands_m": 0.1583
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 39.6,
+      "max_deg": 121.8
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": null
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "deck": {
+     "value": 0.803,
+     "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+     "result": "n/a"
+    },
+    "sync": {
+     "value": {
+      "work_impulses": 32,
+      "matched_to_clip_wrist_events": 19
+     },
+     "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+     "result": "n/a"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2"
+   ],
+   "frames": 9446
+  }
+ },
+ "walk": {
+  "procedural (mocap off)": {
+   "gates": {
+    "bones": {
+     "value": 0.000139,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.0938,
+      "hands_m": 0.037
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 17.2,
+      "max_deg": 104.4
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0491
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.2509,
+      "median_mps": 0.0,
+      "stances": 797
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "FAIL"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 78.2,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -35.1,
+      "max_deg": 49.8
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "FAIL"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 3.6,
+      "heel_p90_ms": 24.9,
+      "strikes": 391
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [
+    "skate",
+    "hip"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "100style_heavyset_fw": {
+   "gates": {
+    "bones": {
+     "value": 0.00014,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.1329,
+      "hands_m": 0.0619
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "FAIL"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 93.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0137
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0016,
+      "median_mps": 0.0,
+      "stances": 794
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 81.8,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -27.5,
+      "max_deg": 44.3
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.2,
+      "heel_p90_ms": 22.5,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [
+    "pops"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "100style_neutral_fw": {
+   "gates": {
+    "bones": {
+     "value": 0.000144,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.121,
+      "hands_m": 0.1831
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "FAIL"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 93.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0075
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0027,
+      "median_mps": 0.0,
+      "stances": 794
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 79.6,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -28.8,
+      "max_deg": 41.0
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.3,
+      "heel_p90_ms": 23.2,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [
+    "pops"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "100style_neutral_id": {
+   "gates": {
+    "bones": {
+     "value": 0.000136,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.132,
+      "hands_m": 0.0697
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "FAIL"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 93.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0149
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0016,
+      "median_mps": 0.0,
+      "stances": 794
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 80.0,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -27.4,
+      "max_deg": 46.9
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.0,
+      "heel_p90_ms": 24.2,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [
+    "pops"
+   ],
+   "result": "FAIL",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "accad_male1_b19_walktopickupbox_working": {
+   "gates": {
+    "bones": {
+     "value": 0.000135,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.0932,
+      "hands_m": 0.0825
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 97.2
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0042
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0021,
+      "median_mps": 0.0,
+      "stances": 792
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 79.7,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -26.9,
+      "max_deg": 41.2
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.2,
+      "heel_p90_ms": 23.6,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "accad_male1_b21_putdownboxtowalk": {
+   "gates": {
+    "bones": {
+     "value": 0.000134,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.1056,
+      "hands_m": 0.0484
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 93.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0016,
+      "median_mps": 0.0,
+      "stances": 793
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 79.6,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -26.4,
+      "max_deg": 41.3
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.3,
+      "heel_p90_ms": 25.3,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "accad_male1_b3_walk": {
+   "gates": {
+    "bones": {
+     "value": 0.000133,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.1005,
+      "hands_m": 0.056
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 93.6
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0013,
+      "median_mps": 0.0,
+      "stances": 793
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 79.7,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -26.2,
+      "max_deg": 41.8
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 10.3,
+      "heel_p90_ms": 23.6,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  },
+  "cmu_86_13": {
+   "gates": {
+    "bones": {
+     "value": 0.00013,
+     "limit": "< 1e-3 m",
+     "result": "PASS"
+    },
+    "pops": {
+     "value": {
+      "feet_m": 0.1171,
+      "hands_m": 0.0715
+     },
+     "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+     "result": "PASS"
+    },
+    "elbow": {
+     "value": {
+      "min_deg": 11.4,
+      "max_deg": 102.7
+     },
+     "limit": "0-155 deg",
+     "result": "PASS"
+    },
+    "reach": {
+     "value": {
+      "arms_share": 0.0,
+      "legs_share": 0.0343
+     },
+     "limit": "< 5 % of frames clamped per limb",
+     "result": "PASS"
+    },
+    "penetration": {
+     "value": -0.0,
+     "limit": ">= -0.005 m (heel, toe)",
+     "result": "PASS"
+    },
+    "skate": {
+     "value": {
+      "max_drift_m": 0.0016,
+      "median_mps": 0.0,
+      "stances": 790
+     },
+     "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+     "result": "PASS"
+    },
+    "knee": {
+     "value": {
+      "max_deg": 88.0,
+      "hyperextended_frames": 0
+     },
+     "limit": "0-160 deg, no hyperextension",
+     "result": "PASS"
+    },
+    "hip": {
+     "value": {
+      "min_deg": -28.2,
+      "max_deg": 45.3
+     },
+     "limit": "-30..+135 deg (pelvis segment)",
+     "result": "PASS"
+    },
+    "sync": {
+     "value": {
+      "heel_median_ms": 8.6,
+      "heel_p90_ms": 24.0,
+      "strikes": 393
+     },
+     "limit": "heel strike median < 30 ms, p90 < 60 ms",
+     "result": "PASS"
+    }
+   },
+   "failed": [],
+   "result": "PASS",
+   "runs": [
+    "A-HAMMER:0",
+    "A-HAMMER:1",
+    "A-HAMMER:2",
+    "A-CARRY:0",
+    "A-CARRY:1",
+    "A-CARRY:2",
+    "A-KNEEL:0",
+    "A-KNEEL:1",
+    "A-KNEEL:2",
+    "A-LADDER:0",
+    "A-LADDER:1",
+    "A-LADDER:2",
+    "A-RUN:0",
+    "A-RUN:1",
+    "A-RUN:2",
+    "L-TRIP:0",
+    "L-TRIP:1",
+    "L-TRIP:2"
+   ],
+   "frames": 10809
+  }
+ }
+}

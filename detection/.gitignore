@@ -8,3 +8,9 @@ __pycache__/
 models/data/
 models/sim_runs/
 simulation/output/
+
+# Motion library (mocap-curator agent): downloads, restricted-licence clips, previews, offline tools
+simulation/motionlib/raw/
+simulation/motionlib/restricted/
+simulation/motionlib/previews/
+simulation/motionlib/.venv-tools/

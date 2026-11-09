@@ -1,0 +1,1546 @@
+{
+  "clip": "100style_heavyset_fw",
+  "source": "100style",
+  "source_name": "100STYLE (Mason, Starke, Komura 2022)",
+  "file": "raw/100style/Heavyset_FW.bvh",
+  "url": "https://zenodo.org/api/records/8127870/files/100STYLE.zip/content",
+  "sha256": "852619771cc9155891c6b42abc1c289a6d866dbbe363674e151ff70bd5fe72af",
+  "licence": {
+    "class": "A",
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "credit": "100STYLE dataset, I. Mason, S. Starke, T. Komura, 'Real-Time Style Modelling of Human Locomotion via Feature-Wise Transformations and Local Motion Phases', 2022; Zenodo 10.5281/zenodo.8127870, CC BY 4.0."
+  },
+  "tags": [
+    "walk"
+  ],
+  "source_fps": 59.99879837036133,
+  "source_frames": 7464,
+  "seconds": 124.38,
+  "fs": 100.0,
+  "frames": 12439,
+  "height_est_m": 1.831,
+  "valid_joints": [
+    "hip_l",
+    "hip_r",
+    "knee_l",
+    "knee_r",
+    "ankle_l",
+    "ankle_r",
+    "heel_l",
+    "heel_r",
+    "toe_l",
+    "toe_r",
+    "shoulder_l",
+    "shoulder_r",
+    "elbow_l",
+    "elbow_r",
+    "hand_l",
+    "hand_r",
+    "neck",
+    "head",
+    "pelvis",
+    "head_top"
+  ],
+  "joint_map": {
+    "hip": "UpLeg/Hip",
+    "knee": "Leg/Knee",
+    "ankle": "Foot/Ankle",
+    "toe": "ToeBase/Toe end site",
+    "heel": "derived from ankle, toe and knee (rig.Dims proportions)",
+    "shoulder": "Shoulder",
+    "elbow": "Elbow",
+    "hand": "midpoint of wrist joint and its end site",
+    "neck": "Neck joint (neck base)",
+    "head": "midpoint of Head joint and end site",
+    "head_top": "Head end site",
+    "pelvis": "midpoint of hip joints",
+    "spine": "hip mid -> Hips -> Chest -> Chest2 -> Chest3 -> Chest4 -> Neck"
+  },
+  "root_relative": false,
+  "trunk": {
+    "method": "rigid source bone under each anchor (0, 2, 3, 5 = spine piece index)",
+    "spine_points": 7,
+    "neutral_frames": [
+      738,
+      788
+    ],
+    "neutral_method": "standing still",
+    "neutral_ok": true,
+    "neutral_reference": null,
+    "tilt_deg": 3.24,
+    "speed_mps": 0.017,
+    "knee_deg": 172.6
+  },
+  "anterior_share": 1.0,
+  "notes": [],
+  "problems": [],
+  "status": "rejected",
+  "gates": {
+    "stage": "S5 preview",
+    "payload_fs": 50.0,
+    "rig": {
+      "H": 1.75,
+      "mass_kg": 80.0,
+      "scale": 0.9559
+    },
+    "method": "clip retargeted onto rig.Dims with rig.two_bone on its own pelvis path (see tools/gates.py)",
+    "source": {
+      "value": {
+        "bone_std_mm": 0.0,
+        "foot_p99_mps": 4.03,
+        "hand_p99_mps": 1.99,
+        "note": null
+      },
+      "limit": "FK bone std < 1 mm (n/a for position data); foot p99 < 12, hand p99 < 15 m/s",
+      "result": "PASS"
+    },
+    "bones": {
+      "value": 4.44e-16,
+      "limit": "< 1e-3 m",
+      "result": "PASS"
+    },
+    "penetration": {
+      "value": {
+        "min_m": -0.0,
+        "frames_below": 0
+      },
+      "limit": ">= -0.005 m (heel, toe)",
+      "result": "PASS"
+    },
+    "skate": {
+      "value": {
+        "max_drift_m": 0.0443,
+        "p90_drift_m": 0.0243,
+        "median_mps": 0.0204,
+        "stances": 402,
+        "rig_foot_max_drift_m": 0.0897,
+        "rig_foot_median_mps": 0.0244
+      },
+      "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+      "result": "FAIL"
+    },
+    "pops": {
+      "value": {
+        "feet_m": 0.0651,
+        "hands_m": 0.0732
+      },
+      "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+      "result": "PASS"
+    },
+    "knee": {
+      "value": {
+        "max_deg": 71.1,
+        "hyperextended_frames": 0
+      },
+      "limit": "0-160 deg, no hyperextension",
+      "result": "PASS"
+    },
+    "elbow": {
+      "value": {
+        "max_deg": 71.9,
+        "min_deg": 3.6
+      },
+      "limit": "0-155 deg",
+      "result": "PASS"
+    },
+    "hip": {
+      "value": {
+        "min_deg": -16.0,
+        "max_deg": 33.9,
+        "out_of_plane_frames": 0
+      },
+      "limit": "-30..+135 deg (pelvis segment, sagittal)",
+      "result": "PASS"
+    },
+    "reach": {
+      "value": {
+        "legs_share": 0.0,
+        "arms_share": 0.0,
+        "legs_max_clamp_m": 0.0002,
+        "arms_max_clamp_m": 0.0047
+      },
+      "limit": "< 5 % of frames clamped (end joint > 5 mm from its target) per limb",
+      "result": "PASS"
+    },
+    "sync": {
+      "value": null,
+      "limit": "heel strike median < 30 ms, p90 < 60 ms; tool strike < 20 ms",
+      "result": "PENDING",
+      "note": "needs the S6 time warp to simulator anchors; measured on the payload in S6"
+    },
+    "failed": [
+      "skate"
+    ],
+    "fails_only_skate": true
+  },
+  "reviewed_by": null,
+  "member": "100STYLE/Heavyset/Heavyset_FW.bvh",
+  "subject": "100style",
+  "s2_checks": {
+    "shape": true,
+    "height_m": 1.831,
+    "scale": true,
+    "up": true,
+    "bone_std_mm_max": 0.0,
+    "hand_toe_span_std_mm_max": 3.67,
+    "bones": true,
+    "foot_p99_mps": 4.03,
+    "hand_p99_mps": 1.99,
+    "speed": true,
+    "sim_conv_err_deg": 1.08e-05,
+    "sim_conv": true,
+    "neutral_resid_deg": 0.0,
+    "neutral": true,
+    "trunk_p5_p95_deg": {
+      "pitch": [
+        -2.0,
+        6.7
+      ],
+      "flex_sum": [
+        -4.8,
+        5.3
+      ],
+      "roll": [
+        -4.8,
+        1.1
+      ],
+      "twist_sum": [
+        -8.5,
+        13.1
+      ]
+    },
+    "pass": true
+  },
+  "s3": {
+    "floor_m": 0.0055,
+    "floor_slope_deg": 0.02,
+    "flat_offsets_m": {
+      "l": {
+        "ankle": 0.1135,
+        "heel": 0.0732,
+        "toe": 0.0021
+      },
+      "r": {
+        "ankle": 0.1122,
+        "heel": 0.0717,
+        "toe": 0.002
+      }
+    },
+    "contact_share": {
+      "l": 0.579,
+      "r": 0.581
+    },
+    "stances": {
+      "l": 112,
+      "r": 105
+    },
+    "heel_strikes": [
+      {
+        "t": 0.49,
+        "side": "l"
+      },
+      {
+        "t": 1.4,
+        "side": "r"
+      },
+      {
+        "t": 2.05,
+        "side": "l"
+      },
+      {
+        "t": 2.76,
+        "side": "r"
+      },
+      {
+        "t": 3.42,
+        "side": "l"
+      },
+      {
+        "t": 4.1,
+        "side": "r"
+      },
+      {
+        "t": 9.04,
+        "side": "r"
+      },
+      {
+        "t": 9.74,
+        "side": "l"
+      },
+      {
+        "t": 10.41,
+        "side": "r"
+      },
+      {
+        "t": 10.99,
+        "side": "l"
+      },
+      {
+        "t": 11.65,
+        "side": "r"
+      },
+      {
+        "t": 12.35,
+        "side": "l"
+      },
+      {
+        "t": 13.05,
+        "side": "r"
+      },
+      {
+        "t": 13.7,
+        "side": "l"
+      },
+      {
+        "t": 14.34,
+        "side": "r"
+      },
+      {
+        "t": 14.96,
+        "side": "l"
+      },
+      {
+        "t": 15.61,
+        "side": "r"
+      },
+      {
+        "t": 16.12,
+        "side": "l"
+      },
+      {
+        "t": 16.9,
+        "side": "r"
+      },
+      {
+        "t": 17.52,
+        "side": "l"
+      },
+      {
+        "t": 18.16,
+        "side": "r"
+      },
+      {
+        "t": 18.77,
+        "side": "l"
+      },
+      {
+        "t": 19.43,
+        "side": "r"
+      },
+      {
+        "t": 20.07,
+        "side": "l"
+      },
+      {
+        "t": 20.72,
+        "side": "r"
+      },
+      {
+        "t": 21.32,
+        "side": "l"
+      },
+      {
+        "t": 22.0,
+        "side": "r"
+      },
+      {
+        "t": 22.62,
+        "side": "l"
+      },
+      {
+        "t": 23.26,
+        "side": "r"
+      },
+      {
+        "t": 23.86,
+        "side": "l"
+      },
+      {
+        "t": 24.52,
+        "side": "r"
+      },
+      {
+        "t": 25.15,
+        "side": "l"
+      },
+      {
+        "t": 25.75,
+        "side": "r"
+      },
+      {
+        "t": 26.3,
+        "side": "l"
+      },
+      {
+        "t": 26.86,
+        "side": "r"
+      },
+      {
+        "t": 27.61,
+        "side": "l"
+      },
+      {
+        "t": 28.26,
+        "side": "r"
+      },
+      {
+        "t": 28.89,
+        "side": "l"
+      },
+      {
+        "t": 29.5,
+        "side": "r"
+      },
+      {
+        "t": 30.16,
+        "side": "l"
+      },
+      {
+        "t": 30.81,
+        "side": "r"
+      },
+      {
+        "t": 31.41,
+        "side": "l"
+      },
+      {
+        "t": 32.09,
+        "side": "r"
+      },
+      {
+        "t": 32.75,
+        "side": "l"
+      },
+      {
+        "t": 33.4,
+        "side": "r"
+      },
+      {
+        "t": 34.01,
+        "side": "l"
+      },
+      {
+        "t": 34.65,
+        "side": "r"
+      },
+      {
+        "t": 35.26,
+        "side": "l"
+      },
+      {
+        "t": 35.91,
+        "side": "r"
+      },
+      {
+        "t": 36.53,
+        "side": "l"
+      },
+      {
+        "t": 37.71,
+        "side": "l"
+      },
+      {
+        "t": 38.49,
+        "side": "r"
+      },
+      {
+        "t": 39.14,
+        "side": "l"
+      },
+      {
+        "t": 39.75,
+        "side": "r"
+      },
+      {
+        "t": 40.36,
+        "side": "l"
+      },
+      {
+        "t": 41.0,
+        "side": "r"
+      },
+      {
+        "t": 41.61,
+        "side": "l"
+      },
+      {
+        "t": 42.24,
+        "side": "r"
+      },
+      {
+        "t": 42.81,
+        "side": "l"
+      },
+      {
+        "t": 43.5,
+        "side": "r"
+      },
+      {
+        "t": 44.1,
+        "side": "l"
+      },
+      {
+        "t": 44.74,
+        "side": "r"
+      },
+      {
+        "t": 45.34,
+        "side": "l"
+      },
+      {
+        "t": 46.01,
+        "side": "r"
+      },
+      {
+        "t": 46.63,
+        "side": "l"
+      },
+      {
+        "t": 47.26,
+        "side": "r"
+      },
+      {
+        "t": 47.91,
+        "side": "l"
+      },
+      {
+        "t": 48.58,
+        "side": "r"
+      },
+      {
+        "t": 49.21,
+        "side": "l"
+      },
+      {
+        "t": 49.86,
+        "side": "r"
+      },
+      {
+        "t": 50.48,
+        "side": "l"
+      },
+      {
+        "t": 51.11,
+        "side": "r"
+      },
+      {
+        "t": 51.73,
+        "side": "l"
+      },
+      {
+        "t": 52.35,
+        "side": "r"
+      },
+      {
+        "t": 52.96,
+        "side": "l"
+      },
+      {
+        "t": 53.6,
+        "side": "r"
+      },
+      {
+        "t": 54.2,
+        "side": "l"
+      },
+      {
+        "t": 54.82,
+        "side": "r"
+      },
+      {
+        "t": 55.45,
+        "side": "l"
+      },
+      {
+        "t": 56.06,
+        "side": "r"
+      },
+      {
+        "t": 56.66,
+        "side": "l"
+      },
+      {
+        "t": 57.31,
+        "side": "r"
+      },
+      {
+        "t": 57.92,
+        "side": "l"
+      },
+      {
+        "t": 58.51,
+        "side": "r"
+      },
+      {
+        "t": 59.21,
+        "side": "l"
+      },
+      {
+        "t": 59.86,
+        "side": "r"
+      },
+      {
+        "t": 60.49,
+        "side": "l"
+      },
+      {
+        "t": 61.11,
+        "side": "r"
+      },
+      {
+        "t": 61.72,
+        "side": "l"
+      },
+      {
+        "t": 62.37,
+        "side": "r"
+      },
+      {
+        "t": 63.01,
+        "side": "l"
+      },
+      {
+        "t": 63.7,
+        "side": "r"
+      },
+      {
+        "t": 64.31,
+        "side": "l"
+      },
+      {
+        "t": 64.98,
+        "side": "r"
+      },
+      {
+        "t": 65.59,
+        "side": "l"
+      },
+      {
+        "t": 66.25,
+        "side": "r"
+      },
+      {
+        "t": 66.86,
+        "side": "l"
+      },
+      {
+        "t": 67.51,
+        "side": "r"
+      },
+      {
+        "t": 68.12,
+        "side": "l"
+      },
+      {
+        "t": 68.75,
+        "side": "r"
+      },
+      {
+        "t": 69.44,
+        "side": "l"
+      },
+      {
+        "t": 70.05,
+        "side": "r"
+      },
+      {
+        "t": 70.65,
+        "side": "l"
+      },
+      {
+        "t": 71.26,
+        "side": "r"
+      },
+      {
+        "t": 71.88,
+        "side": "l"
+      },
+      {
+        "t": 72.5,
+        "side": "r"
+      },
+      {
+        "t": 73.1,
+        "side": "l"
+      },
+      {
+        "t": 73.71,
+        "side": "r"
+      },
+      {
+        "t": 74.36,
+        "side": "l"
+      },
+      {
+        "t": 74.96,
+        "side": "r"
+      },
+      {
+        "t": 75.58,
+        "side": "l"
+      },
+      {
+        "t": 76.21,
+        "side": "r"
+      },
+      {
+        "t": 76.81,
+        "side": "l"
+      },
+      {
+        "t": 77.46,
+        "side": "r"
+      },
+      {
+        "t": 78.08,
+        "side": "l"
+      },
+      {
+        "t": 78.71,
+        "side": "r"
+      },
+      {
+        "t": 79.34,
+        "side": "l"
+      },
+      {
+        "t": 79.95,
+        "side": "r"
+      },
+      {
+        "t": 80.46,
+        "side": "l"
+      },
+      {
+        "t": 80.76,
+        "side": "r"
+      },
+      {
+        "t": 81.04,
+        "side": "r"
+      },
+      {
+        "t": 81.85,
+        "side": "l"
+      },
+      {
+        "t": 82.5,
+        "side": "r"
+      },
+      {
+        "t": 83.11,
+        "side": "l"
+      },
+      {
+        "t": 83.76,
+        "side": "r"
+      },
+      {
+        "t": 84.37,
+        "side": "l"
+      },
+      {
+        "t": 85.01,
+        "side": "r"
+      },
+      {
+        "t": 85.62,
+        "side": "l"
+      },
+      {
+        "t": 86.26,
+        "side": "r"
+      },
+      {
+        "t": 86.87,
+        "side": "l"
+      },
+      {
+        "t": 87.51,
+        "side": "r"
+      },
+      {
+        "t": 88.11,
+        "side": "l"
+      },
+      {
+        "t": 88.76,
+        "side": "r"
+      },
+      {
+        "t": 89.37,
+        "side": "l"
+      },
+      {
+        "t": 90.02,
+        "side": "r"
+      },
+      {
+        "t": 90.66,
+        "side": "l"
+      },
+      {
+        "t": 91.28,
+        "side": "r"
+      },
+      {
+        "t": 91.86,
+        "side": "l"
+      },
+      {
+        "t": 92.6,
+        "side": "r"
+      },
+      {
+        "t": 93.23,
+        "side": "l"
+      },
+      {
+        "t": 93.82,
+        "side": "r"
+      },
+      {
+        "t": 94.26,
+        "side": "l"
+      },
+      {
+        "t": 95.13,
+        "side": "l"
+      },
+      {
+        "t": 95.95,
+        "side": "r"
+      },
+      {
+        "t": 96.61,
+        "side": "l"
+      },
+      {
+        "t": 97.15,
+        "side": "r"
+      },
+      {
+        "t": 97.58,
+        "side": "l"
+      },
+      {
+        "t": 98.35,
+        "side": "r"
+      },
+      {
+        "t": 99.16,
+        "side": "l"
+      },
+      {
+        "t": 99.84,
+        "side": "r"
+      },
+      {
+        "t": 100.39,
+        "side": "l"
+      },
+      {
+        "t": 100.8,
+        "side": "r"
+      },
+      {
+        "t": 101.49,
+        "side": "r"
+      },
+      {
+        "t": 101.71,
+        "side": "r"
+      },
+      {
+        "t": 102.45,
+        "side": "l"
+      },
+      {
+        "t": 103.2,
+        "side": "r"
+      },
+      {
+        "t": 103.88,
+        "side": "l"
+      },
+      {
+        "t": 104.51,
+        "side": "r"
+      },
+      {
+        "t": 105.1,
+        "side": "l"
+      },
+      {
+        "t": 105.56,
+        "side": "r"
+      },
+      {
+        "t": 106.47,
+        "side": "l"
+      },
+      {
+        "t": 107.26,
+        "side": "r"
+      },
+      {
+        "t": 107.88,
+        "side": "l"
+      },
+      {
+        "t": 108.64,
+        "side": "r"
+      },
+      {
+        "t": 109.31,
+        "side": "l"
+      },
+      {
+        "t": 110.01,
+        "side": "r"
+      },
+      {
+        "t": 110.68,
+        "side": "l"
+      },
+      {
+        "t": 111.35,
+        "side": "r"
+      },
+      {
+        "t": 112.1,
+        "side": "l"
+      },
+      {
+        "t": 112.78,
+        "side": "r"
+      },
+      {
+        "t": 113.45,
+        "side": "l"
+      },
+      {
+        "t": 114.14,
+        "side": "r"
+      },
+      {
+        "t": 114.81,
+        "side": "l"
+      },
+      {
+        "t": 115.48,
+        "side": "r"
+      },
+      {
+        "t": 116.14,
+        "side": "l"
+      },
+      {
+        "t": 116.82,
+        "side": "r"
+      },
+      {
+        "t": 117.46,
+        "side": "l"
+      },
+      {
+        "t": 118.15,
+        "side": "r"
+      },
+      {
+        "t": 118.62,
+        "side": "l"
+      },
+      {
+        "t": 119.75,
+        "side": "r"
+      },
+      {
+        "t": 119.9,
+        "side": "r"
+      },
+      {
+        "t": 120.58,
+        "side": "l"
+      },
+      {
+        "t": 121.34,
+        "side": "r"
+      },
+      {
+        "t": 122.02,
+        "side": "l"
+      },
+      {
+        "t": 122.75,
+        "side": "r"
+      },
+      {
+        "t": 123.26,
+        "side": "l"
+      }
+    ],
+    "cycles": 176,
+    "wrist_decel_peaks": [
+      {
+        "t": 1.99,
+        "frame": 199,
+        "side": "r",
+        "decel_mps2": 6.4,
+        "speed_before_mps": 1.44
+      },
+      {
+        "t": 5.4,
+        "frame": 540,
+        "side": "r",
+        "decel_mps2": 5.2,
+        "speed_before_mps": 1.57
+      },
+      {
+        "t": 5.5,
+        "frame": 550,
+        "side": "l",
+        "decel_mps2": 5.2,
+        "speed_before_mps": 1.17
+      },
+      {
+        "t": 11.55,
+        "frame": 1155,
+        "side": "r",
+        "decel_mps2": 4.3,
+        "speed_before_mps": 0.79
+      },
+      {
+        "t": 11.9,
+        "frame": 1190,
+        "side": "l",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 1.24
+      },
+      {
+        "t": 18.25,
+        "frame": 1825,
+        "side": "l",
+        "decel_mps2": 4.5,
+        "speed_before_mps": 0.84
+      },
+      {
+        "t": 26.71,
+        "frame": 2671,
+        "side": "r",
+        "decel_mps2": 4.1,
+        "speed_before_mps": 1.0
+      },
+      {
+        "t": 31.24,
+        "frame": 3124,
+        "side": "r",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 0.99
+      },
+      {
+        "t": 31.95,
+        "frame": 3195,
+        "side": "l",
+        "decel_mps2": 4.4,
+        "speed_before_mps": 1.24
+      },
+      {
+        "t": 36.85,
+        "frame": 3685,
+        "side": "l",
+        "decel_mps2": 5.9,
+        "speed_before_mps": 1.04
+      },
+      {
+        "t": 37.4,
+        "frame": 3740,
+        "side": "l",
+        "decel_mps2": 4.6,
+        "speed_before_mps": 1.67
+      },
+      {
+        "t": 37.85,
+        "frame": 3785,
+        "side": "r",
+        "decel_mps2": 4.4,
+        "speed_before_mps": 1.31
+      },
+      {
+        "t": 42.75,
+        "frame": 4275,
+        "side": "r",
+        "decel_mps2": 4.6,
+        "speed_before_mps": 1.4
+      },
+      {
+        "t": 46.8,
+        "frame": 4680,
+        "side": "l",
+        "decel_mps2": 4.9,
+        "speed_before_mps": 1.63
+      },
+      {
+        "t": 56.6,
+        "frame": 5660,
+        "side": "r",
+        "decel_mps2": 4.3,
+        "speed_before_mps": 1.36
+      },
+      {
+        "t": 57.61,
+        "frame": 5761,
+        "side": "r",
+        "decel_mps2": 4.0,
+        "speed_before_mps": 0.93
+      },
+      {
+        "t": 58.26,
+        "frame": 5826,
+        "side": "r",
+        "decel_mps2": 4.8,
+        "speed_before_mps": 1.11
+      },
+      {
+        "t": 58.4,
+        "frame": 5840,
+        "side": "l",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 1.27
+      },
+      {
+        "t": 59.55,
+        "frame": 5955,
+        "side": "l",
+        "decel_mps2": 4.1,
+        "speed_before_mps": 1.56
+      },
+      {
+        "t": 63.2,
+        "frame": 6320,
+        "side": "l",
+        "decel_mps2": 4.3,
+        "speed_before_mps": 1.47
+      },
+      {
+        "t": 67.95,
+        "frame": 6795,
+        "side": "r",
+        "decel_mps2": 4.3,
+        "speed_before_mps": 1.13
+      },
+      {
+        "t": 73.05,
+        "frame": 7305,
+        "side": "r",
+        "decel_mps2": 4.0,
+        "speed_before_mps": 0.92
+      },
+      {
+        "t": 80.29,
+        "frame": 8029,
+        "side": "r",
+        "decel_mps2": 5.1,
+        "speed_before_mps": 0.88
+      },
+      {
+        "t": 80.96,
+        "frame": 8096,
+        "side": "r",
+        "decel_mps2": 5.1,
+        "speed_before_mps": 1.12
+      },
+      {
+        "t": 90.0,
+        "frame": 9000,
+        "side": "l",
+        "decel_mps2": 4.5,
+        "speed_before_mps": 0.85
+      },
+      {
+        "t": 90.85,
+        "frame": 9085,
+        "side": "l",
+        "decel_mps2": 4.8,
+        "speed_before_mps": 1.78
+      },
+      {
+        "t": 91.05,
+        "frame": 9105,
+        "side": "l",
+        "decel_mps2": 4.0,
+        "speed_before_mps": 1.04
+      },
+      {
+        "t": 91.69,
+        "frame": 9169,
+        "side": "l",
+        "decel_mps2": 4.9,
+        "speed_before_mps": 0.91
+      },
+      {
+        "t": 93.3,
+        "frame": 9330,
+        "side": "r",
+        "decel_mps2": 4.1,
+        "speed_before_mps": 0.77
+      },
+      {
+        "t": 93.51,
+        "frame": 9351,
+        "side": "l",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 1.92
+      },
+      {
+        "t": 93.71,
+        "frame": 9371,
+        "side": "l",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 1.13
+      },
+      {
+        "t": 94.11,
+        "frame": 9411,
+        "side": "r",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 1.2
+      },
+      {
+        "t": 95.15,
+        "frame": 9515,
+        "side": "l",
+        "decel_mps2": 4.4,
+        "speed_before_mps": 1.14
+      },
+      {
+        "t": 95.36,
+        "frame": 9536,
+        "side": "r",
+        "decel_mps2": 5.2,
+        "speed_before_mps": 1.22
+      },
+      {
+        "t": 96.06,
+        "frame": 9606,
+        "side": "l",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 1.44
+      },
+      {
+        "t": 96.8,
+        "frame": 9680,
+        "side": "r",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 1.23
+      },
+      {
+        "t": 98.33,
+        "frame": 9833,
+        "side": "r",
+        "decel_mps2": 4.5,
+        "speed_before_mps": 0.93
+      },
+      {
+        "t": 99.25,
+        "frame": 9925,
+        "side": "r",
+        "decel_mps2": 4.3,
+        "speed_before_mps": 1.22
+      },
+      {
+        "t": 99.9,
+        "frame": 9990,
+        "side": "l",
+        "decel_mps2": 5.6,
+        "speed_before_mps": 1.33
+      },
+      {
+        "t": 103.31,
+        "frame": 10331,
+        "side": "l",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 1.32
+      },
+      {
+        "t": 104.6,
+        "frame": 10460,
+        "side": "l",
+        "decel_mps2": 5.3,
+        "speed_before_mps": 1.3
+      },
+      {
+        "t": 108.1,
+        "frame": 10810,
+        "side": "r",
+        "decel_mps2": 4.1,
+        "speed_before_mps": 1.14
+      },
+      {
+        "t": 111.26,
+        "frame": 11126,
+        "side": "r",
+        "decel_mps2": 4.0,
+        "speed_before_mps": 0.92
+      },
+      {
+        "t": 112.91,
+        "frame": 11291,
+        "side": "l",
+        "decel_mps2": 4.6,
+        "speed_before_mps": 1.09
+      },
+      {
+        "t": 114.26,
+        "frame": 11426,
+        "side": "l",
+        "decel_mps2": 4.1,
+        "speed_before_mps": 1.04
+      },
+      {
+        "t": 119.08,
+        "frame": 11908,
+        "side": "l",
+        "decel_mps2": 6.6,
+        "speed_before_mps": 1.59
+      },
+      {
+        "t": 119.14,
+        "frame": 11914,
+        "side": "r",
+        "decel_mps2": 10.4,
+        "speed_before_mps": 1.71
+      },
+      {
+        "t": 119.76,
+        "frame": 11976,
+        "side": "l",
+        "decel_mps2": 11.0,
+        "speed_before_mps": 3.22
+      },
+      {
+        "t": 119.94,
+        "frame": 11994,
+        "side": "r",
+        "decel_mps2": 9.1,
+        "speed_before_mps": 1.71
+      },
+      {
+        "t": 121.86,
+        "frame": 12186,
+        "side": "r",
+        "decel_mps2": 5.2,
+        "speed_before_mps": 1.5
+      }
+    ],
+    "wrist_decel_peak_count": 50,
+    "rung_contacts": [],
+    "bends": [],
+    "segments": [
+      {
+        "primitive": "stand",
+        "t0": 0.0,
+        "t1": 0.34
+      },
+      {
+        "primitive": "walk",
+        "t0": 0.34,
+        "t1": 3.83
+      },
+      {
+        "primitive": "stand",
+        "t0": 3.83,
+        "t1": 8.51
+      },
+      {
+        "primitive": "walk",
+        "t0": 8.51,
+        "t1": 94.22
+      },
+      {
+        "primitive": "stand",
+        "t0": 94.22,
+        "t1": 95.19
+      },
+      {
+        "primitive": "walk",
+        "t0": 95.19,
+        "t1": 97.4
+      },
+      {
+        "primitive": "stand",
+        "t0": 97.4,
+        "t1": 98.22
+      },
+      {
+        "primitive": "walk",
+        "t0": 98.22,
+        "t1": 100.58
+      },
+      {
+        "primitive": "stand",
+        "t0": 100.58,
+        "t1": 101.52
+      },
+      {
+        "primitive": "walk",
+        "t0": 101.52,
+        "t1": 105.52
+      },
+      {
+        "primitive": "stand",
+        "t0": 105.52,
+        "t1": 106.23
+      },
+      {
+        "primitive": "walk",
+        "t0": 106.23,
+        "t1": 118.72
+      },
+      {
+        "primitive": "stand",
+        "t0": 118.72,
+        "t1": 119.66
+      },
+      {
+        "primitive": "walk",
+        "t0": 119.66,
+        "t1": 123.12
+      },
+      {
+        "primitive": "stand",
+        "t0": 123.12,
+        "t1": 124.39
+      }
+    ],
+    "notes": []
+  },
+  "activity_tags": [
+    "stand",
+    "walk"
+  ],
+  "s4": {
+    "file": "clips/100style_heavyset_fw.npz",
+    "format": 1,
+    "has_legs": true,
+    "task": "floor",
+    "leg_len_m": [
+      0.8696,
+      0.8696
+    ],
+    "arm_len_m": [
+      0.6586,
+      0.6578
+    ],
+    "foot_pitch_flat_deg": [
+      -24.9,
+      -24.6
+    ],
+    "finite": true,
+    "non_finite": []
+  },
+  "s6": {
+    "stage": "S6 payload",
+    "roles": {
+      "walk": {
+        "gates": {
+          "bones": {
+            "value": 0.00014,
+            "limit": "< 1e-3 m",
+            "result": "PASS"
+          },
+          "pops": {
+            "value": {
+              "feet_m": 0.1329,
+              "hands_m": 0.0619
+            },
+            "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+            "result": "FAIL"
+          },
+          "elbow": {
+            "value": {
+              "min_deg": 11.4,
+              "max_deg": 93.6
+            },
+            "limit": "0-155 deg",
+            "result": "PASS"
+          },
+          "reach": {
+            "value": {
+              "arms_share": 0.0,
+              "legs_share": 0.0137
+            },
+            "limit": "< 5 % of frames clamped per limb",
+            "result": "PASS"
+          },
+          "penetration": {
+            "value": -0.0,
+            "limit": ">= -0.005 m (heel, toe)",
+            "result": "PASS"
+          },
+          "skate": {
+            "value": {
+              "max_drift_m": 0.0016,
+              "median_mps": 0.0,
+              "stances": 794
+            },
+            "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+            "result": "PASS"
+          },
+          "knee": {
+            "value": {
+              "max_deg": 81.8,
+              "hyperextended_frames": 0
+            },
+            "limit": "0-160 deg, no hyperextension",
+            "result": "PASS"
+          },
+          "hip": {
+            "value": {
+              "min_deg": -27.5,
+              "max_deg": 44.3
+            },
+            "limit": "-30..+135 deg (pelvis segment)",
+            "result": "PASS"
+          },
+          "sync": {
+            "value": {
+              "heel_median_ms": 10.2,
+              "heel_p90_ms": 22.5,
+              "strikes": 393
+            },
+            "limit": "heel strike median < 30 ms, p90 < 60 ms",
+            "result": "PASS"
+          }
+        },
+        "failed": [
+          "pops"
+        ],
+        "result": "FAIL",
+        "runs": [
+          "A-HAMMER:0",
+          "A-HAMMER:1",
+          "A-HAMMER:2",
+          "A-CARRY:0",
+          "A-CARRY:1",
+          "A-CARRY:2",
+          "A-KNEEL:0",
+          "A-KNEEL:1",
+          "A-KNEEL:2",
+          "A-LADDER:0",
+          "A-LADDER:1",
+          "A-LADDER:2",
+          "A-RUN:0",
+          "A-RUN:1",
+          "A-RUN:2",
+          "L-TRIP:0",
+          "L-TRIP:1",
+          "L-TRIP:2"
+        ],
+        "frames": 10809
+      }
+    },
+    "result": "FAIL"
+  }
+}

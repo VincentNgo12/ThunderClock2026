@@ -1,0 +1,15 @@
+Worker body presets in this folder (anny_*.json) were measured from the Anny human body model.
+
+Anny (NAVER LABS Europe), https://github.com/naver/anny
+  Code: Copyright (C) 2025 NAVER Corp., Apache License 2.0.
+  Mesh, blend shapes, rig and skinning weights: derived from MakeHuman / MPFB2 assets, CC0 1.0 Universal.
+  Citation: Bregier et al., "Human Mesh Modeling for Anny Body", ECCV 2026 (arXiv:2511.03589).
+
+Spinous-level heights (S1/L3/T10/T2) were mapped from BodyParts3D, (c) The Database Center for
+Life Science (DBCLS), licensed under CC BY 4.0.
+
+Segment mass fractions for comparison: de Leva P. (1996), "Adjustments to Zatsiorsky-Seluyanov's
+segment inertia parameters", J Biomech 29(9):1223-1230.
+
+Anny's phenotype parameters encode MakeHuman artists' body templates, not real identity traits.
+These presets are illustrative bodies, not measurements of any worker.

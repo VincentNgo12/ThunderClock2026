@@ -5,35 +5,28 @@
 import * as THREE from "three";
 import type { Region } from "../../telemetry/types";
 
+import column from "./vertebrae.json";
+
 export interface VertebraSpec {
   name: string;
-  height: number; // metres along the local up axis, body plus the disc above it
-  width: number; // body width (X), metres
-  depth: number; // body depth (Z), metres
+  height: number; // metres along the local up axis: pivot (disc below) to the next pivot
+  width: number; // bone width (X), metres
+  depth: number; // bone depth (Z), metres
   restTiltDeg: number; // neutral sagittal tilt; positive leans the top posterior (+Z)
+  pod?: [number, number, number]; // sensor pod point on the skin, local frame (anatomical model)
 }
 
-// Bottom to top. Rest tilts give a mild lumbar lordosis and thoracic kyphosis.
-export const VERTEBRAE: VertebraSpec[] = [
-  { name: "Sacrum", height: 0.1, width: 0.075, depth: 0.04, restTiltDeg: -32 },
-  { name: "L5", height: 0.036, width: 0.05, depth: 0.035, restTiltDeg: -12 },
-  { name: "L4", height: 0.036, width: 0.05, depth: 0.035, restTiltDeg: -6 },
-  { name: "L3", height: 0.035, width: 0.048, depth: 0.034, restTiltDeg: 0 },
-  { name: "L2", height: 0.034, width: 0.046, depth: 0.033, restTiltDeg: 5 },
-  { name: "L1", height: 0.033, width: 0.044, depth: 0.032, restTiltDeg: 9 },
-  { name: "T12", height: 0.03, width: 0.04, depth: 0.03, restTiltDeg: 10 },
-  { name: "T11", height: 0.029, width: 0.038, depth: 0.029, restTiltDeg: 10 },
-  { name: "T10", height: 0.028, width: 0.036, depth: 0.028, restTiltDeg: 9 },
-  { name: "T9", height: 0.027, width: 0.034, depth: 0.027, restTiltDeg: 7 },
-  { name: "T8", height: 0.026, width: 0.033, depth: 0.026, restTiltDeg: 5 },
-  { name: "T7", height: 0.025, width: 0.032, depth: 0.025, restTiltDeg: 3 },
-  { name: "T6", height: 0.024, width: 0.031, depth: 0.024, restTiltDeg: 1 },
-  { name: "T5", height: 0.023, width: 0.03, depth: 0.023, restTiltDeg: -2 },
-  { name: "T4", height: 0.022, width: 0.029, depth: 0.022, restTiltDeg: -5 },
-  { name: "T3", height: 0.021, width: 0.028, depth: 0.021, restTiltDeg: -8 },
-  { name: "T2", height: 0.02, width: 0.027, depth: 0.02, restTiltDeg: -11 },
-  { name: "T1", height: 0.02, width: 0.027, depth: 0.02, restTiltDeg: -14 },
-];
+// Bottom to top (sacrum .. T1). Measured from BodyParts3D by scripts/build_spine_mesh.py: segment
+// lengths and rest tilts between neighbouring vertebral-body centres, so the neutral column has the
+// real lordosis and kyphosis. BodyParts3D, (c) The Database Center for Life Science, CC BY 4.0.
+export const VERTEBRAE: VertebraSpec[] = column.vertebrae.map((v) => ({
+  name: v.name,
+  height: v.height,
+  width: v.width,
+  depth: v.depth,
+  restTiltDeg: v.restTiltDeg,
+  pod: [v.pod[0], v.pod[1], v.pod[2]],
+}));
 
 // Index into VERTEBRAE where each sensor sits. Confirm against the physical mounting.
 export const SENSOR_ANCHORS: { region: Region; index: number }[] = [
@@ -160,4 +153,73 @@ export function neutralCenter(): THREE.Vector3 {
     .clone()
     .add(UP.clone().applyQuaternion(top.rotation).multiplyScalar(VERTEBRAE[VERTEBRAE.length - 1].height));
   return topEnd.multiplyScalar(0.5);
+}
+
+/**
+ * Fill sensors that have no data from the ones that do, so a missing sensor follows the body instead
+ * of staying pinned at its last pose. Between two measured sensors: slerp by vertebra index. Beyond
+ * the outermost measured sensor: copy it. Returns null when no sensor has data (keep the last pose).
+ * The second array marks which entries were inferred.
+ */
+export function fillMissingAnchors(anchors: (THREE.Quaternion | null)[]): { rotations: THREE.Quaternion[]; inferred: boolean[] } | null {
+  const known = anchors.map((q, k) => (q ? k : -1)).filter((k) => k >= 0);
+  if (known.length === 0) {
+    return null;
+  }
+  const at = (k: number) => SENSOR_ANCHORS[k].index;
+  const rotations = anchors.map((q, k) => {
+    if (q) {
+      return q.clone();
+    }
+    const below = known.filter((j) => j < k).pop();
+    const above = known.find((j) => j > k);
+    if (below === undefined) {
+      return anchors[above!]!.clone();
+    }
+    if (above === undefined) {
+      return anchors[below]!.clone();
+    }
+    const t = (at(k) - at(below)) / (at(above) - at(below));
+    return anchors[below]!.clone().slerp(anchors[above]!, t);
+  });
+  return { rotations, inferred: anchors.map((q) => !q) };
+}
+
+/**
+ * Swing part of a rotation: the shortest rotation that tilts +Y (the segment's long axis) to where q
+ * sends it. Drops the twist about the long axis, which a 6-axis sensor cannot hold (its heading drifts).
+ */
+export function swingOnly(q: THREE.Quaternion): THREE.Quaternion {
+  const up = UP.clone().applyQuaternion(q);
+  return new THREE.Quaternion().setFromUnitVectors(UP, up);
+}
+
+/**
+ * Twist angle (radians) of q about its own long axis +Y, from the swing–twist split q = swing · twist,
+ * twist = normalise(w, 0, y, 0). A turn of the whole body shows up here, as does heading drift.
+ */
+export function twistAngle(q: THREE.Quaternion): number {
+  return 2 * Math.atan2(q.y, q.w);
+}
+
+/**
+ * Replace each segment's twist with one shared twist: the circular mean over the segments that have
+ * data. The body's turn (which all sensors agree on) is kept, so lying face down after turning still
+ * looks face down; only each sensor's own disagreement, i.e. its heading drift, is removed.
+ */
+export function shareTwist(rotations: (THREE.Quaternion | null)[]): (THREE.Quaternion | null)[] {
+  let sin = 0;
+  let cos = 0;
+  for (const q of rotations) {
+    if (q) {
+      const angle = twistAngle(q);
+      sin += Math.sin(angle);
+      cos += Math.cos(angle);
+    }
+  }
+  if (sin === 0 && cos === 0) {
+    return rotations;
+  }
+  const common = new THREE.Quaternion().setFromAxisAngle(UP, Math.atan2(sin, cos));
+  return rotations.map((q) => (q ? swingOnly(q).multiply(common) : null));
 }

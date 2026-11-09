@@ -1,0 +1,1569 @@
+{
+ "format": 1,
+ "generated_by": "motionlib/tools/manifest.py",
+ "note": "Clips the viewer may use with mocap on (thundersim viz with THUNDERSIM_MOCAP=1, or ?mocap=1). default_on stays false until a person sets reviewed_by on the card.",
+ "clips": [
+  {
+   "clip": "accad_male1_b19_walktopickupbox_working",
+   "file": "clips/accad_male1_b19_walktopickupbox_working.npz",
+   "sha256": "6fd165df62a3628cf1f3389dde6e22a5668ece39fd266c27e93c69aef15ea8db",
+   "source": "accad",
+   "licence_class": "A",
+   "licence": "CC BY 3.0",
+   "credit": "Open Motion Project by ACCAD/The Ohio State University, CC BY 3.0 (https://accad.osu.edu/research/motion-lab/mocap-system-and-data).",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "walk": {
+     "steps": [
+      [
+       1.1,
+       1.7,
+       1,
+       0.3333,
+       1.211
+      ],
+      [
+       1.7,
+       2.33,
+       0,
+       0.3651,
+       1.2038
+      ],
+      [
+       2.33,
+       2.93,
+       1,
+       0.3333,
+       1.1904
+      ],
+      [
+       2.93,
+       3.53,
+       0,
+       0.3333,
+       1.138
+      ],
+      [
+       3.53,
+       4.1,
+       1,
+       0.2982,
+       0.8861
+      ],
+      [
+       6.4,
+       7.06,
+       1,
+       0.303,
+       1.1368
+      ],
+      [
+       7.06,
+       7.66,
+       0,
+       0.3,
+       1.2571
+      ],
+      [
+       7.66,
+       8.24,
+       1,
+       0.2931,
+       1.304
+      ],
+      [
+       8.24,
+       8.83,
+       0,
+       0.322,
+       1.2503
+      ]
+     ],
+     "runs": [
+      [
+       0,
+       5
+      ],
+      [
+       5,
+       9
+      ]
+     ],
+     "leg_len_m": 0.9235,
+     "speed_leg_per_s": 1.2038
+    }
+   }
+  },
+  {
+   "clip": "accad_male1_b20_walkwithbox",
+   "file": "clips/accad_male1_b20_walkwithbox.npz",
+   "sha256": "6dc28ee4b77d14c6bb4f9afbaccadb5425ca2e43c96e1d808f7aae93210f5b0a",
+   "source": "accad",
+   "licence_class": "A",
+   "licence": "CC BY 3.0",
+   "credit": "Open Motion Project by ACCAD/The Ohio State University, CC BY 3.0 (https://accad.osu.edu/research/motion-lab/mocap-system-and-data).",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "carry_walk": {
+     "steps": [
+      [
+       0.7,
+       1.3,
+       1,
+       0.3333,
+       1.2508
+      ],
+      [
+       1.3,
+       1.93,
+       0,
+       0.3175,
+       1.1939
+      ],
+      [
+       1.93,
+       2.5,
+       1,
+       0.2982,
+       1.2453
+      ],
+      [
+       2.5,
+       3.13,
+       0,
+       0.3651,
+       1.2015
+      ],
+      [
+       3.13,
+       3.73,
+       1,
+       0.2833,
+       1.1811
+      ],
+      [
+       3.73,
+       4.34,
+       0,
+       0.3279,
+       1.2609
+      ],
+      [
+       4.34,
+       4.96,
+       1,
+       0.3065,
+       1.2103
+      ]
+     ],
+     "runs": [
+      [
+       0,
+       7
+      ]
+     ],
+     "leg_len_m": 0.9235,
+     "speed_leg_per_s": 1.2103
+    }
+   }
+  },
+  {
+   "clip": "accad_male1_b21_putdownboxtowalk",
+   "file": "clips/accad_male1_b21_putdownboxtowalk.npz",
+   "sha256": "72b451c376aab88814bd2a1f1b90e1c0b60892c267ce112bb9a333ed77133546",
+   "source": "accad",
+   "licence_class": "A",
+   "licence": "CC BY 3.0",
+   "credit": "Open Motion Project by ACCAD/The Ohio State University, CC BY 3.0 (https://accad.osu.edu/research/motion-lab/mocap-system-and-data).",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "walk": {
+     "steps": [
+      [
+       3.9,
+       4.5,
+       0,
+       0.2833,
+       1.2298
+      ],
+      [
+       4.5,
+       5.13,
+       1,
+       0.3175,
+       1.2381
+      ],
+      [
+       5.13,
+       5.7,
+       0,
+       0.2982,
+       1.2511
+      ],
+      [
+       5.7,
+       6.3,
+       1,
+       0.3333,
+       1.2886
+      ]
+     ],
+     "runs": [
+      [
+       0,
+       4
+      ]
+     ],
+     "leg_len_m": 0.9235,
+     "speed_leg_per_s": 1.2446
+    }
+   }
+  },
+  {
+   "clip": "accad_male1_b3_walk",
+   "file": "clips/accad_male1_b3_walk.npz",
+   "sha256": "ce22f377d44fae2c6e99344d4ed9930e715dcc1088ef21a0eb45c10e32a4892d",
+   "source": "accad",
+   "licence_class": "A",
+   "licence": "CC BY 3.0",
+   "credit": "Open Motion Project by ACCAD/The Ohio State University, CC BY 3.0 (https://accad.osu.edu/research/motion-lab/mocap-system-and-data).",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "walk": {
+     "steps": [
+      [
+       1.0,
+       1.56,
+       0,
+       0.3036,
+       1.4362
+      ],
+      [
+       1.56,
+       2.13,
+       1,
+       0.2982,
+       1.4387
+      ],
+      [
+       2.13,
+       2.67,
+       0,
+       0.2593,
+       1.4006
+      ],
+      [
+       2.67,
+       3.24,
+       1,
+       0.3333,
+       1.4137
+      ],
+      [
+       3.24,
+       3.8,
+       0,
+       0.2857,
+       1.3925
+      ],
+      [
+       3.8,
+       4.37,
+       1,
+       0.3509,
+       1.4161
+      ],
+      [
+       4.37,
+       4.94,
+       0,
+       0.2982,
+       1.3628
+      ],
+      [
+       4.94,
+       5.5,
+       1,
+       0.2857,
+       1.378
+      ]
+     ],
+     "runs": [
+      [
+       0,
+       8
+      ]
+     ],
+     "leg_len_m": 0.9235,
+     "speed_leg_per_s": 1.4072
+    }
+   }
+  },
+  {
+   "clip": "cmu_62_07",
+   "file": "clips/cmu_62_07.npz",
+   "sha256": "7b353be3be6729441cad2f05f8141edd2dd1a37caac515f30f1c6375d9cb84de",
+   "source": "cmu",
+   "licence_class": "A",
+   "licence": "Free for all uses (site statement); do not resell the data itself",
+   "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "hammer": {
+     "strikes": [
+      11.08,
+      11.77,
+      12.12,
+      12.47,
+      12.82,
+      13.18
+     ],
+     "runs": [
+      [
+       0,
+       6
+      ]
+     ],
+     "window": [
+      10.58,
+      15.46
+     ]
+    }
+   }
+  },
+  {
+   "clip": "cmu_62_08",
+   "file": "clips/cmu_62_08.npz",
+   "sha256": "5ce6b38543d182cea1f58245233afbdb654cc7636019902892de4e9149e28b10",
+   "source": "cmu",
+   "licence_class": "A",
+   "licence": "Free for all uses (site statement); do not resell the data itself",
+   "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "hammer": {
+     "strikes": [
+      5.32,
+      5.99,
+      6.33,
+      7.0,
+      7.36,
+      8.05,
+      9.03,
+      9.38,
+      9.71,
+      10.07,
+      10.41
+     ],
+     "runs": [
+      [
+       0,
+       6
+      ],
+      [
+       6,
+       11
+      ]
+     ],
+     "window": [
+      2.66,
+      13.49
+     ]
+    }
+   }
+  },
+  {
+   "clip": "cmu_62_10",
+   "file": "clips/cmu_62_10.npz",
+   "sha256": "46b257659f73f15439cc9784f847a69a937f62eed98955b573333fc9bc0404f1",
+   "source": "cmu",
+   "licence_class": "A",
+   "licence": "Free for all uses (site statement); do not resell the data itself",
+   "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "hammer": {
+     "strikes": [
+      11.9,
+      12.24,
+      12.6,
+      12.95,
+      13.3,
+      13.65,
+      14.02,
+      14.85,
+      15.31,
+      19.92,
+      20.28,
+      20.65,
+      20.99,
+      21.33,
+      21.68,
+      21.9,
+      22.12,
+      22.58,
+      22.81,
+      28.44,
+      28.82,
+      29.16,
+      29.5,
+      29.86,
+      30.23,
+      30.58,
+      30.92,
+      31.3,
+      32.05
+     ],
+     "runs": [
+      [
+       0,
+       9
+      ],
+      [
+       9,
+       19
+      ],
+      [
+       19,
+       29
+      ]
+     ],
+     "window": [
+      2.32,
+      33.24
+     ]
+    }
+   }
+  },
+  {
+   "clip": "cmu_86_13",
+   "file": "clips/cmu_86_13.npz",
+   "sha256": "f8adfa9aa351ba618c341e178f00a055e221225b40eb871efd9baf75df041c47",
+   "source": "cmu",
+   "licence_class": "A",
+   "licence": "Free for all uses (site statement); do not resell the data itself",
+   "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "walk": {
+     "steps": [
+      [
+       5.29,
+       6.08,
+       0,
+       0.3671,
+       0.8303
+      ],
+      [
+       6.08,
+       6.86,
+       1,
+       0.3205,
+       0.817
+      ],
+      [
+       44.92,
+       45.61,
+       1,
+       0.3188,
+       1.0575
+      ],
+      [
+       45.61,
+       46.3,
+       0,
+       0.3333,
+       1.0774
+      ],
+      [
+       46.3,
+       46.98,
+       1,
+       0.2941,
+       0.9358
+      ]
+     ],
+     "runs": [
+      [
+       0,
+       2
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "leg_len_m": 0.9022,
+     "speed_leg_per_s": 0.9358
+    }
+   }
+  },
+  {
+   "clip": "niosh_s1_t0",
+   "file": "clips/niosh_s1_t0.npz",
+   "sha256": "258020b0b6b12ab19435c801bbaa6b04d8784cc61439ce1a25f096affa8ea771",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      13.55
+     ],
+     "peaks": [
+      1.94,
+      1.99,
+      3.17,
+      3.5,
+      3.81,
+      4.04,
+      4.09,
+      5.3,
+      5.85,
+      6.53,
+      6.83,
+      6.89,
+      7.36,
+      7.58,
+      7.87,
+      8.06,
+      8.26,
+      8.47,
+      8.56,
+      8.76,
+      8.81,
+      9.76,
+      9.81,
+      10.01,
+      10.22,
+      10.95
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s1_t1",
+   "file": "clips/niosh_s1_t1.npz",
+   "sha256": "c1e2462efbf3a916641fd9b344a0c4ac738a7ba76c6bc781b6b473bdf03db877",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      11.16
+     ],
+     "peaks": [
+      1.73,
+      2.57,
+      2.97,
+      3.26,
+      3.64,
+      4.33,
+      4.99,
+      5.08,
+      5.66,
+      6.15,
+      6.42,
+      6.9,
+      7.07,
+      7.39,
+      7.59,
+      7.87,
+      8.05,
+      8.3,
+      8.5,
+      9.25,
+      9.3,
+      9.5
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s1_t2",
+   "file": "clips/niosh_s1_t2.npz",
+   "sha256": "fce75bebc3cef9d222560e04aaae2496665cfa4c4c1f323b6d5ea0e8c5863757",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      11.2
+     ],
+     "peaks": [
+      1.63,
+      1.67,
+      2.57,
+      2.66,
+      3.76,
+      4.08,
+      4.29,
+      4.49,
+      4.54,
+      4.79,
+      5.04,
+      5.31,
+      5.35,
+      5.62,
+      6.09,
+      6.78,
+      6.99,
+      7.11,
+      7.29,
+      7.63,
+      7.72,
+      8.05,
+      8.3,
+      9.0,
+      9.3,
+      9.55,
+      10.05
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s2_t0",
+   "file": "clips/niosh_s2_t0.npz",
+   "sha256": "d31dfe9f86f161960424c36d2623a637815e3121fed6b2d60a5190bb57d57510",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      14.01
+     ],
+     "peaks": [
+      1.58,
+      1.65,
+      2.58,
+      2.89,
+      2.91,
+      3.79,
+      4.04,
+      4.31,
+      4.85,
+      5.06,
+      5.3,
+      5.76,
+      5.99,
+      6.21,
+      6.79,
+      7.65,
+      7.66,
+      8.21,
+      8.41,
+      8.96,
+      9.21,
+      9.7,
+      10.35,
+      11.34,
+      11.52,
+      11.76,
+      12.57,
+      13.1,
+      13.39,
+      13.87
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s2_t1",
+   "file": "clips/niosh_s2_t1.npz",
+   "sha256": "091c248e450606f983f6b558688aac9c5438909c60eb933d5c36c76d1f857f76",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      13.44
+     ],
+     "peaks": [
+      1.54,
+      2.33,
+      2.55,
+      2.59,
+      3.65,
+      3.86,
+      4.47,
+      5.84,
+      5.9,
+      6.76,
+      7.63,
+      7.77,
+      8.22,
+      8.45,
+      8.9,
+      8.98,
+      9.2,
+      9.45,
+      10.2,
+      11.29,
+      11.43,
+      12.26,
+      12.69
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s2_t2",
+   "file": "clips/niosh_s2_t2.npz",
+   "sha256": "b21c3e24b50094fe68e13ae72fc7ce93c5c25d4217ec9b8ce5b0087024329183",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      13.27
+     ],
+     "peaks": [
+      1.09,
+      1.89,
+      2.32,
+      3.67,
+      4.07,
+      4.54,
+      4.55,
+      4.8,
+      5.01,
+      5.62,
+      5.75,
+      6.13,
+      6.74,
+      7.45,
+      7.67,
+      8.15,
+      8.35,
+      8.65,
+      8.86,
+      8.9,
+      9.4,
+      10.08,
+      10.98,
+      12.0,
+      12.56
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s3_t0",
+   "file": "clips/niosh_s3_t0.npz",
+   "sha256": "592f649c056d4462b29388d2468c459b38560e8e8dc2ae7048a37dce64d79316",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      15.81
+     ],
+     "peaks": [
+      1.71,
+      1.98,
+      2.23,
+      3.55,
+      3.64,
+      3.77,
+      3.84,
+      4.08,
+      4.12,
+      5.08,
+      5.45,
+      6.26,
+      7.38,
+      7.39,
+      7.67,
+      8.31,
+      8.6,
+      9.06,
+      9.4,
+      9.42,
+      9.97,
+      12.45,
+      13.6,
+      14.82
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s3_t1",
+   "file": "clips/niosh_s3_t1.npz",
+   "sha256": "6048d34d2976b1ddefa694f04be4bc77fa9d7e19941dd996a93100d41f67419d",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      16.9
+     ],
+     "peaks": [
+      1.48,
+      1.99,
+      3.24,
+      3.91,
+      3.97,
+      4.77,
+      5.02,
+      5.22,
+      5.98,
+      7.15,
+      7.25,
+      8.24,
+      9.04,
+      9.24,
+      10.04,
+      10.38,
+      11.71,
+      12.71,
+      14.09,
+      14.23,
+      15.14,
+      16.22,
+      16.23,
+      16.57
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s3_t2",
+   "file": "clips/niosh_s3_t2.npz",
+   "sha256": "b4cc614495e6143e0dda465a6032907c6193bf44fda1d15bfc5a43167b1d187a",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      16.65
+     ],
+     "peaks": [
+      1.47,
+      1.77,
+      1.97,
+      2.58,
+      2.94,
+      3.55,
+      3.75,
+      3.79,
+      4.58,
+      4.62,
+      4.83,
+      5.08,
+      5.81,
+      6.63,
+      6.87,
+      8.06,
+      8.76,
+      8.98,
+      9.51,
+      9.76,
+      10.01,
+      10.94,
+      11.66,
+      13.32,
+      13.78,
+      15.08,
+      15.59,
+      16.34
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s4_t0",
+   "file": "clips/niosh_s4_t0.npz",
+   "sha256": "335ebef6b9e7b86f67cdb22a5a035433aa27a1c08ac668e28a3aa505bcfe01d2",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      14.84
+     ],
+     "peaks": [
+      1.82,
+      2.09,
+      2.59,
+      3.64,
+      3.84,
+      3.97,
+      4.4,
+      4.72,
+      5.71,
+      5.9,
+      6.32,
+      6.59,
+      6.74,
+      7.15,
+      7.67,
+      7.87,
+      7.96,
+      8.2,
+      8.41,
+      8.64,
+      8.88,
+      9.45,
+      9.62,
+      9.99,
+      10.21,
+      10.54,
+      11.65,
+      11.93,
+      12.23,
+      13.22,
+      13.56,
+      14.06
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s4_t1",
+   "file": "clips/niosh_s4_t1.npz",
+   "sha256": "c4e4b8ccbd8970d2ba9c32b36204bd271e0b99305dcb36e96f4ed18553e0dbc0",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      13.97
+     ],
+     "peaks": [
+      1.24,
+      1.57,
+      2.1,
+      2.46,
+      2.66,
+      3.03,
+      3.28,
+      3.95,
+      4.77,
+      5.02,
+      5.15,
+      5.53,
+      5.86,
+      7.27,
+      8.48,
+      8.74,
+      9.36,
+      9.5,
+      9.91,
+      10.61,
+      10.97,
+      11.21,
+      12.38,
+      12.85,
+      13.24
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s4_t2",
+   "file": "clips/niosh_s4_t2.npz",
+   "sha256": "2e1d07b68e0c4bf688add66a500dca9a41911921af72c69a28bbf8074bf1bb52",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      13.72
+     ],
+     "peaks": [
+      1.71,
+      1.94,
+      2.42,
+      2.97,
+      3.21,
+      3.97,
+      4.2,
+      4.34,
+      4.43,
+      4.88,
+      5.38,
+      6.03,
+      6.22,
+      6.26,
+      7.01,
+      7.34,
+      7.61,
+      8.74,
+      8.94,
+      9.2,
+      9.73,
+      10.21,
+      11.28,
+      11.56,
+      11.81,
+      13.26
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s5_t0",
+   "file": "clips/niosh_s5_t0.npz",
+   "sha256": "838d3e49cf4516cae99e1f9f49caa1a03b4560346200eeb999fc3f7ec81a4a74",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      15.5
+     ],
+     "peaks": [
+      1.71,
+      1.91,
+      4.53,
+      4.61,
+      4.86,
+      5.03,
+      7.19,
+      7.47,
+      7.55,
+      8.25,
+      8.5,
+      8.8,
+      9.0,
+      9.3,
+      9.8,
+      10.05,
+      10.22,
+      10.86,
+      11.38,
+      12.67,
+      13.92,
+      14.49,
+      14.69,
+      14.98
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s5_t1",
+   "file": "clips/niosh_s5_t1.npz",
+   "sha256": "b70c7c9f27a607759eba8276b53cf98d27b8201aba355e7bcc1a32708f493089",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      16.7
+     ],
+     "peaks": [
+      1.9,
+      1.99,
+      3.89,
+      4.37,
+      4.79,
+      4.87,
+      5.04,
+      5.37,
+      7.79,
+      8.01,
+      9.01,
+      9.26,
+      9.56,
+      9.76,
+      10.06,
+      10.28,
+      10.74,
+      11.45,
+      12.02,
+      12.16,
+      13.16,
+      13.39,
+      14.67,
+      15.42,
+      15.67,
+      16.6,
+      16.68
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s5_t2",
+   "file": "clips/niosh_s5_t2.npz",
+   "sha256": "d87db1af7d5124b5ee420cd8ba80ca43f0a0e791f677dbf30c1e8e29c144801e",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      15.04
+     ],
+     "peaks": [
+      1.75,
+      1.99,
+      3.55,
+      4.04,
+      4.25,
+      4.62,
+      4.83,
+      5.04,
+      6.65,
+      6.9,
+      7.11,
+      8.01,
+      8.31,
+      8.51,
+      8.81,
+      9.06,
+      9.26,
+      9.56,
+      9.81,
+      10.15,
+      10.51,
+      11.09,
+      12.36,
+      13.7
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s6_t0",
+   "file": "clips/niosh_s6_t0.npz",
+   "sha256": "fd1ce19538f35576448ad1bbcc1d51365a7f827e40972a313c399e21475fc794",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      14.08
+     ],
+     "peaks": [
+      1.69,
+      2.78,
+      3.5,
+      4.28,
+      4.78,
+      4.82,
+      4.98,
+      5.03,
+      5.63,
+      6.01,
+      6.15,
+      7.95,
+      8.04,
+      8.49,
+      8.91,
+      9.04,
+      9.74,
+      10.43,
+      10.9
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s6_t1",
+   "file": "clips/niosh_s6_t1.npz",
+   "sha256": "76f4a6d67fd70fef37ea2de65a2e8d8ed7ff67e7fb81aea02ca80b34722a48e0",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      14.96
+     ],
+     "peaks": [
+      1.76,
+      2.47,
+      3.48,
+      4.31,
+      4.77,
+      5.02,
+      5.27,
+      5.52,
+      6.23,
+      8.24,
+      8.49,
+      8.79,
+      9.49,
+      10.04,
+      11.18,
+      13.43
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s6_t2",
+   "file": "clips/niosh_s6_t2.npz",
+   "sha256": "6c3f56aa93cbf3dfca67550c8c511a047263db6ac2ac0df6fad4956299c7f17d",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      14.89
+     ],
+     "peaks": [
+      1.87,
+      2.1,
+      2.8,
+      3.79,
+      4.29,
+      4.33,
+      4.49,
+      5.04,
+      5.08,
+      5.32,
+      5.77,
+      6.22,
+      6.76,
+      8.01,
+      8.22,
+      8.81,
+      9.31,
+      10.01,
+      10.75,
+      11.78,
+      12.05,
+      13.35,
+      13.83
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s7_t0",
+   "file": "clips/niosh_s7_t0.npz",
+   "sha256": "3637cd951fe16a3e92c09663196a2adc17ea9e4f64f54de7c72e36680328366e",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      11.25
+     ],
+     "peaks": [
+      1.84,
+      1.99,
+      2.24,
+      2.81,
+      3.27,
+      3.54,
+      4.04,
+      4.26,
+      5.41,
+      5.49,
+      5.65,
+      6.35,
+      6.95,
+      8.2,
+      8.45,
+      8.66,
+      8.75,
+      9.45,
+      9.7,
+      9.95
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s7_t1",
+   "file": "clips/niosh_s7_t1.npz",
+   "sha256": "24888ecf675d768c813e5004cd94a48adf40649f2e99f9cd71a807bb7d18d819",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      10.92
+     ],
+     "peaks": [
+      0.53,
+      0.81,
+      1.38,
+      2.54,
+      2.62,
+      3.08,
+      3.1,
+      4.54,
+      5.23,
+      5.43,
+      6.02,
+      6.33,
+      6.45,
+      7.28,
+      7.72,
+      8.32,
+      8.48,
+      8.93,
+      9.23,
+      9.43,
+      9.64,
+      9.68,
+      9.98
+     ]
+    }
+   }
+  },
+  {
+   "clip": "niosh_s7_t2",
+   "file": "clips/niosh_s7_t2.npz",
+   "sha256": "7eb6c2c99576f8a75effd6d3c5d913c0d8a2cea490cb2395209fa8d0f1129143",
+   "source": "niosh_roofing",
+   "licence_class": "A",
+   "licence": "Public domain (US Government work, CC public domain mark)",
+   "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+   "card_status": "gated",
+   "s6_result": "PASS",
+   "reviewed_by": null,
+   "default_on": false,
+   "roles": {
+    "kneel_work": {
+     "window": [
+      0.5,
+      10.89
+     ],
+     "peaks": [
+      1.44,
+      2.49,
+      2.78,
+      2.99,
+      3.43,
+      3.52,
+      5.08,
+      5.96,
+      8.39,
+      8.56,
+      9.01,
+      9.51,
+      9.56,
+      9.81,
+      10.47
+     ]
+    }
+   }
+  }
+ ],
+ "skipped": {
+  "100style_heavyset_fw": "S6 payload gates failed",
+  "100style_neutral_fw": "S6 payload gates failed",
+  "100style_neutral_id": "S6 payload gates failed",
+  "accad_female1_a01_stand": "no role with enough steady events",
+  "accad_female1_a05_pickupbox": "no role with enough steady events",
+  "accad_female1_a06_liftbox": "no role with enough steady events",
+  "accad_female1_a07_crouch": "S5 failed penetration, reach",
+  "accad_female1_b03_walk1": "S5 failed hip",
+  "accad_female1_b19_walktopickupbox": "no role with enough steady events",
+  "accad_female1_b20_walkwithbox": "S5 failed hip",
+  "accad_female1_b21_putdownboxtowalk": "S5 failed hip",
+  "accad_male1_a10_lietocrouch": "S5 failed penetration, reach",
+  "accad_male1_a11_crawlforward": "S5 failed reach",
+  "accad_male1_a1_stand": "no role with enough steady events",
+  "accad_male1_a2_sway": "no role with enough steady events",
+  "accad_male1_a4_lookaround": "no role with enough steady events",
+  "accad_male1_a5_pickupbox": "no role with enough steady events",
+  "accad_male1_a6_liftbox": "no role with enough steady events",
+  "accad_male1_a7_crouch": "S5 failed penetration, reach",
+  "accad_male1_a8_crouchtolie": "S5 failed penetration, reach",
+  "accad_male1_a9_liedown": "no role with enough steady events",
+  "accad_male1_b24_walktocrouch": "S5 failed penetration, reach",
+  "accad_male1_b25_crouchtowalk": "S5 failed penetration, reach",
+  "cml_27movingobject_000008": "S5 failed reach",
+  "cml_27movingobject_000009": "S5 failed hip, reach",
+  "cmu_07_01": "S5 failed pops, hip",
+  "cmu_07_12": "S5 failed pops, hip",
+  "cmu_08_02": "no role with enough steady events",
+  "cmu_09_01": "S5 failed hip",
+  "cmu_115_01": "no role with enough steady events",
+  "cmu_115_02": "no role with enough steady events",
+  "cmu_115_06": "no role with enough steady events",
+  "cmu_115_07": "no role with enough steady events",
+  "cmu_137_27": "no role with enough steady events",
+  "cmu_137_40": "no role with enough steady events",
+  "cmu_13_33": "no role with enough steady events",
+  "cmu_13_34": "no role with enough steady events",
+  "cmu_143_10": "S5 failed pops",
+  "cmu_143_11": "S5 failed pops",
+  "cmu_143_32": "S5 failed pops",
+  "cmu_143_37": "no role with enough steady events",
+  "cmu_14_33": "S5 failed reach",
+  "cmu_14_34": "S5 failed reach",
+  "cmu_16_15": "S5 failed pops",
+  "cmu_16_35": "no role with enough steady events",
+  "cmu_23_03": "no role with enough steady events",
+  "cmu_26_10": "no role with enough steady events",
+  "cmu_35_01": "S5 failed pops",
+  "cmu_69_69": "no role with enough steady events",
+  "cmu_69_70": "S5 failed penetration, reach",
+  "cmu_69_73": "no role with enough steady events",
+  "cmu_69_75": "S5 failed penetration, reach",
+  "cmu_70_03": "no role with enough steady events",
+  "cmu_70_10": "no role with enough steady events",
+  "cmu_79_25": "no role with enough steady events"
+ }
+}

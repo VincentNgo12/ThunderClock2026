@@ -110,14 +110,18 @@ def first_time(events: list, name: str) -> float | None:
 
 
 def build_run(scenario_id: str, seed: int, obs_s: float = 120.0, fn_scale: float = 1.0,
-              slot_failure: int | None = None) -> ScenarioRun:
-    """Generate one randomised run of a catalogue scenario."""
+              slot_failure: int | None = None, builder: Callable[..., Builder] = Builder) -> ScenarioRun:
+    """Generate one randomised run of a catalogue scenario.
+
+    builder: Builder class (or factory) to use. The 3D viewer passes a recording subclass
+    that logs which primitives ran; it must not draw random numbers of its own.
+    """
     spec = CATALOGUE[scenario_id]
     rng = np.random.default_rng(seed)
     site_rng = np.random.default_rng(seed + 7_919)
     site = random_site(site_rng)
     worker = random_worker(rng, site.clothing)
-    b = Builder(worker, site, rng)
+    b = builder(worker, site, rng)
     ctx = {"obs_s": obs_s, "expected": spec.expected, "checkin_s": None, "ref": "impact", "params": {}}
     spec.build(b, rng, ctx)
     if not b.segs or b.segs[0].phase[0] != 1:
@@ -401,7 +405,7 @@ def _a_equip(b, rng, ctx):
     _neg_tail(b, rng, ctx)
 
 
-@scenario("A-KNEEL", "negative", "normal", "Kneeling / crawling floor work, trunk 45-90 deg for minutes")
+@scenario("A-KNEEL", "negative", "normal", "Kneeling / crawling floor work, trunk moving around 30-55 deg for minutes")
 def _a_kneel(b, rng, ctx):
     begin(b)
     lead_in(b, rng)

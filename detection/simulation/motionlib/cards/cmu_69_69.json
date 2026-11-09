@@ -1,0 +1,361 @@
+{
+  "clip": "cmu_69_69",
+  "source": "cmu",
+  "source_name": "CMU Graphics Lab Motion Capture Database",
+  "file": "raw/cmu/69_69.amc",
+  "url": "http://mocap.cs.cmu.edu/subjects/69/69_69.amc",
+  "sha256": "fa2ec06790b4556413aa57e9edba8a058b569cf42c4f59f6ef10171fad32961d",
+  "licence": {
+    "class": "A",
+    "name": "Free for all uses (site statement); do not resell the data itself",
+    "url": "http://mocap.cs.cmu.edu/",
+    "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217."
+  },
+  "tags": [
+    "walk",
+    "pickup",
+    "carry"
+  ],
+  "source_fps": 120.0,
+  "source_frames": 801,
+  "seconds": 6.66,
+  "fs": 100.0,
+  "frames": 667,
+  "height_est_m": 1.793,
+  "valid_joints": [
+    "hip_l",
+    "hip_r",
+    "knee_l",
+    "knee_r",
+    "ankle_l",
+    "ankle_r",
+    "heel_l",
+    "heel_r",
+    "toe_l",
+    "toe_r",
+    "shoulder_l",
+    "shoulder_r",
+    "elbow_l",
+    "elbow_r",
+    "hand_l",
+    "hand_r",
+    "neck",
+    "head",
+    "pelvis",
+    "head_top"
+  ],
+  "joint_map": {
+    "hip": "femur start",
+    "knee": "tibia start",
+    "ankle": "foot start",
+    "toe": "toes end (tip)",
+    "heel": "derived from ankle, toe and knee (rig.Dims proportions)",
+    "shoulder": "humerus start",
+    "elbow": "radius start",
+    "hand": "midpoint of wrist and hand end",
+    "neck": "lowerneck start (neck base)",
+    "head": "midpoint of head bone",
+    "head_top": "head end",
+    "pelvis": "midpoint of femur starts",
+    "spine": "hip mid -> root -> lowerback -> upperback -> thorax end; bones root/lowerback/upperback/thorax"
+  },
+  "root_relative": false,
+  "trunk": {
+    "method": "rigid source bone under each anchor (0, 1, 2, 3 = spine piece index)",
+    "spine_points": 5,
+    "neutral_frames": [
+      411,
+      461
+    ],
+    "neutral_method": "fallback: no still standing window, most upright and slowest 0.5 s",
+    "neutral_ok": true,
+    "neutral_reference": null,
+    "tilt_deg": 2.77,
+    "speed_mps": 0.194,
+    "knee_deg": 143.0
+  },
+  "anterior_share": 1.0,
+  "notes": [],
+  "problems": [],
+  "status": "rejected",
+  "gates": {
+    "stage": "S5 preview",
+    "payload_fs": 50.0,
+    "rig": {
+      "H": 1.75,
+      "mass_kg": 80.0,
+      "scale": 0.9749
+    },
+    "method": "clip retargeted onto rig.Dims with rig.two_bone on its own pelvis path (see tools/gates.py)",
+    "source": {
+      "value": {
+        "bone_std_mm": 0.0,
+        "foot_p99_mps": 3.12,
+        "hand_p99_mps": 1.45,
+        "note": null
+      },
+      "limit": "FK bone std < 1 mm (n/a for position data); foot p99 < 12, hand p99 < 15 m/s",
+      "result": "PASS"
+    },
+    "bones": {
+      "value": 2.78e-16,
+      "limit": "< 1e-3 m",
+      "result": "PASS"
+    },
+    "penetration": {
+      "value": {
+        "min_m": -0.0,
+        "frames_below": 0
+      },
+      "limit": ">= -0.005 m (heel, toe)",
+      "result": "PASS"
+    },
+    "skate": {
+      "value": {
+        "max_drift_m": 0.0293,
+        "p90_drift_m": 0.0254,
+        "median_mps": 0.0367,
+        "stances": 26,
+        "rig_foot_max_drift_m": 0.0299,
+        "rig_foot_median_mps": 0.0397
+      },
+      "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+      "result": "FAIL"
+    },
+    "pops": {
+      "value": {
+        "feet_m": 0.0661,
+        "hands_m": 0.0277
+      },
+      "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+      "result": "PASS"
+    },
+    "knee": {
+      "value": {
+        "max_deg": 69.0,
+        "hyperextended_frames": 0
+      },
+      "limit": "0-160 deg, no hyperextension",
+      "result": "PASS"
+    },
+    "elbow": {
+      "value": {
+        "max_deg": 105.6,
+        "min_deg": 24.7
+      },
+      "limit": "0-155 deg",
+      "result": "PASS"
+    },
+    "hip": {
+      "value": {
+        "min_deg": -14.9,
+        "max_deg": 93.9,
+        "out_of_plane_frames": 0
+      },
+      "limit": "-30..+135 deg (pelvis segment, sagittal)",
+      "result": "PASS"
+    },
+    "reach": {
+      "value": {
+        "legs_share": 0.0,
+        "arms_share": 0.0,
+        "legs_max_clamp_m": 0.0,
+        "arms_max_clamp_m": 0.0
+      },
+      "limit": "< 5 % of frames clamped (end joint > 5 mm from its target) per limb",
+      "result": "PASS"
+    },
+    "sync": {
+      "value": null,
+      "limit": "heel strike median < 30 ms, p90 < 60 ms; tool strike < 20 ms",
+      "result": "PENDING",
+      "note": "needs the S6 time warp to simulator anchors; measured on the payload in S6"
+    },
+    "failed": [
+      "skate"
+    ],
+    "fails_only_skate": true
+  },
+  "reviewed_by": null,
+  "asf_sha256": "c3019031ae5789b1d43d3bba424229ac544ccc68bb8c06e7d67bf75b1c41605f",
+  "subject": "cmu:c3019031ae5789b1",
+  "s2_checks": {
+    "shape": true,
+    "height_m": 1.793,
+    "scale": true,
+    "up": true,
+    "bone_std_mm_max": 0.0,
+    "hand_toe_span_std_mm_max": 2.29,
+    "bones": true,
+    "foot_p99_mps": 3.12,
+    "hand_p99_mps": 1.45,
+    "speed": true,
+    "sim_conv_err_deg": 9.04e-06,
+    "sim_conv": true,
+    "neutral_resid_deg": 0.009,
+    "neutral": true,
+    "trunk_p5_p95_deg": {
+      "pitch": [
+        -3.3,
+        42.9
+      ],
+      "flex_sum": [
+        -4.5,
+        43.4
+      ],
+      "roll": [
+        -2.0,
+        11.1
+      ],
+      "twist_sum": [
+        -12.1,
+        22.8
+      ]
+    },
+    "pass": true
+  },
+  "s3": {
+    "floor_m": 0.022,
+    "floor_slope_deg": 0.0,
+    "flat_offsets_m": {
+      "l": {
+        "ankle": 0.0565,
+        "heel": -0.0008,
+        "toe": 0.0244
+      },
+      "r": {
+        "ankle": 0.066,
+        "heel": 0.0176,
+        "toe": 0.0076
+      }
+    },
+    "contact_share": {
+      "l": 0.712,
+      "r": 0.7
+    },
+    "stances": {
+      "l": 6,
+      "r": 6
+    },
+    "heel_strikes": [
+      {
+        "t": 0.62,
+        "side": "r"
+      },
+      {
+        "t": 1.3,
+        "side": "l"
+      },
+      {
+        "t": 1.73,
+        "side": "r"
+      },
+      {
+        "t": 2.17,
+        "side": "l"
+      }
+    ],
+    "cycles": 2,
+    "wrist_decel_peaks": [
+      {
+        "t": 2.59,
+        "frame": 259,
+        "side": "r",
+        "decel_mps2": 5.7,
+        "speed_before_mps": 0.96
+      },
+      {
+        "t": 3.77,
+        "frame": 377,
+        "side": "l",
+        "decel_mps2": 6.9,
+        "speed_before_mps": 0.47
+      }
+    ],
+    "wrist_decel_peak_count": 2,
+    "rung_contacts": [],
+    "bends": [
+      {
+        "frames": [
+          221,
+          317
+        ],
+        "k_low": 269,
+        "primitive": "lift",
+        "technique": "semi_squat",
+        "t_low": 2.69,
+        "t0": 2.21,
+        "t1": 3.17,
+        "knee_flex_deg": [
+          56.1,
+          69.7
+        ],
+        "asymmetric": false,
+        "thorax_incl_deg": 89.6,
+        "pelvis_drop_m": 0.128,
+        "hand_height_m": 0.195
+      }
+    ],
+    "segments": [
+      {
+        "primitive": "walk",
+        "t0": 0.0,
+        "t1": 1.85
+      },
+      {
+        "primitive": "stand",
+        "t0": 1.85,
+        "t1": 2.21
+      },
+      {
+        "primitive": "lift",
+        "t0": 2.21,
+        "t1": 3.17
+      },
+      {
+        "primitive": "carry",
+        "t0": 3.17,
+        "t1": 3.53
+      },
+      {
+        "primitive": "hold",
+        "t0": 3.53,
+        "t1": 4.54
+      },
+      {
+        "primitive": "carry",
+        "t0": 4.54,
+        "t1": 6.67
+      }
+    ],
+    "notes": []
+  },
+  "activity_tags": [
+    "carry",
+    "hold",
+    "lift",
+    "stand",
+    "walk",
+    "lift:semi_squat"
+  ],
+  "s4": {
+    "file": "clips/cmu_69_69.npz",
+    "format": 1,
+    "has_legs": true,
+    "task": "floor",
+    "leg_len_m": [
+      0.8517,
+      0.8536
+    ],
+    "arm_len_m": [
+      0.5734,
+      0.5669
+    ],
+    "foot_pitch_flat_deg": [
+      -11.0,
+      -18.8
+    ],
+    "finite": true,
+    "non_finite": []
+  }
+}

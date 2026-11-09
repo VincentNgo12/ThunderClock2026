@@ -1,0 +1,6 @@
+block,date,config_hash,git_sha,purpose,result_file
+0,2026-11-07,dev,f3337e3/b123c40,dev tuning scenarios,scratch
+500000,2026-11-07,dev,f3337e3/b123c40,dev shifts,scratch
+2100000,2026-11-07,cf8c7456b67e,origin/main 979afef + checkout b123c40,held-out once: 35 scenarios A-E; SYNC/SYNC-KNEEL apnea+slowstart B/D; X-DISMISS B/D; seeds 2100000-2100019,reports/collapse_v1.md#6
+0,2026-11-08,cf8c7456b67e,HEAD 86faf2e + sim pin f05639c99ccacc46,dev re-run on new simulator (scenarios 0-19; shifts 500000-500008),scratch
+2200000,2026-11-08,cf8c7456b67e,HEAD 86faf2e + sim pin f05639c99ccacc4635258cbc48aa5fecaf817fc790beb995fb3b071a3b8fd68a,held-out once on new simulator: 35 scenarios A-E; SYNC/SYNC-KNEEL apnea+slowstart B/D; X-DISMISS B/D; seeds 2200000-2200019,reports/collapse_v1.md#6b

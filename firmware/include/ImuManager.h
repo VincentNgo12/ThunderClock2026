@@ -31,7 +31,8 @@ private:
 
   TwoWire& wire_;
   uint8_t muxAddress = 0x70;
-  // Mux channel i: pelvis, lumbar, thoracic, upper thoracic.
+  // Slot i (sensor_id i + 1): pelvis, lumbar, thoracic, upper thoracic.
+  // Each slot reads mux channel SystemConfig::kImuMuxChannels[i].
   bool isIcm[kSlotCount] = {true, false, false, true};
   Adafruit_ICM20948 icmSensors[kSlotCount];  // Only slots where isIcm is true.
   Adafruit_MPU6050 mpuSensors[kSlotCount];   // Only slots where isIcm is false.

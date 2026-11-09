@@ -7,8 +7,10 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
   computeSpinePose,
+  fillMissingAnchors,
   neutralCenter,
   SENSOR_ANCHORS,
   VERTEBRAE,
@@ -22,7 +24,7 @@ export type ViewName = "oblique" | "side" | "back";
 
 export interface SensorInput {
   status: FreshnessStatus;
-  rotation: THREE.Quaternion | null; // already neutral-corrected; null keeps the last pose
+  rotation: THREE.Quaternion | null; // already neutral-corrected; null = no data, inferred from neighbours
 }
 
 interface Props {
@@ -49,15 +51,22 @@ const CAMERA_POSITIONS: Record<ViewName, THREE.Vector3> = {
   back: new THREE.Vector3(0, 0.05, 1.4),
 };
 
-const SMOOTHING_SECONDS = 0.035; // light easing between 20 Hz snapshots
+const SMOOTHING_SECONDS = 0.015; // light easing between snapshots (up to 100 Hz; 20 Hz strip quaternions)
 
 const CURVE_COLOR = 0x2563eb;
 const CURVE_RADIUS = 0.0032; // metres
 const CURVE_SEGMENTS = 160;
 
-// Where a sensor pod sits on a vertebra (local space): on the back surface, behind the
-// spinous process. The sensor curve passes through this point on every vertebra.
+// Anatomical vertebrae (BodyParts3D, CC BY 4.0) built by scripts/build_spine_mesh.py. Each mesh is
+// already in its vertebra's local frame. Until it loads (or if it fails) the procedural shapes show.
+const VERTEBRAE_URL = `${import.meta.env.BASE_URL}models/spine/vertebrae.glb`;
+
+// Where a sensor pod sits on a vertebra (local space): on the skin behind the spinous process.
+// The sensor curve passes through this point on every vertebra.
 function podOffset(spec: VertebraSpec): THREE.Vector3 {
+  if (spec.pod) {
+    return new THREE.Vector3(...spec.pod);
+  }
   return new THREE.Vector3(0, spec.height * 0.45, spec.depth * 2.2 + 0.012);
 }
 
@@ -194,11 +203,73 @@ export function SpineView({ sensors, view, showAxes, interpolation, testAnimatio
     floor.receiveShadow = true;
     spineGroup.add(floor);
 
+    // Each vertebra is a pivot group (posed every frame) holding its bone shape and, for anchors, a pod.
+    const procedural: THREE.Group[] = [];
     const vertebraGroups = VERTEBRAE.map((spec, index) => {
-      const group = buildVertebra(spec, index === 0);
+      const group = new THREE.Group();
+      const shape = buildVertebra(
+        { ...spec, width: spec.width * 0.6, depth: spec.depth * 0.45 }, // bone extents -> body proportions
+        index === 0,
+      );
+      shape.visible = false; // shown only if the anatomical model cannot be loaded
+      procedural.push(shape);
+      group.add(shape);
       spineGroup.add(group);
       return group;
     });
+
+    // Per-vertebra extent in its local frame, for framing: the procedural shape until the bones load.
+    const localBoxes = VERTEBRAE.map(
+      (spec) =>
+        new THREE.Box3(
+          new THREE.Vector3(-spec.width / 2, 0, -spec.depth / 2),
+          new THREE.Vector3(spec.width / 2, spec.height, spec.depth / 2),
+        ),
+    );
+    // Keep the whole column in view and its shadow under it, whatever the pose: the column is posed
+    // from a fixed sacrum pivot, so lying down would otherwise swing it out of frame and through the floor.
+    const frameBox = new THREE.Box3();
+    const partBox = new THREE.Box3();
+    const frameTarget = new THREE.Vector3();
+    const FRAME_SECONDS = 0.35; // camera-like easing of the re-centring
+    let disposed = false;
+    new GLTFLoader().load(
+      VERTEBRAE_URL,
+      (gltf) => {
+        if (disposed) {
+          return;
+        }
+        VERTEBRAE.forEach((spec, index) => {
+          const source = gltf.scene.getObjectByName(spec.name);
+          let geometry: THREE.BufferGeometry | null = null;
+          source?.traverse((child) => {
+            if (!geometry && child instanceof THREE.Mesh) {
+              geometry = child.geometry as THREE.BufferGeometry;
+            }
+          });
+          if (!geometry) {
+            procedural[index].visible = true;
+            return;
+          }
+          const shape = geometry as THREE.BufferGeometry;
+          if (!shape.getAttribute("normal")) {
+            shape.computeVertexNormals();
+          }
+          shape.computeBoundingBox();
+          localBoxes[index] = shape.boundingBox!.clone();
+          const bone = new THREE.Mesh(shape, boneMaterial);
+          bone.castShadow = true;
+          bone.receiveShadow = true;
+          vertebraGroups[index].add(bone);
+        });
+      },
+      undefined,
+      () => {
+        procedural.forEach((shape) => {
+          shape.visible = true;
+        });
+      },
+    );
 
     // Sensor pods sit on the back surface of their anchor vertebra.
     const podGeometry = new RoundedBoxGeometry(0.032, 0.021, 0.01, 3, 0.003);
@@ -287,11 +358,15 @@ export function SpineView({ sensors, view, showAxes, interpolation, testAnimatio
         testLabel = "";
       }
 
+      // A sensor without data follows its neighbours (slerp between the nearest measured sensors, or a
+      // copy of the outermost one) instead of staying pinned where it last was.
+      const filled = fillMissingAnchors(
+        SENSOR_ANCHORS.map(({ region }) => (testFrame ? testFrame.rotations[region] : current[region].rotation)),
+      );
       SENSOR_ANCHORS.forEach(({ region }, k) => {
         const input = current[region];
-        const target = testFrame ? testFrame.rotations[region] : input.rotation;
-        if (target) {
-          displayed[k].slerp(target, blend);
+        if (filled) {
+          displayed[k].slerp(filled.rotations[k], blend);
         }
         const color = testFrame ? TEST_COLOR : STATUS_COLORS[input.status];
         pods[k].material.color.setHex(color);
@@ -304,12 +379,25 @@ export function SpineView({ sensors, view, showAxes, interpolation, testAnimatio
       });
       updateCurve();
 
+      // Re-centre the posed column (spine-group space) and rest the shadow just under its lowest bone.
+      frameBox.makeEmpty();
+      vertebraGroups.forEach((group, index) => {
+        group.updateMatrix();
+        frameBox.union(partBox.copy(localBoxes[index]).applyMatrix4(group.matrix));
+      });
+      if (!frameBox.isEmpty()) {
+        frameBox.getCenter(frameTarget).multiplyScalar(-1);
+        spineGroup.position.lerp(frameTarget, 1 - Math.exp(-dt / FRAME_SECONDS));
+        floor.position.y = frameBox.min.y - 0.01;
+      }
+
       controls.update();
       renderer.render(scene, camera);
       labelRenderer.render(scene, camera);
     });
 
     return () => {
+      disposed = true;
       renderer.setAnimationLoop(null);
       observer.disconnect();
       controls.dispose();

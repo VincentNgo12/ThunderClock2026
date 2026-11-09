@@ -1,0 +1,82 @@
+{
+  "_comment": "Detection hub thresholds (docs/DETECTION_ARCHITECTURE.md 3.2-3.7). Seconds, degrees, rad/s, g. Prototype values from ThunderSim dev seeds; not validated on people.",
+  "version": "collapse_v1",
+  "falldet": {
+    "profile": null,
+    "backend": "gbt",
+    "dlpf_hz": 10.0,
+    "current_max_dlpf_hz": 20.0,
+    "current_max_range_g": 4.0
+  },
+  "time": {
+    "restart_back_s": 1.0,
+    "tilt_reset_gap_s": 0.1,
+    "long_gap_s": 2.0,
+    "restart_arm_window_s": 60.0
+  },
+  "rate": {
+    "window_s": 5.0,
+    "min_hz": 40.0,
+    "recover_hz": 90.0,
+    "recover_s": 5.0
+  },
+  "posture": {
+    "acc_gain_per_s": 2.0,
+    "acc_gate_g": 0.15,
+    "down_deg": 45.0,
+    "down_pelvis_deg": 40.0,
+    "upright_deg": 30.0,
+    "min_anchors": 3,
+    "still_lp_tau_s": 0.5,
+    "still_gyro_rad_s": 0.35,
+    "still_acc_g": 0.10,
+    "still_gyro_abs_rad_s": 1.0,
+    "still_acc_abs_g": 0.30,
+    "quiet_gyro_rad_s": 0.10,
+    "quiet_acc_g": 0.03,
+    "no_motion_acc_g": 0.004,
+    "gait_peak_g": 1.10,
+    "gait_min_interval_s": 0.3,
+    "gait_max_interval_s": 1.0,
+    "gait_min_steps": 4
+  },
+  "topple": {
+    "enabled": true,
+    "max_descent_s": 3.0,
+    "rot_rad_s": 3.0,
+    "rot_lead_s": 0.5
+  },
+  "collapse": {
+    "start_s": 2.0,
+    "fast_still_s": 6.0,
+    "fast_still_frac": 0.90,
+    "slow_window_s": 10.0,
+    "slow_still_frac": 0.70,
+    "down_frac": 0.5,
+    "end_s": 30.0,
+    "upright_hold_s": 5.0,
+    "min_coverage": 0.5
+  },
+  "man_down": {
+    "enabled": true,
+    "arm_s": 120.0,
+    "window_s": 10.0,
+    "still_frac": 0.70,
+    "down_frac": 0.5,
+    "warning_s": 30.0,
+    "critical_s": 60.0,
+    "upright_hold_s": 5.0,
+    "disarm_on_upright": true,
+    "lying_work_quiet": true,
+    "lying_work_still_frac": 0.95,
+    "lying_work_warning_s": 150.0,
+    "lying_work_critical_s": 180.0,
+    "lying_work_expiry_s": 1800.0
+  },
+  "arbiter": {
+    "suspect_merge_s": 10.0,
+    "clear_after_s": 8.0,
+    "clear_upright_s": 5.0,
+    "close_after_dismiss_s": 120.0
+  }
+}

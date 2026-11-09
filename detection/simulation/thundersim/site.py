@@ -71,7 +71,9 @@ SURFACES = {
     "gravel": Surface("gravel", (1e5, 3e5), 0.35, 0.60, 0.35, 12.0, 0.020),
     "packed_soil": Surface("packed_soil", (1e5, 3e5), 0.35, 0.60, 0.35, 12.0, 0.015),
     "mud": Surface("mud", (2e4, 6e4), 0.50, 0.35, 0.20, 8.0, 0.030),
-    "crash_mat": Surface("crash_mat", (1.5e4, 3e4), 0.50, 0.70, 0.25, 10.0, 0.005),
+    # crash_mat stiffness fitted to Erciyes mat falls (realism scorecard iteration 2: x0.2 of the
+    # original [design] 1.5e4-3e4 N/m, the softest value searched); [fitted, weak: acted falls].
+    "crash_mat": Surface("crash_mat", (3e3, 6e3), 0.50, 0.70, 0.25, 10.0, 0.005),
     "safety_net": Surface("safety_net", (4e3, 9e3), 0.15, 0.50, 0.0, 0.0, 0.0),
 }
 

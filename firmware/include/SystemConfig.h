@@ -55,7 +55,9 @@ constexpr int kI2sDataPin = 11;
 // Prototype mux defaults. Confirm wiring, placement and mounting before use.
 constexpr uint8_t kMuxAddress = 0x70;
 constexpr uint8_t kImuAddress = 0x68;
-// constexpr int kImuMuxChannels[fw::kImuCount] = {0, 1, 2, 3};
+// Mux channel of each strip slot, in sensor_id order (pelvis, lumbar, thoracic, upper thoracic).
+// Wiring: pelvis 0, lumbar 1, thoracic 2, upper thoracic 3.
+constexpr uint8_t kImuMuxChannels[4] = {0, 1, 2, 3};
 // TODO(FW-IMU): confirm each board's sensor-to-segment mounting transform.
 
 // Datasheet default addresses. Confirm with kRunI2cScanAtBoot during bring-up.

@@ -30,3 +30,18 @@ Point it at another backend with `?ws=ws://HOST:8000/ws/telemetry` or `VITE_TELE
   twists, then bend plus twist) in place of live data. Pods turn violet while it runs.
   Click **Stop test** to go back to the sensors. It works with no backend running.
 - **Sensor axes** shows each sensor's local X/Y/Z (red/green/blue) for checking mounting.
+
+## Anatomical spine model
+
+The vertebrae (sacrum to T1) come from [BodyParts3D](https://dbarchive.biosciencedbc.jp/en/bodyparts3d/)
+("BodyParts3D, (c) The Database Center for Life Science licensed under CC Attribution 4.0 International").
+`scripts/build_spine_mesh.py` downloads the PART-OF OBJ set, picks each vertebra by FMA ID, decimates it
+to 2,400 triangles and writes `public/models/spine/vertebrae.glb` (about 1 MB) plus
+`src/lib/posture3d/vertebrae.json`, which gives the spine maths the measured segment lengths and rest
+curve. Rebuild (needs numpy, trimesh, open3d, e.g. `../sitescan/.venv`):
+
+```sh
+../sitescan/.venv/bin/python scripts/build_spine_mesh.py
+```
+
+If the GLB cannot be loaded, the view falls back to the simple procedural vertebrae.

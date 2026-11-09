@@ -1,0 +1,1167 @@
+{
+ "format": "anny-worker-body/1",
+ "generator": {
+  "script": "anny_worker/anny_body.py",
+  "anny_version": "0.6.2",
+  "torch": "2.15.0",
+  "args": {
+   "preset": "avg_male",
+   "gender": null,
+   "age": null,
+   "age_years": null,
+   "muscle": null,
+   "weight": null,
+   "proportions": null,
+   "height": null,
+   "height_m": null,
+   "voxel": 0.005,
+   "knn": 8
+  },
+  "deterministic": "no timestamps or timings are written; reruns give byte-identical files"
+ },
+ "frame": {
+  "name": "thundersim spine.py frame",
+  "units": "metres",
+  "axes": "+X wearer-right, +Y up, +Z posterior; the body faces -Z (same as thundersim/spine.py)",
+  "origin": "y = 0 at the lowest rest vertex (soles); x = 0 on Anny's mid-sagittal plane; z = 0 at the S1 spinal-midline point, so the sim pelvis anchor root_pos = (0, pelvis_height, 0)",
+  "from_anny_native": {
+   "M": [
+    [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0
+    ]
+   ],
+   "t": [
+    0.0,
+    0.82062,
+    -0.02106
+   ],
+   "rule": "p_sim = M p_anny + t; Anny native = Z up, faces -Y, left +X. M = Ry(180) * Rx(-90) (extract.py's Y-up map then turn to face -Z)"
+  },
+  "pose": "Anny rest (bind) pose: MakeHuman A-pose, standing, arms ~45 deg down-out"
+ },
+ "phenotype": {
+  "values": {
+   "gender": 0.0,
+   "age": 0.7922,
+   "muscle": 0.5,
+   "weight": 0.5,
+   "height": 0.3789,
+   "proportions": 0.5
+  },
+  "requested": {
+   "gender": 0.0,
+   "age_years": 35.0,
+   "muscle": 0.5,
+   "weight": 0.5,
+   "proportions": 0.5,
+   "height_m": 1.765
+  },
+  "note": "Anny phenotype parameters in [0,1]; gender 0 = male anchor, 1 = female anchor. age from years via Anny's MorphologicalAgeMapping; height param solved by bisection on rest crown-to-sole height when height_m is given; values rounded to 4 decimals."
+ },
+ "height_m": 1.76495,
+ "total_mass_kg": 69.62007,
+ "mass_method": {
+  "density_kg_m3": 980.0,
+  "density_source": "anny/anthropometry.py Anthropometry.mass(): volume x 980 kg/m^3 ('for simplicity'); matches the extract.py / anny_avg_male.json value",
+  "volume_m3_whole_mesh": 0.07104,
+  "volume_m3_body_component": 0.07098,
+  "note": "whole closed mesh (body + eyeballs + tongue, divergence theorem). Whole-body density of living adults is ~1010-1070 kg/m^3 depending on fat and lung air, so the true mass for this volume could be 3-9% higher; kept at Anny's 980 for consistency."
+ },
+ "bmi": 22.34961,
+ "bone_heads": {
+  "root": [
+   -0.0,
+   0.94705,
+   -0.02335
+  ],
+  "pelvis.L": [
+   -0.0,
+   0.94705,
+   -0.02335
+  ],
+  "upperleg01.L": [
+   -0.12219,
+   0.93269,
+   -0.01243
+  ],
+  "upperleg02.L": [
+   -0.12602,
+   0.84544,
+   -0.03508
+  ],
+  "lowerleg01.L": [
+   -0.15401,
+   0.5354,
+   -0.04624
+  ],
+  "lowerleg02.L": [
+   -0.17596,
+   0.29833,
+   -0.03632
+  ],
+  "foot.L": [
+   -0.19628,
+   0.0767,
+   -0.01962
+  ],
+  "toe1-1.L": [
+   -0.16561,
+   0.03561,
+   -0.17314
+  ],
+  "toe1-2.L": [
+   -0.16813,
+   0.02724,
+   -0.20203
+  ],
+  "toe2-1.L": [
+   -0.19245,
+   0.03197,
+   -0.17679
+  ],
+  "toe2-2.L": [
+   -0.19411,
+   0.02769,
+   -0.20075
+  ],
+  "toe2-3.L": [
+   -0.19432,
+   0.0221,
+   -0.21579
+  ],
+  "toe3-1.L": [
+   -0.21163,
+   0.02889,
+   -0.1735
+  ],
+  "toe3-2.L": [
+   -0.21208,
+   0.02533,
+   -0.19572
+  ],
+  "toe3-3.L": [
+   -0.21161,
+   0.02121,
+   -0.20937
+  ],
+  "toe4-1.L": [
+   -0.22836,
+   0.02812,
+   -0.16476
+  ],
+  "toe4-2.L": [
+   -0.22833,
+   0.0247,
+   -0.18185
+  ],
+  "toe4-3.L": [
+   -0.22705,
+   0.02105,
+   -0.19538
+  ],
+  "toe5-1.L": [
+   -0.24437,
+   0.02652,
+   -0.1609
+  ],
+  "toe5-2.L": [
+   -0.24431,
+   0.02331,
+   -0.17385
+  ],
+  "toe5-3.L": [
+   -0.24266,
+   0.02079,
+   -0.18295
+  ],
+  "pelvis.R": [
+   -0.0,
+   0.94705,
+   -0.02335
+  ],
+  "upperleg01.R": [
+   0.12219,
+   0.93269,
+   -0.01243
+  ],
+  "upperleg02.R": [
+   0.12602,
+   0.84544,
+   -0.03508
+  ],
+  "lowerleg01.R": [
+   0.15401,
+   0.5354,
+   -0.04624
+  ],
+  "lowerleg02.R": [
+   0.17596,
+   0.29833,
+   -0.03632
+  ],
+  "foot.R": [
+   0.19628,
+   0.0767,
+   -0.01962
+  ],
+  "toe1-1.R": [
+   0.16561,
+   0.03561,
+   -0.17314
+  ],
+  "toe1-2.R": [
+   0.16813,
+   0.02724,
+   -0.20203
+  ],
+  "toe2-1.R": [
+   0.19245,
+   0.03197,
+   -0.17679
+  ],
+  "toe2-2.R": [
+   0.19411,
+   0.02769,
+   -0.20075
+  ],
+  "toe2-3.R": [
+   0.19432,
+   0.0221,
+   -0.21579
+  ],
+  "toe3-1.R": [
+   0.21163,
+   0.02889,
+   -0.1735
+  ],
+  "toe3-2.R": [
+   0.21208,
+   0.02533,
+   -0.19572
+  ],
+  "toe3-3.R": [
+   0.21161,
+   0.02121,
+   -0.20937
+  ],
+  "toe4-1.R": [
+   0.22836,
+   0.02812,
+   -0.16476
+  ],
+  "toe4-2.R": [
+   0.22833,
+   0.0247,
+   -0.18185
+  ],
+  "toe4-3.R": [
+   0.22705,
+   0.02105,
+   -0.19538
+  ],
+  "toe5-1.R": [
+   0.24437,
+   0.02652,
+   -0.1609
+  ],
+  "toe5-2.R": [
+   0.24431,
+   0.02331,
+   -0.17385
+  ],
+  "toe5-3.R": [
+   0.24266,
+   0.02079,
+   -0.18295
+  ],
+  "spine05": [
+   -0.0,
+   0.94705,
+   -0.02335
+  ],
+  "spine04": [
+   0.0,
+   1.03781,
+   0.00811
+  ],
+  "spine03": [
+   -0.0,
+   1.11139,
+   0.00055
+  ],
+  "spine02": [
+   0.0,
+   1.17885,
+   0.01807
+  ],
+  "spine01": [
+   0.0,
+   1.30158,
+   0.03969
+  ],
+  "clavicle.L": [
+   -0.02292,
+   1.43737,
+   -0.04379
+  ],
+  "shoulder01.L": [
+   -0.11826,
+   1.45593,
+   -0.04462
+  ],
+  "upperarm01.L": [
+   -0.19205,
+   1.41005,
+   -0.0345
+  ],
+  "upperarm02.L": [
+   -0.24057,
+   1.34849,
+   -0.04144
+  ],
+  "lowerarm01.L": [
+   -0.37157,
+   1.20973,
+   -0.04311
+  ],
+  "lowerarm02.L": [
+   -0.43386,
+   1.1513,
+   -0.13398
+  ],
+  "wrist.L": [
+   -0.50104,
+   1.08575,
+   -0.22447
+  ],
+  "finger1-1.L": [
+   -0.50227,
+   1.07896,
+   -0.27278
+  ],
+  "finger1-2.L": [
+   -0.47993,
+   1.07071,
+   -0.29569
+  ],
+  "finger1-3.L": [
+   -0.46656,
+   1.05714,
+   -0.33
+  ],
+  "metacarpal1.L": [
+   -0.51261,
+   1.0694,
+   -0.25407
+  ],
+  "finger2-1.L": [
+   -0.53077,
+   1.0459,
+   -0.3285
+  ],
+  "finger2-2.L": [
+   -0.53442,
+   1.03069,
+   -0.35158
+  ],
+  "finger2-3.L": [
+   -0.53381,
+   1.01387,
+   -0.36999
+  ],
+  "metacarpal2.L": [
+   -0.51261,
+   1.0694,
+   -0.25407
+  ],
+  "finger3-1.L": [
+   -0.54826,
+   1.03324,
+   -0.3101
+  ],
+  "finger3-2.L": [
+   -0.55616,
+   1.00638,
+   -0.33326
+  ],
+  "finger3-3.L": [
+   -0.55896,
+   0.98416,
+   -0.3525
+  ],
+  "metacarpal3.L": [
+   -0.52512,
+   1.05256,
+   -0.24361
+  ],
+  "finger4-1.L": [
+   -0.55636,
+   1.02428,
+   -0.29182
+  ],
+  "finger4-2.L": [
+   -0.56656,
+   0.99871,
+   -0.30811
+  ],
+  "finger4-3.L": [
+   -0.57121,
+   0.97685,
+   -0.32272
+  ],
+  "metacarpal4.L": [
+   -0.52512,
+   1.05256,
+   -0.24361
+  ],
+  "finger5-1.L": [
+   -0.55801,
+   1.01405,
+   -0.27124
+  ],
+  "finger5-2.L": [
+   -0.56459,
+   0.99403,
+   -0.28038
+  ],
+  "finger5-3.L": [
+   -0.56638,
+   0.97884,
+   -0.28713
+  ],
+  "clavicle.R": [
+   0.02292,
+   1.43737,
+   -0.04379
+  ],
+  "shoulder01.R": [
+   0.11826,
+   1.45593,
+   -0.04462
+  ],
+  "upperarm01.R": [
+   0.19205,
+   1.41005,
+   -0.0345
+  ],
+  "upperarm02.R": [
+   0.24057,
+   1.34849,
+   -0.04144
+  ],
+  "lowerarm01.R": [
+   0.37157,
+   1.20973,
+   -0.04311
+  ],
+  "lowerarm02.R": [
+   0.43386,
+   1.1513,
+   -0.13398
+  ],
+  "wrist.R": [
+   0.50104,
+   1.08575,
+   -0.22447
+  ],
+  "finger1-1.R": [
+   0.50227,
+   1.07896,
+   -0.27278
+  ],
+  "finger1-2.R": [
+   0.47993,
+   1.07071,
+   -0.29569
+  ],
+  "finger1-3.R": [
+   0.46656,
+   1.05714,
+   -0.33
+  ],
+  "metacarpal1.R": [
+   0.51261,
+   1.0694,
+   -0.25407
+  ],
+  "finger2-1.R": [
+   0.53077,
+   1.0459,
+   -0.3285
+  ],
+  "finger2-2.R": [
+   0.53442,
+   1.03069,
+   -0.35158
+  ],
+  "finger2-3.R": [
+   0.53381,
+   1.01387,
+   -0.36999
+  ],
+  "metacarpal2.R": [
+   0.51261,
+   1.0694,
+   -0.25407
+  ],
+  "finger3-1.R": [
+   0.54826,
+   1.03324,
+   -0.3101
+  ],
+  "finger3-2.R": [
+   0.55616,
+   1.00638,
+   -0.33326
+  ],
+  "finger3-3.R": [
+   0.55896,
+   0.98416,
+   -0.3525
+  ],
+  "metacarpal3.R": [
+   0.52512,
+   1.05256,
+   -0.24361
+  ],
+  "finger4-1.R": [
+   0.55636,
+   1.02428,
+   -0.29182
+  ],
+  "finger4-2.R": [
+   0.56656,
+   0.99871,
+   -0.30811
+  ],
+  "finger4-3.R": [
+   0.57121,
+   0.97685,
+   -0.32272
+  ],
+  "metacarpal4.R": [
+   0.52512,
+   1.05256,
+   -0.24361
+  ],
+  "finger5-1.R": [
+   0.55801,
+   1.01405,
+   -0.27124
+  ],
+  "finger5-2.R": [
+   0.56459,
+   0.99403,
+   -0.28038
+  ],
+  "finger5-3.R": [
+   0.56638,
+   0.97884,
+   -0.28713
+  ],
+  "neck01": [
+   0.0,
+   1.51543,
+   -0.03187
+  ],
+  "neck02": [
+   -0.00019,
+   1.53405,
+   -0.03572
+  ],
+  "neck03": [
+   -0.0021,
+   1.5801,
+   -0.04881
+  ],
+  "head": [
+   0.0,
+   1.60964,
+   -0.06325
+  ],
+  "eye.L": [
+   -0.03004,
+   1.65119,
+   -0.14906
+  ],
+  "eye.R": [
+   0.03004,
+   1.65119,
+   -0.14906
+  ]
+ },
+ "spinal_midline": {
+  "definition": "Anny rig spinal column: polyline through the bone heads root -> spine04 -> spine03 -> spine02 -> spine01 -> neck01 -> neck02 -> neck03 -> head (rest pose), linearly interpolated at each level height; x = 0",
+  "polyline": [
+   [
+    -0.0,
+    0.94705,
+    -0.02335
+   ],
+   [
+    0.0,
+    1.03781,
+    0.00811
+   ],
+   [
+    -0.0,
+    1.11139,
+    0.00055
+   ],
+   [
+    0.0,
+    1.17885,
+    0.01807
+   ],
+   [
+    0.0,
+    1.30158,
+    0.03969
+   ],
+   [
+    0.0,
+    1.51543,
+    -0.03187
+   ],
+   [
+    -0.00019,
+    1.53405,
+    -0.03572
+   ],
+   [
+    -0.0021,
+    1.5801,
+    -0.04881
+   ],
+   [
+    0.0,
+    1.60964,
+    -0.06325
+   ]
+  ],
+  "skin_depth_note": "Anny's spine bones lie 3-5 cm anterior to the back skin, i.e. close to the vertebral canal / lamina depth, so the sim's 'spine line' maps onto them directly."
+ },
+ "spinous_anchors": {
+  "method": "anny_lift_spec.md section 5 / D7: level height y = hip_y + (y_tip_BP3D - 0.8915) * s, s = (C7_y - hip_y) / (1.457 - 0.8915); hip_y = mean upperleg01.L/R head height, C7_y = neck01 head height; horizontal +Z (posterior) ray at x = 0, farthest hit = back skin; normal = mean area-weighted vertex normal over the 34 x 44 mm pod footprint (outward)",
+  "bp3d_tip_heights_m": {
+   "S1": 0.9708,
+   "L3": 1.056,
+   "T10": 1.1836,
+   "T2": 1.4093
+  },
+  "hip_y_m": 0.93269,
+  "c7_y_m": 1.51543,
+  "spinous_scale": 1.03049,
+  "levels": {
+   "S1": {
+    "y": 1.01441,
+    "skin": [
+     0.0,
+     1.01441,
+     0.05032
+    ],
+    "normal": [
+     0.0,
+     0.31668,
+     0.94853
+    ],
+    "footprint_vertices": 6,
+    "midline": [
+     0.0,
+     1.01441,
+     -0.0
+    ],
+    "midline_to_skin_depth_m": 0.05032,
+    "pod_centre": [
+     0.0,
+     1.01694,
+     0.0579
+    ],
+    "midline_to_pod_centre_horizontal_m": 0.0579,
+    "neutral_pitch_deg": 18.46211,
+    "sensor_gap_to_skin_along_posterior_m": -0.01032,
+    "sensor_signed_distance_to_skin_m": -0.00974
+   },
+   "L3": {
+    "y": 1.1022,
+    "skin": [
+     0.0,
+     1.1022,
+     0.03791
+    ],
+    "normal": [
+     -0.0,
+     -0.1042,
+     0.99456
+    ],
+    "footprint_vertices": 3,
+    "midline": [
+     0.0,
+     1.1022,
+     0.0015
+    ],
+    "midline_to_skin_depth_m": 0.03642,
+    "pod_centre": [
+     -0.0,
+     1.10137,
+     0.04587
+    ],
+    "midline_to_pod_centre_horizontal_m": 0.04437,
+    "neutral_pitch_deg": -5.98085,
+    "sensor_gap_to_skin_along_posterior_m": 0.00358,
+    "sensor_signed_distance_to_skin_m": 0.00345
+   },
+   "T10": {
+    "y": 1.23369,
+    "skin": [
+     0.0,
+     1.23369,
+     0.05995
+    ],
+    "normal": [
+     -0.0,
+     -0.08451,
+     0.99642
+    ],
+    "footprint_vertices": 2,
+    "midline": [
+     0.0,
+     1.23369,
+     0.02773
+    ],
+    "midline_to_skin_depth_m": 0.03222,
+    "pod_centre": [
+     -0.0,
+     1.23302,
+     0.06792
+    ],
+    "midline_to_pod_centre_horizontal_m": 0.04019,
+    "neutral_pitch_deg": -4.84782,
+    "sensor_gap_to_skin_along_posterior_m": 0.00778,
+    "sensor_signed_distance_to_skin_m": 0.00775
+   },
+   "T2": {
+    "y": 1.46628,
+    "skin": [
+     0.0,
+     1.46628,
+     0.02596
+    ],
+    "normal": [
+     -0.0,
+     0.36484,
+     0.93107
+    ],
+    "footprint_vertices": 6,
+    "midline": [
+     0.0,
+     1.46628,
+     -0.01542
+    ],
+    "midline_to_skin_depth_m": 0.04138,
+    "pod_centre": [
+     -0.0,
+     1.46919,
+     0.03341
+    ],
+    "midline_to_pod_centre_horizontal_m": 0.04883,
+    "neutral_pitch_deg": 21.39777,
+    "sensor_gap_to_skin_along_posterior_m": -0.00138,
+    "sensor_signed_distance_to_skin_m": -0.00125
+   }
+  }
+ },
+ "sensor_positions": {
+  "definition": "sensor_k = midline(y_k) + 0.04 m * (0, 0, +1): 0.04 m behind the spinal midline, measured horizontally along the sim's posterior axis +Z in the standing rest pose (in the sim's neutral stand every segment frame equals world, so the OFFSET equals spine.py's seg_i.apply([0, 0, sensor_offset_m]); the BASE points differ because the sim's neutral spine line is straight: see the top-level sim_neutral_check)",
+  "offset_m": 0.04,
+  "positions": {
+   "S1": [
+    0.0,
+    1.01441,
+    0.04
+   ],
+   "L3": [
+    0.0,
+    1.1022,
+    0.0415
+   ],
+   "T10": [
+    0.0,
+    1.23369,
+    0.06773
+   ],
+   "T2": [
+    0.0,
+    1.46628,
+    0.02458
+   ]
+  },
+  "gap_to_skin_m": {
+   "S1": -0.01032,
+   "L3": 0.00358,
+   "T10": 0.00778,
+   "T2": -0.00138
+  },
+  "signed_distance_to_skin_m": {
+   "S1": -0.00974,
+   "L3": 0.00345,
+   "T10": 0.00775,
+   "T2": -0.00125
+  },
+  "gap_sign": "+ = outside (behind) the skin, - = inside the body",
+  "pod_centre_note": "a physical 12 mm pod with a 2 mm stand-off has its centre 8 mm off the skin along the normal (spinous_anchors.levels.*.pod_centre)"
+ },
+ "thunder_links": {
+  "definition": "thundersim spine.py: spine_line[i+1] = spine_line[i] + spacing[i] * seg_i up-axis, spine_line[0] = root_pos (pelvis anchor). Link i joins the spinal-midline points at levels (S1, L3, T10, T2)[i] and [i+1]; length_m = straight midline chord. Upper thoracic has no length in the sim (only its sensor); T2 -> C7 is reported for info.",
+  "pelvis": {
+   "from": "S1",
+   "to": "L3",
+   "length_m": 0.08781,
+   "midline_chord_m": 0.08781,
+   "skin_chord_m": 0.08867,
+   "skin_arc_m": 0.08991,
+   "vertical_m": 0.0878
+  },
+  "lumbar": {
+   "from": "L3",
+   "to": "T10",
+   "length_m": 0.13408,
+   "midline_chord_m": 0.13408,
+   "skin_chord_m": 0.13332,
+   "skin_arc_m": 0.13371,
+   "vertical_m": 0.13149
+  },
+  "thoracic": {
+   "from": "T10",
+   "to": "T2",
+   "length_m": 0.23655,
+   "midline_chord_m": 0.23655,
+   "skin_chord_m": 0.23505,
+   "skin_arc_m": 0.2387,
+   "vertical_m": 0.23258
+  },
+  "upper_thoracic": {
+   "from": "T2",
+   "to": "C7 (neck01 bone head)",
+   "length_m": 0.05183,
+   "midline_chord_m": 0.05183,
+   "vertical_m": 0.04915,
+   "used_by_sim": false
+  },
+  "sim_default_spacing_m_for_this_height": [
+   0.12355,
+   0.15885,
+   0.19414
+  ],
+  "anny_minus_sim_default_m": [
+   -0.03574,
+   -0.02476,
+   0.04241
+  ]
+ },
+ "region_masses": {
+  "method": "interior of the closed body component sampled on a 5 mm voxel grid (scan-line parity); each voxel takes the inverse-distance blend of the full skin weights of its 8 nearest body vertices; bone weights summed into regions; masses = region volume fraction x total_mass_kg (uniform density). Bone -> region: trunk_pelvis = root, pelvis.L/R, spine05; trunk_lumbar = spine04, spine03; trunk_thoracic = spine02; trunk_upper_thoracic = spine01, clavicles, shoulder01s; head_neck = neck01-03, head, eyes; upper_arm = upperarm01-02; forearm = lowerarm01-02; hand = wrist, metacarpals, fingers; thigh = upperleg01-02; shank = lowerleg01-02; foot = foot, toes.",
+  "voxel_volume_m3": 0.07099,
+  "voxel_vs_exact_body_volume": 1.00014,
+  "odd_parity_columns_skipped": 0,
+  "voxels": 567915,
+  "kg": {
+   "head_neck": 4.83131,
+   "trunk_pelvis": 6.29095,
+   "trunk_lumbar": 9.8092,
+   "trunk_thoracic": 7.89735,
+   "trunk_upper_thoracic": 8.22946,
+   "upper_arm_L": 2.58928,
+   "upper_arm_R": 2.58763,
+   "forearm_L": 0.94654,
+   "forearm_R": 0.94195,
+   "hand_L": 0.35454,
+   "hand_R": 0.35349,
+   "thigh_L": 7.91998,
+   "thigh_R": 7.91905,
+   "shank_L": 3.42599,
+   "shank_R": 3.42569,
+   "foot_L": 1.04803,
+   "foot_R": 1.04962
+  },
+  "trunk_kg_by_skin_weights": {
+   "trunk_pelvis": 6.29095,
+   "trunk_lumbar": 9.8092,
+   "trunk_thoracic": 7.89735,
+   "trunk_upper_thoracic": 8.22946
+  },
+  "trunk_kg_by_planes_at_sim_link_levels": {
+   "definition": "trunk-weighted volume cut by horizontal planes at the L3, T10, T2 level heights: pelvis < L3 <= lumbar < T10 <= thoracic < T2 <= upper_thoracic",
+   "trunk_pelvis": 11.35188,
+   "trunk_lumbar": 7.38209,
+   "trunk_thoracic": 12.80835,
+   "trunk_upper_thoracic": 0.68464
+  },
+  "whole_body_com": [
+   -5e-05,
+   1.00706,
+   -0.04858
+  ],
+  "de_leva_1996_check": {
+   "source": "de Leva P. Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. J Biomech 1996;29(9):1223-1230, Table 4 (male/female, % body mass); linearly interpolated by Anny gender = 0.0",
+   "fractions_pct": {
+    "head_neck": 6.94,
+    "trunk": 43.46,
+    "upper_arm": 2.71,
+    "forearm": 1.62,
+    "hand": 0.61,
+    "thigh": 14.16,
+    "shank": 4.33,
+    "foot": 1.37,
+    "trunk_upper": 15.96,
+    "trunk_middle": 16.33,
+    "trunk_lower": 11.17
+   },
+   "comparison": {
+    "head_neck": {
+     "anny_kg": 4.83131,
+     "anny_pct": 6.93954,
+     "de_leva_pct": 6.94,
+     "de_leva_kg": 4.83163,
+     "anny_minus_de_leva_pct_points": -0.00046
+    },
+    "trunk": {
+     "anny_kg": 32.22696,
+     "anny_pct": 46.28975,
+     "de_leva_pct": 43.46,
+     "de_leva_kg": 30.25688,
+     "anny_minus_de_leva_pct_points": 2.82975
+    },
+    "upper_arm (each side, mean L/R)": {
+     "anny_kg": 2.58845,
+     "anny_pct": 3.71797,
+     "de_leva_pct": 2.71,
+     "de_leva_kg": 1.8867,
+     "anny_minus_de_leva_pct_points": 1.00797
+    },
+    "forearm (each side, mean L/R)": {
+     "anny_kg": 0.94425,
+     "anny_pct": 1.35628,
+     "de_leva_pct": 1.62,
+     "de_leva_kg": 1.12785,
+     "anny_minus_de_leva_pct_points": -0.26372
+    },
+    "hand (each side, mean L/R)": {
+     "anny_kg": 0.35401,
+     "anny_pct": 0.50849,
+     "de_leva_pct": 0.61,
+     "de_leva_kg": 0.42468,
+     "anny_minus_de_leva_pct_points": -0.10151
+    },
+    "thigh (each side, mean L/R)": {
+     "anny_kg": 7.91952,
+     "anny_pct": 11.37534,
+     "de_leva_pct": 14.16,
+     "de_leva_kg": 9.8582,
+     "anny_minus_de_leva_pct_points": -2.78466
+    },
+    "shank (each side, mean L/R)": {
+     "anny_kg": 3.42584,
+     "anny_pct": 4.92077,
+     "de_leva_pct": 4.33,
+     "de_leva_kg": 3.01455,
+     "anny_minus_de_leva_pct_points": 0.59077
+    },
+    "foot (each side, mean L/R)": {
+     "anny_kg": 1.04883,
+     "anny_pct": 1.5065,
+     "de_leva_pct": 1.37,
+     "de_leva_kg": 0.95379,
+     "anny_minus_de_leva_pct_points": 0.1365
+    }
+   },
+   "caveat": "uniform density and skin-weight boundaries (not de Leva's joint-centre planes) shift mass from the limbs to the trunk: de Leva limb masses come from denser tissue than the trunk (which holds the lungs). Treat de Leva as the reference for per-segment masses."
+  }
+ },
+ "worker_fields": {
+  "height_m": 1.76495,
+  "mass_kg": 69.62007,
+  "load_kg": 8.0,
+  "spacing_m": [
+   0.08781,
+   0.13408,
+   0.23655
+  ],
+  "neutral_curvature_deg": [
+   18.46211,
+   -5.98085,
+   -4.84782,
+   21.39777
+  ],
+  "mount_error_deg": 6.0,
+  "sensor_offset_m": 0.04
+ },
+ "worker_fields_sources": {
+  "height_m": "Anny rest crown-to-sole height (anthropometry.height)",
+  "mass_kg": "Anny total_mass_kg (body only; the sim adds load_kg)",
+  "load_kg": "NOT DERIVED: sim default (tool belt / harness / PPE)",
+  "spacing_m": "Anny spinal-midline chords S1-L3, L3-T10, T10-T2 (thunder_links.*.length_m)",
+  "neutral_curvature_deg": "Anny pod normal pitch at S1/L3/T10/T2: c = atan2(n_y, n_z) in the sim frame, so that spine.py's chip = seg * Rx(-c) has its z axis on the skin normal",
+  "mount_error_deg": "NOT DERIVED: sim default (strap misalignment)",
+  "sensor_offset_m": "kept at the sim default 0.04 m so that sensor_positions match spine.py; the Anny-measured alternatives are in worker_fields_alternatives"
+ },
+ "worker_fields_not_derived": [
+  "load_kg",
+  "mount_error_deg",
+  "sensor_offset_m (kept at 0.04 by design)"
+ ],
+ "worker_fields_alternatives": {
+  "sensor_offset_m_midline_to_skin_per_level": [
+   0.05032,
+   0.03642,
+   0.03222,
+   0.04138
+  ],
+  "sensor_offset_m_midline_to_skin_mean": 0.04008,
+  "sensor_offset_m_midline_to_pod_centre_mean": 0.04782,
+  "spacing_m_skin_chord": [
+   0.08867,
+   0.13332,
+   0.23505
+  ],
+  "spacing_m_skin_arc_tape": [
+   0.08991,
+   0.13371,
+   0.2387
+  ],
+  "spacing_m_vertical": [
+   0.0878,
+   0.13149,
+   0.23258
+  ],
+  "spacing_note": "spine.py stacks the links on one straight neutral axis, so with the midline chords its neutral anchor heights rise above Anny's by the cumulative chord-minus-vertical (a few mm at T2); spacing_m_vertical reproduces Anny's level heights exactly instead. Worker's own comment calls spacings 'surface distances' (tape): spacing_m_skin_arc_tape is that reading; it differs from the midline chords by <= 5 mm (avg_male +2.1/-0.4/+2.2, female_160 +4.1/-0.1/+2.4 mm)"
+ },
+ "sim_neutral_check": {
+  "note": "spine.py's neutral stand (pitch = flex = 0) puts all four anchors on ONE vertical line at z = sensor_offset_m. Anny's midline is curved (lordosis/kyphosis), so the sim's neutral anchors differ from sensor_positions by the residual below. Neither Worker kwarg can fix this; the curved-neutral alternative needs a neutral pose offset in the sim's PoseTrack (calibration stand), not a Worker field.",
+  "straight_neutral_anchor_minus_sensor_positions_m": {
+   "S1": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "L3": [
+    0.0,
+    1e-05,
+    -0.0015
+   ],
+   "T10": [
+    0.0,
+    0.0026,
+    -0.02773
+   ],
+   "T2": [
+    0.0,
+    0.00657,
+    0.01542
+   ]
+  },
+  "curved_neutral_alternative": {
+   "definition": "PoseTrack at stand: pitch = lean_0, flex[j] = lean_{j+1} - lean_j (sagittal only), with lean_i = forward lean of Anny midline chord i (S1-L3, L3-T10, T10-T2, T2-C7) from vertical, + = top towards -Z. Use together with neutral_curvature_deg below (pod normal pitch minus lean_i) and the same spacing_m: anchors then lie on Anny's midline points + 0.04 m along each segment's own posterior axis, and chip z axes equal the pod normals.",
+   "pitch_rad": -0.01704,
+   "flex_rad": [
+    -0.17989,
+    0.3804,
+    0.13943
+   ],
+   "segment_lean_deg": [
+    -0.97645,
+    -11.28367,
+    10.51185,
+    18.50085
+   ],
+   "neutral_curvature_deg": [
+    19.43856,
+    5.30282,
+    -15.35967,
+    2.89693
+   ],
+   "anchor_minus_sensor_positions_m": {
+    "S1": [
+     0.0,
+     -0.00068,
+     -1e-05
+    ],
+    "L3": [
+     0.0,
+     -0.00783,
+     -0.00077
+    ],
+    "T10": [
+     0.0,
+     0.0073,
+     -0.00067
+    ],
+    "T2": [
+     0.0,
+     0.01269,
+     -0.00207
+    ]
+   }
+  }
+ },
+ "worker_properties_not_settable": {
+  "note": "computed properties in spine.py / falls.py that a Worker(**kwargs) cannot override",
+  "pelvis_height": {
+   "sim_formula": "0.53 * height_m",
+   "sim_value": 0.93542,
+   "anny_value_S1_midline_y": 1.01441,
+   "anny_fraction_of_height": 0.57475
+  },
+  "falls_r_p_com_to_pelvis_anchor": {
+   "sim_formula": "(0, -0.03 H, 0.10)",
+   "sim_value": [
+    0.0,
+    -0.05295,
+    0.1
+   ],
+   "anny_com_to_S1_midline": [
+    5e-05,
+    0.00735,
+    0.04858
+   ],
+   "anny_com_to_S1_sensor": [
+    5e-05,
+    0.00735,
+    0.08858
+   ]
+  },
+  "total_mass": "mass_kg + load_kg (unchanged)"
+ },
+ "worker_defaults_reference": {
+  "height_m": 1.75,
+  "mass_kg": 80.0,
+  "load_kg": 8.0,
+  "spacing_m": null,
+  "neutral_curvature_deg": [
+   -12.0,
+   -6.0,
+   10.0,
+   18.0
+  ],
+  "mount_error_deg": 6.0,
+  "sensor_offset_m": 0.04
+ },
+ "licence": {
+  "anny": "Anny code (C) 2025 NAVER Corp., Apache-2.0 (https://github.com/naver/anny)",
+  "assets": "body mesh, blend shapes, rig and skin weights derived from MakeHuman / MPFB2 assets, CC0 1.0",
+  "bp3d": "spinous-tip heights from BodyParts3D, (c) The Database Center for Life Science, CC BY 4.0 (attribution required)",
+  "de_leva": "segment fractions cited from de Leva 1996 (facts, cited)"
+ }
+}

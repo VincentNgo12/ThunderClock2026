@@ -1,0 +1,614 @@
+{
+  "clip": "cmu_62_10",
+  "source": "cmu",
+  "source_name": "CMU Graphics Lab Motion Capture Database",
+  "file": "raw/cmu/62_10.amc",
+  "url": "http://mocap.cs.cmu.edu/subjects/62/62_10.amc",
+  "sha256": "28df11d54f35bd8101d245f5b3d864eab598474f2e4b3f5d9b8565805e73927d",
+  "licence": {
+    "class": "A",
+    "name": "Free for all uses (site statement); do not resell the data itself",
+    "url": "http://mocap.cs.cmu.edu/",
+    "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217."
+  },
+  "tags": [
+    "hammer"
+  ],
+  "source_fps": 60.0,
+  "source_frames": 2021,
+  "seconds": 33.66,
+  "fs": 100.0,
+  "frames": 3367,
+  "height_est_m": 1.758,
+  "valid_joints": [
+    "hip_l",
+    "hip_r",
+    "knee_l",
+    "knee_r",
+    "ankle_l",
+    "ankle_r",
+    "heel_l",
+    "heel_r",
+    "toe_l",
+    "toe_r",
+    "shoulder_l",
+    "shoulder_r",
+    "elbow_l",
+    "elbow_r",
+    "hand_l",
+    "hand_r",
+    "neck",
+    "head",
+    "pelvis",
+    "head_top"
+  ],
+  "joint_map": {
+    "hip": "femur start",
+    "knee": "tibia start",
+    "ankle": "foot start",
+    "toe": "toes end (tip)",
+    "heel": "derived from ankle, toe and knee (rig.Dims proportions)",
+    "shoulder": "humerus start",
+    "elbow": "radius start",
+    "hand": "midpoint of wrist and hand end",
+    "neck": "lowerneck start (neck base)",
+    "head": "midpoint of head bone",
+    "head_top": "head end",
+    "pelvis": "midpoint of femur starts",
+    "spine": "hip mid -> root -> lowerback -> upperback -> thorax end; bones root/lowerback/upperback/thorax"
+  },
+  "root_relative": false,
+  "trunk": {
+    "method": "rigid source bone under each anchor (0, 1, 2, 3 = spine piece index)",
+    "spine_points": 5,
+    "neutral_frames": [
+      30,
+      80
+    ],
+    "neutral_method": "standing still",
+    "neutral_ok": true,
+    "neutral_reference": null,
+    "tilt_deg": 3.13,
+    "speed_mps": 0.009,
+    "knee_deg": 152.1
+  },
+  "anterior_share": 1.0,
+  "notes": [],
+  "problems": [],
+  "status": "gated",
+  "gates": {
+    "stage": "S5 preview",
+    "payload_fs": 50.0,
+    "rig": {
+      "H": 1.75,
+      "mass_kg": 80.0,
+      "scale": 0.9972
+    },
+    "method": "clip retargeted onto rig.Dims with rig.two_bone on its own pelvis path (see tools/gates.py)",
+    "source": {
+      "value": {
+        "bone_std_mm": 0.0,
+        "foot_p99_mps": 1.07,
+        "hand_p99_mps": 1.03,
+        "note": null
+      },
+      "limit": "FK bone std < 1 mm (n/a for position data); foot p99 < 12, hand p99 < 15 m/s",
+      "result": "PASS"
+    },
+    "bones": {
+      "value": 2.78e-16,
+      "limit": "< 1e-3 m",
+      "result": "PASS"
+    },
+    "penetration": {
+      "value": {
+        "min_m": -0.0,
+        "frames_below": 0
+      },
+      "limit": ">= -0.005 m (heel, toe)",
+      "result": "PASS"
+    },
+    "skate": {
+      "value": {
+        "max_drift_m": 0.0565,
+        "p90_drift_m": 0.0416,
+        "median_mps": 0.0095,
+        "stances": 16,
+        "rig_foot_max_drift_m": 0.0548,
+        "rig_foot_median_mps": 0.0107
+      },
+      "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+      "result": "FAIL"
+    },
+    "pops": {
+      "value": {
+        "feet_m": 0.0412,
+        "hands_m": 0.0251
+      },
+      "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+      "result": "PASS"
+    },
+    "knee": {
+      "value": {
+        "max_deg": 64.4,
+        "hyperextended_frames": 0
+      },
+      "limit": "0-160 deg, no hyperextension",
+      "result": "PASS"
+    },
+    "elbow": {
+      "value": {
+        "max_deg": 117.6,
+        "min_deg": 3.6
+      },
+      "limit": "0-155 deg",
+      "result": "PASS"
+    },
+    "hip": {
+      "value": {
+        "min_deg": -13.8,
+        "max_deg": 50.7,
+        "out_of_plane_frames": 0
+      },
+      "limit": "-30..+135 deg (pelvis segment, sagittal)",
+      "result": "PASS"
+    },
+    "reach": {
+      "value": {
+        "legs_share": 0.0,
+        "arms_share": 0.0,
+        "legs_max_clamp_m": 0.0014,
+        "arms_max_clamp_m": 0.0019
+      },
+      "limit": "< 5 % of frames clamped (end joint > 5 mm from its target) per limb",
+      "result": "PASS"
+    },
+    "sync": {
+      "value": null,
+      "limit": "heel strike median < 30 ms, p90 < 60 ms; tool strike < 20 ms",
+      "result": "PENDING",
+      "note": "needs the S6 time warp to simulator anchors; measured on the payload in S6"
+    },
+    "failed": [
+      "skate"
+    ],
+    "fails_only_skate": true
+  },
+  "reviewed_by": null,
+  "asf_sha256": "a029f31db2849649019515451c895dbebc997699a2e59af3d529434513138580",
+  "subject": "cmu:a029f31db2849649",
+  "s2_checks": {
+    "shape": true,
+    "height_m": 1.758,
+    "scale": true,
+    "up": true,
+    "bone_std_mm_max": 0.0,
+    "hand_toe_span_std_mm_max": 2.52,
+    "bones": true,
+    "foot_p99_mps": 1.07,
+    "hand_p99_mps": 1.03,
+    "speed": true,
+    "sim_conv_err_deg": 8.14e-06,
+    "sim_conv": true,
+    "neutral_resid_deg": 0.0,
+    "neutral": true,
+    "trunk_p5_p95_deg": {
+      "pitch": [
+        0.7,
+        30.5
+      ],
+      "flex_sum": [
+        3.9,
+        40.9
+      ],
+      "roll": [
+        -4.7,
+        4.1
+      ],
+      "twist_sum": [
+        -6.8,
+        4.3
+      ]
+    },
+    "pass": true
+  },
+  "s3": {
+    "floor_m": 0.0072,
+    "floor_slope_deg": 0.0,
+    "flat_offsets_m": {
+      "l": {
+        "ankle": 0.0668,
+        "heel": -0.0001,
+        "toe": 0.065
+      },
+      "r": {
+        "ankle": 0.0676,
+        "heel": 0.0055,
+        "toe": 0.0541
+      }
+    },
+    "contact_share": {
+      "l": 0.971,
+      "r": 0.974
+    },
+    "stances": {
+      "l": 4,
+      "r": 4
+    },
+    "heel_strikes": [
+      {
+        "t": 1.72,
+        "side": "r"
+      },
+      {
+        "t": 15.08,
+        "side": "l"
+      }
+    ],
+    "cycles": 0,
+    "wrist_decel_peaks": [
+      {
+        "t": 2.01,
+        "frame": 201,
+        "side": "r",
+        "decel_mps2": 4.6,
+        "speed_before_mps": 1.11
+      },
+      {
+        "t": 2.95,
+        "frame": 295,
+        "side": "l",
+        "decel_mps2": 5.8,
+        "speed_before_mps": 0.62
+      },
+      {
+        "t": 3.09,
+        "frame": 309,
+        "side": "r",
+        "decel_mps2": 7.9,
+        "speed_before_mps": 0.89
+      },
+      {
+        "t": 11.9,
+        "frame": 1190,
+        "side": "r",
+        "decel_mps2": 11.0,
+        "speed_before_mps": 0.48
+      },
+      {
+        "t": 12.24,
+        "frame": 1224,
+        "side": "r",
+        "decel_mps2": 7.1,
+        "speed_before_mps": 0.51
+      },
+      {
+        "t": 12.6,
+        "frame": 1260,
+        "side": "r",
+        "decel_mps2": 18.1,
+        "speed_before_mps": 0.73
+      },
+      {
+        "t": 12.95,
+        "frame": 1295,
+        "side": "r",
+        "decel_mps2": 17.3,
+        "speed_before_mps": 0.76
+      },
+      {
+        "t": 13.3,
+        "frame": 1330,
+        "side": "r",
+        "decel_mps2": 14.3,
+        "speed_before_mps": 0.64
+      },
+      {
+        "t": 13.65,
+        "frame": 1365,
+        "side": "r",
+        "decel_mps2": 13.9,
+        "speed_before_mps": 0.71
+      },
+      {
+        "t": 14.02,
+        "frame": 1402,
+        "side": "r",
+        "decel_mps2": 15.2,
+        "speed_before_mps": 0.76
+      },
+      {
+        "t": 14.85,
+        "frame": 1485,
+        "side": "r",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 0.65
+      },
+      {
+        "t": 15.31,
+        "frame": 1531,
+        "side": "r",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 0.6
+      },
+      {
+        "t": 19.92,
+        "frame": 1992,
+        "side": "r",
+        "decel_mps2": 7.4,
+        "speed_before_mps": 0.47
+      },
+      {
+        "t": 20.28,
+        "frame": 2028,
+        "side": "r",
+        "decel_mps2": 7.3,
+        "speed_before_mps": 0.44
+      },
+      {
+        "t": 20.65,
+        "frame": 2065,
+        "side": "r",
+        "decel_mps2": 14.4,
+        "speed_before_mps": 0.71
+      },
+      {
+        "t": 20.99,
+        "frame": 2099,
+        "side": "r",
+        "decel_mps2": 11.5,
+        "speed_before_mps": 0.68
+      },
+      {
+        "t": 21.33,
+        "frame": 2133,
+        "side": "r",
+        "decel_mps2": 13.6,
+        "speed_before_mps": 0.78
+      },
+      {
+        "t": 21.68,
+        "frame": 2168,
+        "side": "r",
+        "decel_mps2": 17.8,
+        "speed_before_mps": 0.85
+      },
+      {
+        "t": 21.9,
+        "frame": 2190,
+        "side": "r",
+        "decel_mps2": 4.7,
+        "speed_before_mps": 0.61
+      },
+      {
+        "t": 22.12,
+        "frame": 2212,
+        "side": "r",
+        "decel_mps2": 15.0,
+        "speed_before_mps": 0.93
+      },
+      {
+        "t": 22.58,
+        "frame": 2258,
+        "side": "r",
+        "decel_mps2": 15.2,
+        "speed_before_mps": 0.92
+      },
+      {
+        "t": 22.81,
+        "frame": 2281,
+        "side": "r",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 0.57
+      },
+      {
+        "t": 23.4,
+        "frame": 2340,
+        "side": "l",
+        "decel_mps2": 6.9,
+        "speed_before_mps": 0.43
+      },
+      {
+        "t": 28.44,
+        "frame": 2844,
+        "side": "r",
+        "decel_mps2": 8.0,
+        "speed_before_mps": 0.54
+      },
+      {
+        "t": 28.82,
+        "frame": 2882,
+        "side": "r",
+        "decel_mps2": 7.7,
+        "speed_before_mps": 0.49
+      },
+      {
+        "t": 29.16,
+        "frame": 2916,
+        "side": "r",
+        "decel_mps2": 12.4,
+        "speed_before_mps": 0.55
+      },
+      {
+        "t": 29.5,
+        "frame": 2950,
+        "side": "r",
+        "decel_mps2": 10.7,
+        "speed_before_mps": 0.61
+      },
+      {
+        "t": 29.86,
+        "frame": 2986,
+        "side": "r",
+        "decel_mps2": 13.8,
+        "speed_before_mps": 0.83
+      },
+      {
+        "t": 30.23,
+        "frame": 3023,
+        "side": "r",
+        "decel_mps2": 17.8,
+        "speed_before_mps": 0.92
+      },
+      {
+        "t": 30.58,
+        "frame": 3058,
+        "side": "r",
+        "decel_mps2": 15.8,
+        "speed_before_mps": 0.71
+      },
+      {
+        "t": 30.92,
+        "frame": 3092,
+        "side": "r",
+        "decel_mps2": 18.1,
+        "speed_before_mps": 0.72
+      },
+      {
+        "t": 31.3,
+        "frame": 3130,
+        "side": "r",
+        "decel_mps2": 15.7,
+        "speed_before_mps": 0.64
+      },
+      {
+        "t": 31.55,
+        "frame": 3155,
+        "side": "l",
+        "decel_mps2": 8.3,
+        "speed_before_mps": 0.43
+      },
+      {
+        "t": 32.05,
+        "frame": 3205,
+        "side": "r",
+        "decel_mps2": 7.2,
+        "speed_before_mps": 0.83
+      },
+      {
+        "t": 32.74,
+        "frame": 3274,
+        "side": "r",
+        "decel_mps2": 4.9,
+        "speed_before_mps": 1.37
+      }
+    ],
+    "wrist_decel_peak_count": 35,
+    "rung_contacts": [],
+    "bends": [],
+    "segments": [
+      {
+        "primitive": "stand",
+        "t0": 0.0,
+        "t1": 1.41
+      },
+      {
+        "primitive": "walk",
+        "t0": 1.41,
+        "t1": 2.32
+      },
+      {
+        "primitive": "hammer",
+        "t0": 2.32,
+        "t1": 32.42
+      },
+      {
+        "primitive": "walk",
+        "t0": 32.42,
+        "t1": 32.93
+      },
+      {
+        "primitive": "hammer",
+        "t0": 32.93,
+        "t1": 33.24
+      },
+      {
+        "primitive": "stand",
+        "t0": 33.24,
+        "t1": 33.67
+      }
+    ],
+    "notes": []
+  },
+  "activity_tags": [
+    "hammer",
+    "stand",
+    "walk"
+  ],
+  "s4": {
+    "file": "clips/cmu_62_10.npz",
+    "format": 1,
+    "has_legs": true,
+    "task": "hammer_post",
+    "leg_len_m": [
+      0.8351,
+      0.8322
+    ],
+    "arm_len_m": [
+      0.5517,
+      0.5657
+    ],
+    "foot_pitch_flat_deg": [
+      -1.1,
+      -5.6
+    ],
+    "finite": true,
+    "non_finite": []
+  },
+  "s6": {
+    "stage": "S6 payload",
+    "roles": {
+      "hammer": {
+        "gates": {
+          "bones": {
+            "value": 0.00013,
+            "limit": "< 1e-3 m",
+            "result": "PASS"
+          },
+          "pops": {
+            "value": {
+              "feet_m": null,
+              "hands_m": 0.0336
+            },
+            "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+            "result": "PASS"
+          },
+          "elbow": {
+            "value": {
+              "min_deg": 63.5,
+              "max_deg": 114.2
+            },
+            "limit": "0-155 deg",
+            "result": "PASS"
+          },
+          "reach": {
+            "value": {
+              "arms_share": 0.0,
+              "legs_share": null
+            },
+            "limit": "< 5 % of frames clamped per limb",
+            "result": "PASS"
+          },
+          "sync": {
+            "value": {
+              "tool_median_ms": 7.1,
+              "tool_p90_ms": 17.2,
+              "strikes": 275
+            },
+            "limit": "tool strike to impulse: median < 20 ms (p90 reported)",
+            "result": "PASS"
+          }
+        },
+        "failed": [],
+        "result": "PASS",
+        "runs": [
+          "A-HAMMER:0",
+          "A-HAMMER:1",
+          "A-HAMMER:2"
+        ],
+        "frames": 4000
+      }
+    },
+    "result": "PASS"
+  }
+}
