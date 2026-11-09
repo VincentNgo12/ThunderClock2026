@@ -1,198 +1,183 @@
-// Guided mounting calibration: prompts the wearer through upright, forward, backward, right and left
-// bends, averages each held pose per sensor, then solves every sensor's heading (and mirror) so the
-// bends line up with the wearer frame. Nothing changes until the user presses Apply.
+// Sensor mounting calibration, done by the backend (backend/app/mounting.py): the wizard prompts the wearer
+// and asks the backend to capture each held pose from the live stream (POST /mounting/capture), then fits
+// and saves each sensor's mounting for this strip (POST /mounting/fit). Mounting is physical, so it survives
+// ESP32 reboots; re-run only when the sensors move on the vest.
 
-import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import {
-  averageQuaternion,
-  MIN_BEND_DEG,
-  rotationVector,
-  solveMounting,
-  type MountingSet,
-  type MovementName,
-  type SensorFit,
-} from "../../lib/posture3d/mounting";
-import { REGION_LABELS, REGIONS, type Region } from "../../telemetry/types";
-
-type Raw = Partial<Record<Region, THREE.Quaternion>>;
+import { useEffect, useState } from "react";
 
 interface Props {
-  getRaw: () => Raw; // latest raw sensor quaternions (sensor world frame)
-  current: MountingSet;
-  onApply: (neutral: Record<Region, THREE.Quaternion>, mountings: MountingSet) => void;
+  apiBase: string;
   onClose: () => void;
 }
 
+type Pose = "stand" | "forward" | "backward" | "right" | "left";
+
 interface Step {
-  key: "neutral" | MovementName;
+  pose: Pose;
   title: string;
   prompt: string;
+  optional: boolean;
 }
 
 const STEPS: Step[] = [
-  { key: "neutral", title: "Stand upright", prompt: "Stand straight and relaxed, arms by your sides. Stay still." },
-  { key: "forward", title: "Bend forward", prompt: "Bend forward from the waist (about 45°) and hold it." },
-  { key: "backward", title: "Lean backward", prompt: "Stand up, then lean back gently (about 20°) and hold it." },
-  { key: "right", title: "Bend to your right", prompt: "Stand up, then bend sideways to your RIGHT (about 30°) and hold it." },
-  { key: "left", title: "Bend to your left", prompt: "Stand up, then bend sideways to your LEFT (about 30°) and hold it." },
+  { pose: "stand", title: "Stand upright", prompt: "Stand straight and relaxed, arms by your sides. Stay still.", optional: false },
+  { pose: "forward", title: "Bend forward", prompt: "Bend forward from the waist (about 45°) and hold it still.", optional: false },
+  { pose: "backward", title: "Lean backward", prompt: "Stand up, then lean back gently (about 20°) and hold it.", optional: true },
+  { pose: "right", title: "Bend to your right", prompt: "Stand up, then bend sideways to your RIGHT (about 30°) and hold it.", optional: true },
+  { pose: "left", title: "Bend to your left", prompt: "Stand up, then bend sideways to your LEFT (about 30°) and hold it.", optional: true },
 ];
 
-const GET_READY_S = 4; // time to get into position
-const HOLD_S = 2; // samples averaged while holding
-const SAMPLE_MS = 50;
+const GET_READY_S = 4;
+const HOLD_S = 2;
+const MIN_BEND_DEG = 8;
 
-type Phase = "intro" | "ready" | "hold" | "done";
+interface SensorCapture {
+  samples: number;
+  spread_deg: number;
+  still: boolean;
+  tilt_from_stand_deg?: number;
+}
 
-export function CalibrationWizard({ getRaw, current, onApply, onClose }: Props) {
+interface FitReport {
+  report: Record<string, { tilt_deg?: Record<string, number>; direction_error_deg?: number | null; error?: string }>;
+  regions: string[];
+  saved_path: string | null;
+}
+
+const REGION_NAMES: Record<string, string> = {
+  pelvis: "Pelvis",
+  lumbar: "Lumbar",
+  thoracic: "Thoracic",
+  upper_thoracic: "Upper thoracic",
+};
+
+async function post<T>(url: string): Promise<{ ok: boolean; data: T & { detail?: string } }> {
+  try {
+    const response = await fetch(url, { method: "POST" });
+    return { ok: response.ok, data: await response.json().catch(() => ({})) };
+  } catch {
+    return { ok: false, data: { detail: "Backend unreachable" } as T & { detail?: string } };
+  }
+}
+
+type Phase = "intro" | "ready" | "capturing" | "review" | "fitting" | "done";
+
+export function CalibrationWizard({ apiBase, onClose }: Props) {
   const [phase, setPhase] = useState<Phase>("intro");
-  const [stepIndex, setStepIndex] = useState(0);
+  const [index, setIndex] = useState(0);
   const [countdown, setCountdown] = useState(GET_READY_S);
-  const [liveBend, setLiveBend] = useState(0);
+  const [capture, setCapture] = useState<Record<string, SensorCapture> | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-  const captures = useRef<Partial<Record<Step["key"], Raw>>>({});
-  const samples = useRef<Record<Region, THREE.Quaternion[]>>(emptySamples());
-  const [fits, setFits] = useState<Record<Region, SensorFit> | null>(null);
+  const [fit, setFit] = useState<FitReport | null>(null);
+  const step = STEPS[index];
 
-  const step = STEPS[stepIndex];
-
-  // Countdown, then hold-and-sample, then the next step.
+  // Countdown, then the backend captures HOLD_S seconds of the held pose.
   useEffect(() => {
-    if (phase !== "ready" && phase !== "hold") {
+    if (phase !== "ready") {
       return;
     }
+    setCountdown(GET_READY_S);
     const started = performance.now();
-    const duration = (phase === "ready" ? GET_READY_S : HOLD_S) * 1000;
-    if (phase === "hold") {
-      samples.current = emptySamples();
-    }
     const timer = window.setInterval(() => {
-      const elapsed = performance.now() - started;
-      const raw = getRaw();
-      const neutral = captures.current.neutral;
-      if (neutral) {
-        // Live feedback: the largest rotation away from upright over all sensors.
-        let max = 0;
-        for (const region of REGIONS) {
-          const q = raw[region];
-          const q0 = neutral[region];
-          if (q && q0) {
-            max = Math.max(max, THREE.MathUtils.radToDeg(rotationVector(q.clone().multiply(q0.clone().invert())).length()));
-          }
-        }
-        setLiveBend(max);
-      }
-      if (phase === "hold") {
-        for (const region of REGIONS) {
-          const q = raw[region];
-          if (q) {
-            samples.current[region].push(q.clone());
-          }
-        }
-      }
-      setCountdown(Math.max(0, Math.ceil((duration - elapsed) / 1000)));
-      if (elapsed >= duration) {
+      const left = GET_READY_S - (performance.now() - started) / 1000;
+      setCountdown(Math.max(0, Math.ceil(left)));
+      if (left <= 0) {
         window.clearInterval(timer);
-        if (phase === "ready") {
-          setPhase("hold");
-          return;
-        }
-        finishStep();
+        void runCapture();
       }
-    }, SAMPLE_MS);
+    }, 100);
     return () => window.clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, stepIndex]);
+  }, [phase, index]);
 
-  const finishStep = () => {
-    const held: Raw = {};
-    for (const region of REGIONS) {
-      const mean = averageQuaternion(samples.current[region]);
-      if (mean) {
-        held[region] = mean;
+  const runCapture = async () => {
+    setPhase("capturing");
+    setProblem(null);
+    const response = await post<{ sensors: Record<string, SensorCapture> }>(
+      `${apiBase}/mounting/capture?pose=${step.pose}&seconds=${HOLD_S}`,
+    );
+    if (!response.ok) {
+      setProblem(response.data.detail ?? "Capture failed");
+      setCapture(null);
+    } else {
+      setCapture(response.data.sensors);
+    }
+    setPhase("review");
+  };
+
+  const issues = (): string[] => {
+    if (!capture) {
+      return [];
+    }
+    const out: string[] = [];
+    const moving = Object.entries(capture).filter(([, c]) => !c.still).map(([r]) => REGION_NAMES[r] ?? r);
+    if (moving.length) {
+      out.push(`Moved during the hold: ${moving.join(", ")}.`);
+    }
+    if (step.pose !== "stand") {
+      const tilts = Object.values(capture).map((c) => c.tilt_from_stand_deg ?? 0);
+      if (Math.max(...tilts) < MIN_BEND_DEG) {
+        out.push("Hardly any bend was measured: bend further.");
       }
     }
-    if (step.key === "neutral" && Object.keys(held).length === 0) {
-      setProblem("No sensor data while standing. Check that the strip is connected, then retry.");
-      setPhase("intro");
-      return;
+    if (Object.keys(capture).length < 4) {
+      out.push(`Only ${Object.keys(capture).length} of 4 sensors reported.`);
     }
-    captures.current[step.key] = held;
-    if (stepIndex + 1 < STEPS.length) {
-      setStepIndex(stepIndex + 1);
-      setCountdown(GET_READY_S);
+    return out;
+  };
+
+  const next = () => {
+    if (index + 1 < STEPS.length) {
+      setIndex(index + 1);
+      setCapture(null);
       setPhase("ready");
     } else {
-      solve();
+      void runFit();
     }
   };
 
-  const solve = () => {
-    const neutral = captures.current.neutral!;
-    const result = {} as Record<Region, SensorFit>;
-    for (const region of REGIONS) {
-      const q0 = neutral[region];
-      const deltas: Partial<Record<MovementName, THREE.Quaternion>> = {};
-      for (const key of ["forward", "backward", "right", "left"] as MovementName[]) {
-        const q = captures.current[key]?.[region];
-        if (q && q0) {
-          deltas[key] = q.clone().multiply(q0.clone().invert());
-        }
-      }
-      result[region] = solveMounting(deltas);
+  const runFit = async () => {
+    setPhase("fitting");
+    const response = await post<FitReport>(`${apiBase}/mounting/fit`);
+    if (!response.ok) {
+      setProblem(response.data.detail ?? "Fit failed");
+      setPhase("review");
+      return;
     }
-    setFits(result);
+    setFit(response.data);
     setPhase("done");
   };
 
   const start = () => {
-    captures.current = {};
+    setIndex(0);
+    setCapture(null);
+    setFit(null);
     setProblem(null);
-    setFits(null);
-    setStepIndex(0);
-    setCountdown(GET_READY_S);
     setPhase("ready");
   };
 
-  const apply = () => {
-    if (!fits) {
-      return;
-    }
-    const neutral = captures.current.neutral!;
-    const mountings = { ...current };
-    const neutralOut = {} as Record<Region, THREE.Quaternion>;
-    for (const region of REGIONS) {
-      const fit = fits[region];
-      if (fit.mounting) {
-        mountings[region] = fit.mounting;
-      }
-      if (neutral[region]) {
-        neutralOut[region] = neutral[region]!;
-      }
-    }
-    onApply(neutralOut, mountings);
-    onClose();
-  };
+  const busy = phase === "capturing" || phase === "fitting";
+  const stepIssues = issues();
 
   return (
     <div className="calib-backdrop">
       <div className="calib-dialog" role="dialog" aria-label="Sensor calibration">
         <div className="calib-head">
           <span className="calib-title">Sensor calibration</span>
-          <button className="calib-close" onClick={onClose} aria-label="Close">×</button>
+          {!busy && <button className="calib-close" onClick={onClose} aria-label="Close">×</button>}
         </div>
 
         {phase === "intro" && (
           <>
             <p>
-              Wear the strip and connect it. You will be asked to hold five poses: upright, forward, backward,
-              right and left. Each pose has a {GET_READY_S} s countdown to get into position, then {HOLD_S} s of holding still.
+              Finds how each sensor sits on the body, from a few held poses: standing, then bending forward (needed),
+              backward and to each side (recommended). Each pose has a {GET_READY_S} s countdown, then {HOLD_S} s of
+              holding still.
             </p>
             <p className="calib-muted">
-              This finds each sensor's heading (and a mirrored axis, if any) so bends show up the right way.
-              It also sets the neutral. Re-run it if the spine starts to drift.
+              The result is saved for this strip and survives restarts. Re-run it only if the sensors move on the vest;
+              for small shifts use Re-zero upright.
             </p>
-            {problem && <p className="calib-error">{problem}</p>}
             <div className="calib-actions">
               <button onClick={onClose}>Cancel</button>
               <button className="primary" onClick={start}>Start</button>
@@ -200,85 +185,90 @@ export function CalibrationWizard({ getRaw, current, onApply, onClose }: Props) 
           </>
         )}
 
-        {(phase === "ready" || phase === "hold") && (
+        {(phase === "ready" || phase === "capturing" || phase === "review") && (
           <>
             <div className="calib-progress">
-              Step {stepIndex + 1} of {STEPS.length}
+              Step {index + 1} of {STEPS.length}
+              {step.optional ? " · optional" : ""}
               <span className="calib-dots">
                 {STEPS.map((s, i) => (
-                  <span key={s.key} className={i < stepIndex ? "done" : i === stepIndex ? "now" : ""} />
+                  <span key={s.pose} className={i < index ? "done" : i === index ? "now" : ""} />
                 ))}
               </span>
             </div>
             <div className="calib-step">{step.title}</div>
             <p>{step.prompt}</p>
-            <div className={`calib-count ${phase}`}>
-              {phase === "ready" ? `Get into position… ${countdown}` : `Hold still… ${countdown}`}
-            </div>
-            {step.key !== "neutral" && (
-              <div className={`calib-bend ${liveBend >= MIN_BEND_DEG * 2 ? "ok" : ""}`}>
-                Current bend: {Math.round(liveBend)}°
-              </div>
+            {phase === "ready" && <div className="calib-count ready">Get into position… {countdown}</div>}
+            {phase === "capturing" && <div className="calib-count hold">Hold still… capturing</div>}
+            {phase === "review" && (
+              <>
+                {capture && (
+                  <table className="calib-table">
+                    <thead>
+                      <tr>
+                        <th>Sensor</th>
+                        <th>Still</th>
+                        {step.pose !== "stand" && <th>Bend measured</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(capture).map(([region, c]) => (
+                        <tr key={region}>
+                          <td>{REGION_NAMES[region] ?? region}</td>
+                          <td className={c.still ? "" : "calib-error"}>{c.still ? "yes" : `no (${c.spread_deg}°)`}</td>
+                          {step.pose !== "stand" && <td>{c.tilt_from_stand_deg?.toFixed(0) ?? "—"}°</td>}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+                {stepIssues.map((issue) => (
+                  <p key={issue} className="calib-error">{issue}</p>
+                ))}
+                {problem && <p className="calib-error">{problem}</p>}
+                <div className="calib-actions">
+                  <button onClick={() => setPhase("ready")}>Retry</button>
+                  {step.optional && <button onClick={next}>Skip</button>}
+                  <button className="primary" disabled={!capture} onClick={next}>
+                    {index + 1 < STEPS.length ? "Next" : "Finish"}
+                  </button>
+                </div>
+              </>
             )}
-            <div className="calib-actions">
-              <button onClick={() => setPhase("intro")}>Restart</button>
-            </div>
           </>
         )}
 
-        {phase === "done" && fits && (
+        {phase === "fitting" && <p>Fitting the sensor mountings…</p>}
+
+        {phase === "done" && fit && (
           <>
-            <p className="calib-muted">
-              Heading found per sensor. Fit error is the angle between the corrected bend axes and the expected
-              ones (lower is better; under ~15° is good).
-            </p>
+            <p>Calibrated {fit.regions.length} of 4 sensors{fit.saved_path ? " and saved it for this strip" : ""}.</p>
             <table className="calib-table">
               <thead>
                 <tr>
                   <th>Sensor</th>
-                  <th>Yaw</th>
-                  <th>Mirror</th>
-                  <th>Fit error</th>
+                  <th>Direction fit</th>
                 </tr>
               </thead>
               <tbody>
-                {REGIONS.map((region) => {
-                  const fit = fits[region];
-                  const bad = fit.meanErrorDeg !== null && fit.meanErrorDeg > 25;
-                  return (
-                    <tr key={region}>
-                      <td>{REGION_LABELS[region]}</td>
-                      <td>{fit.mounting ? `${fit.mounting.yaw.toFixed(0)}°` : "—"}</td>
-                      <td>{fit.mounting ? (fit.mirrored ? "yes" : "no") : "—"}</td>
-                      <td className={bad ? "calib-error" : ""}>
-                        {fit.mounting
-                          ? fit.meanErrorDeg !== null
-                            ? `${fit.meanErrorDeg.toFixed(0)}°`
-                            : "—"
-                          : "Too little movement: kept old setting"}
-                      </td>
-                    </tr>
-                  );
-                })}
+                {Object.entries(fit.report).map(([region, r]) => (
+                  <tr key={region}>
+                    <td>{REGION_NAMES[region] ?? region}</td>
+                    <td className={r.error || (r.direction_error_deg ?? 0) > 25 ? "calib-error" : ""}>
+                      {r.error ?? (r.direction_error_deg == null ? "—" : `${r.direction_error_deg.toFixed(0)}° off`)}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-            {REGIONS.some((r) => (fits[r].meanErrorDeg ?? 0) > 25) && (
-              <p className="calib-error">
-                A large fit error usually means the bends were mixed with twisting, or that sensor's axes are
-                unusual. Repeat, or set its axis remap by hand.
-              </p>
-            )}
+            <p className="calib-muted">Under about 15° is good. A large value means a bend was mixed with twisting: repeat it.</p>
             <div className="calib-actions">
               <button onClick={start}>Repeat</button>
-              <button className="primary" onClick={apply}>Apply</button>
+              <button className="primary" onClick={onClose}>Done</button>
             </div>
           </>
         )}
       </div>
     </div>
   );
-}
-
-function emptySamples(): Record<Region, THREE.Quaternion[]> {
-  return Object.fromEntries(REGIONS.map((r) => [r, []])) as unknown as Record<Region, THREE.Quaternion[]>;
 }

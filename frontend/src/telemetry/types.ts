@@ -79,12 +79,52 @@ export interface DemoBlock {
   truth: { t: number; name: string }[];
 }
 
+export interface SegmentPose {
+  rotation: Quaternion; // body frame, no twist: +X right, +Y up, +Z posterior
+  flexion_deg: number; // + forward
+  lateral_deg: number; // + right
+  inclination_deg: number; // from vertical
+}
+
+export interface TrunkPosture {
+  trunk: { flexion_deg: number; lateral_deg: number; inclination_deg: number };
+  pelvis_inclination_deg: number | null;
+  zone: "neutral" | "moderate" | "high" | "lying";
+  lying: boolean;
+  joints: Record<string, { flexion_deg: number; lateral_deg: number }>;
+}
+
 export interface WorkerTelemetry {
   schema_version: string;
   sequence: number;
   connection: { source: string; esp32: string };
   imus: ImuSlot[];
-  alerts?: { category: string; region: string; summary: string; sustained_seconds: number }[];
+  alerts?: { severity: string; category: string; region: string; summary: string; sustained_seconds: number }[];
+  mounting?: {
+    calibrated: boolean;
+    source: string | null;
+    regions: Region[];
+    auto_zero_pending: boolean;
+    capturing: boolean;
+    captured_poses: string[];
+  };
+  trunk_posture?: TrunkPosture | null;
+  posture_source?: "gravity";
+  // Heading-free segment poses from the backend (backend/app/segments.py), when a mounting is known.
+  segments?: Partial<Record<Region, SegmentPose>> | null;
+  segment_model?: { source: string; regions: Region[] };
+  replay?: {
+    file: string;
+    t: number;
+    duration_s: number;
+    label: string | null;
+    speed: number;
+    pass: number;
+    paused: boolean;
+    loop: boolean;
+    finished: boolean;
+    steps: [number, string][];
+  };
   fall_state?: FallState | null;
   detector?: DetectorStatus;
   demo?: DemoBlock;

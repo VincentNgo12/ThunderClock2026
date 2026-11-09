@@ -373,10 +373,19 @@ export function SpineView({ sensors, view, showAxes, interpolation, testAnimatio
         pods[k].dot.style.background = `#${color.toString(16).padStart(6, "0")}`;
       });
 
-      computeSpinePose(displayed, interpolationRef.current).forEach((pose, index) => {
+      const poses = computeSpinePose(displayed, interpolationRef.current);
+      poses.forEach((pose, index) => {
         vertebraGroups[index].position.copy(pose.position);
         vertebraGroups[index].quaternion.copy(pose.rotation);
       });
+      // Read-only snapshot of what is drawn, for the replay visual test (tools/replay_visual_check.py).
+      (window as unknown as { __spineDebug?: unknown }).__spineDebug = {
+        pivots: poses.map((pose) => pose.position.toArray()),
+        anchors: SENSOR_ANCHORS.map(({ region }, k) => ({
+          region,
+          up: new THREE.Vector3(0, 1, 0).applyQuaternion(displayed[k]).toArray(),
+        })),
+      };
       updateCurve();
 
       // Re-centre the posed column (spine-group space) and rest the shadow just under its lowest bone.

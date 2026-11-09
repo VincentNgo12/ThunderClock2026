@@ -33,7 +33,7 @@ export function DeviceConnect({ latest, apiBase }: Props) {
 
   // Follow the BLE state (connecting, subscribed, error) between telemetry snapshots.
   useEffect(() => {
-    if (!latest || source === "simulated") {
+    if (!latest || source === "simulated" || source === "replay") {
       return;
     }
     const poll = () =>
@@ -46,7 +46,7 @@ export function DeviceConnect({ latest, apiBase }: Props) {
     return () => window.clearInterval(timer);
   }, [apiBase, source, latest === null]);
 
-  if (!latest || source === "simulated") {
+  if (!latest || source === "simulated" || source === "replay") {
     return null;
   }
 

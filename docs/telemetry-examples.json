@@ -138,20 +138,12 @@
     },
     "alerts": [
       {
-        "severity": "warning",
+        "severity": "high",
         "category": "posture",
-        "region": "lumbar",
-        "summary": "Sustained lumbar bend",
+        "region": "trunk",
+        "summary": "Deep forward bend (> 60\u00b0)",
         "active": true,
-        "sustained_seconds": 3.25
-      },
-      {
-        "severity": "warning",
-        "category": "posture",
-        "region": "thoracic",
-        "summary": "Sustained thoracic bend",
-        "active": true,
-        "sustained_seconds": 3.25
+        "sustained_seconds": 2.95
       }
     ],
     "fall_state": null,
@@ -203,7 +195,107 @@
         "received_at": null,
         "age_ms": null
       }
-    }
+    },
+    "mounting": {
+      "calibrated": true,
+      "source": "simulated: body-aligned sensors",
+      "regions": [
+        "lumbar",
+        "pelvis",
+        "thoracic",
+        "upper_thoracic"
+      ],
+      "auto_zero_pending": false,
+      "capturing": false,
+      "captured_poses": []
+    },
+    "segments": {
+      "pelvis": {
+        "rotation": {
+          "w": 1.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "flexion_deg": -0.0,
+        "lateral_deg": 0.0,
+        "inclination_deg": 0.0
+      },
+      "lumbar": {
+        "rotation": {
+          "w": 0.961262,
+          "x": -0.275637,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "flexion_deg": 32.0,
+        "lateral_deg": 0.0,
+        "inclination_deg": 32.0
+      },
+      "thoracic": {
+        "rotation": {
+          "w": 0.891007,
+          "x": -0.45399,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "flexion_deg": 54.0,
+        "lateral_deg": 0.0,
+        "inclination_deg": 54.0
+      },
+      "upper_thoracic": {
+        "rotation": {
+          "w": 0.843391,
+          "x": -0.5373,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "flexion_deg": 65.0,
+        "lateral_deg": 0.0,
+        "inclination_deg": 65.0
+      }
+    },
+    "segment_model": {
+      "source": "simulated: body-aligned sensors",
+      "regions": [
+        "lumbar",
+        "pelvis",
+        "thoracic",
+        "upper_thoracic"
+      ]
+    },
+    "trunk_posture": {
+      "trunk": {
+        "flexion_deg": 65.0,
+        "lateral_deg": 0.0,
+        "inclination_deg": 65.0
+      },
+      "pelvis_inclination_deg": 0.0,
+      "zone": "high",
+      "lying": false,
+      "joints": {
+        "lumbar": {
+          "flexion_deg": 32.0,
+          "lateral_deg": 0.0
+        },
+        "thoracic": {
+          "flexion_deg": 22.0,
+          "lateral_deg": 0.0
+        },
+        "upper_thoracic": {
+          "flexion_deg": 11.0,
+          "lateral_deg": 0.0
+        }
+      },
+      "thresholds": {
+        "flexion_moderate_deg": 20.0,
+        "flexion_high_deg": 60.0,
+        "extension_deg": 10.0,
+        "lateral_deg": 15.0,
+        "warning_seconds": 2.0
+      }
+    },
+    "posture_source": "gravity"
   },
   "hardware_partial": {
     "schema_version": "2.0",

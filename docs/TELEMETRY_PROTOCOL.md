@@ -233,6 +233,38 @@ vector. The rig uses the quaternions directly, including twist. Six-axis
 orientation can drift in heading. Confirm physical mounting and axis alignment
 before relying on a live pose. [Device coordinate convention](../protocol/ORIENTATION.md#coordinate-convention)
 
+### Gravity model: segments, trunk posture, mounting
+
+When the backend knows each sensor's **mounting** (from **Calibrate…** / `POST /mounting/fit`, a saved
+`backend/mountings/<device>.json`, `MOUNTING_FILE`, or identity for simulated data), every message also has:
+
+```ts
+  mounting: { calibrated: boolean; source: string | null; regions: Region[]; auto_zero_pending: boolean;
+              capturing: boolean; captured_poses: string[] }
+  segments: Record<Region, { rotation: Quaternion;      // body frame, no twist: +X right, +Y up, +Z back
+                             flexion_deg: number;        // + forward
+                             lateral_deg: number;        // + right
+                             inclination_deg: number }> | null   // null when the data is stale
+  segment_model: { source: string; regions: Region[] }
+  trunk_posture: { trunk: { flexion_deg; lateral_deg; inclination_deg }; pelvis_inclination_deg;
+                   zone: "neutral" | "moderate" | "high" | "lying"; lying: boolean;
+                   joints: Record<"lumbar" | "thoracic" | "upper_thoracic", { flexion_deg; lateral_deg }>;
+                   thresholds: {...} } | null
+  posture_source: "gravity"            // alerts[] then come from trunk_posture, not joint quaternions
+  replay?: { file; t; duration_s; label; speed; pass }   // TELEMETRY_SOURCE=replay only
+```
+
+Segment poses use only the direction of gravity in each sensor's frame, so heading drift of the 6-axis
+sensors has no effect (backend/app/segments.py). Draw `segments[region].rotation` directly; do not apply a
+neutral. Calibration endpoints (query parameters only, no CORS preflight):
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /mounting` | Current mounting, saved path, captured poses |
+| `POST /mounting/capture?pose=stand\|forward\|backward\|left\|right&seconds=2` | Hold the pose; returns per-sensor stillness and tilt. `stand` starts a new calibration |
+| `POST /mounting/fit` | Fit, use and save (hardware) the mounting; needs `stand` + at least `forward` |
+| `POST /mounting/zero?seconds=2` | Stand still: new upright, same forward directions (also automatic after a connect) |
+
 ### Environment and feature coverage
 
 | Field | Meaning |

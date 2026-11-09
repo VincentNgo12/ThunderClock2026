@@ -91,6 +91,7 @@ class Demo:
         self.dismissed = set()
         self.building = None
         self.catalogue = []
+        self.app_state = None                 # the backend app's state (recorder), set by make_demo_app
 
     # ------------------------------------------------------------------ control
     async def start(self, scenario, seed):
@@ -238,10 +239,14 @@ class ReplayStream:
                 elapsed = now - demo.playback_started
                 if elapsed >= 0:
                     upto = int(np.searchsorted(replay.t, elapsed, side="right"))
+                    recorder = getattr(demo.app_state, "recorder", None)
                     for k in range(cursor, upto):
                         imus = tuple(Imu(i + 1, accel=tuple(replay.acc[k, i]), gyro=tuple(replay.gyro[k, i]))
                                      for i in range(4))
-                        service.on_raw_sample(Sample("raw", int(replay.time_ms[k]), imus), now)
+                        raw = Sample("raw", int(replay.time_ms[k]), imus)
+                        service.on_raw_sample(raw, now)
+                        if recorder is not None:      # "Collect data" also gets the replay's raw stream
+                            recorder.add(raw)
                     cursor = upto
                 if cursor >= len(replay.t):
                     ended = now if ended is None else ended
@@ -330,6 +335,7 @@ def make_demo_app(service=None, scenario=DEFAULT_SCENARIO, seed=DEFAULT_SEED):
 
     inner.router.lifespan_context = lifespan
     inner.state.demo = demo
+    demo.app_state = inner.state
     inner.state.detector = service
 
     @inner.get("/demo/scenarios")

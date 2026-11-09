@@ -28,13 +28,18 @@ export const VERTEBRAE: VertebraSpec[] = column.vertebrae.map((v) => ({
   pod: [v.pod[0], v.pod[1], v.pod[2]],
 }));
 
-// Index into VERTEBRAE where each sensor sits. Confirm against the physical mounting.
-export const SENSOR_ANCHORS: { region: Region; index: number }[] = [
+// index: vertebra where each sensor's pod is drawn. bendIndex (rendering only, defaults to index): vertebra
+// where that sensor's rotation takes full effect in the drawn curve; vertebrae above the top one copy it.
+// The upper thoracic sensor sits lower on the vest than T2, so its bend is applied from T4 up: the upper back
+// shows the measured bend instead of spreading it thinly over T4-T2. Its pod is still drawn on T2.
+export const SENSOR_ANCHORS: { region: Region; index: number; bendIndex?: number }[] = [
   { region: "pelvis", index: 0 }, // sacrum
   { region: "lumbar", index: 3 }, // L3
   { region: "thoracic", index: 10 }, // T8
-  { region: "upper_thoracic", index: 16 }, // T2
+  { region: "upper_thoracic", index: 16, bendIndex: 14 }, // pod on T2, bend from T4
 ];
+
+const bendIndexOf = (anchor: { index: number; bendIndex?: number }) => anchor.bendIndex ?? anchor.index;
 
 const UP = new THREE.Vector3(0, 1, 0);
 const X_AXIS = new THREE.Vector3(1, 0, 0);
@@ -82,7 +87,7 @@ function quatExp(v: THREE.Vector3): THREE.Quaternion {
  * the end sensors copy the nearest sensor.
  */
 function segmentRotations(anchors: THREE.Quaternion[], mode: InterpolationMode): THREE.Quaternion[] {
-  const knots = SENSOR_ANCHORS.map((anchor) => anchor.index);
+  const knots = SENSOR_ANCHORS.map(bendIndexOf);
   const spans = knots.length - 1;
   const deltas: THREE.Vector3[] = [];
   const widths: number[] = [];
@@ -166,7 +171,7 @@ export function fillMissingAnchors(anchors: (THREE.Quaternion | null)[]): { rota
   if (known.length === 0) {
     return null;
   }
-  const at = (k: number) => SENSOR_ANCHORS[k].index;
+  const at = (k: number) => bendIndexOf(SENSOR_ANCHORS[k]);
   const rotations = anchors.map((q, k) => {
     if (q) {
       return q.clone();
@@ -183,43 +188,4 @@ export function fillMissingAnchors(anchors: (THREE.Quaternion | null)[]): { rota
     return anchors[below]!.clone().slerp(anchors[above]!, t);
   });
   return { rotations, inferred: anchors.map((q) => !q) };
-}
-
-/**
- * Swing part of a rotation: the shortest rotation that tilts +Y (the segment's long axis) to where q
- * sends it. Drops the twist about the long axis, which a 6-axis sensor cannot hold (its heading drifts).
- */
-export function swingOnly(q: THREE.Quaternion): THREE.Quaternion {
-  const up = UP.clone().applyQuaternion(q);
-  return new THREE.Quaternion().setFromUnitVectors(UP, up);
-}
-
-/**
- * Twist angle (radians) of q about its own long axis +Y, from the swing–twist split q = swing · twist,
- * twist = normalise(w, 0, y, 0). A turn of the whole body shows up here, as does heading drift.
- */
-export function twistAngle(q: THREE.Quaternion): number {
-  return 2 * Math.atan2(q.y, q.w);
-}
-
-/**
- * Replace each segment's twist with one shared twist: the circular mean over the segments that have
- * data. The body's turn (which all sensors agree on) is kept, so lying face down after turning still
- * looks face down; only each sensor's own disagreement, i.e. its heading drift, is removed.
- */
-export function shareTwist(rotations: (THREE.Quaternion | null)[]): (THREE.Quaternion | null)[] {
-  let sin = 0;
-  let cos = 0;
-  for (const q of rotations) {
-    if (q) {
-      const angle = twistAngle(q);
-      sin += Math.sin(angle);
-      cos += Math.cos(angle);
-    }
-  }
-  if (sin === 0 && cos === 0) {
-    return rotations;
-  }
-  const common = new THREE.Quaternion().setFromAxisAngle(UP, Math.atan2(sin, cos));
-  return rotations.map((q) => (q ? swingOnly(q).multiply(common) : null));
 }
