@@ -9,22 +9,19 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-#include "BLEManager.h"
-#include "Debug.h"
-#include "EnvironmentManager.h"
 #include "FirmwareTasks.h"
-#include "HeartRateMonitor.h"
-#include "ImuManager.h"
 #include "SharedData.h"
-#include "SlowSensors.h"
 #include "SystemConfig.h"
+#include "Debug.h"
 
+#include "ImuManager.h"
 #include "AudioMonitor.h"
+#include "EnvironmentManager.h"
+#include "HeartRateMonitor.h"
+#include "BLEManager.h"
 
 // queues & mutexes
-QueueHandle_t imuToTelemetryQueue = nullptr;
 QueueHandle_t imuToSnapshotQueue = nullptr;
-QueueHandle_t snapshotToTelemetryQueue = nullptr;
 SemaphoreHandle_t i2cMutex = nullptr;
 
 // sensor objects
@@ -37,74 +34,87 @@ ImuManager imuManager(Wire);
 EnvironmentManager environmentManager(Wire);
 HeartRateMonitor heartRateMonitor(Wire);
 
+// Show fatal startup errors even before loop() starts running.
+void stopOnError() {
+  bleReportError();
+  bleUpdateStatus();
+  while (true) {
+    delay(1000);
+  }
+}
+
 void setup() {
+  delay(1000);
+  bleStatusBegin();
   Serial.begin(SystemConfig::kSerialBaud);
-  while (!Serial) delay(500);
-  debugPrintln("ThunderClock firmware scaffold. Hardware modules are unimplemented.");
+  // while (!Serial) delay(500);
 
   // -----------------------------------
   // INITIALIZE MUTEX & QUEUE 
   // -----------------------------------
 
   i2cMutex = xSemaphoreCreateMutex();
-  if (i2cMutex == nullptr) Serial.println("i2c mutex failed");
+  if (i2cMutex == nullptr) {
+    Serial.println("i2c mutex FAILED");
+    stopOnError();
+  }
 
-  imuToTelemetryQueue = xQueueCreate(1, sizeof(fw::StripData));
-  if (imuToTelemetryQueue == nullptr) Serial.println("imu to telemetry queue failed");
   imuToSnapshotQueue = xQueueCreate(1, sizeof(fw::StripData));
-  if (imuToSnapshotQueue == nullptr) Serial.println("imu to snapshot queue failed");
-  snapshotToTelemetryQueue = xQueueCreate(1, sizeof(fw::Snapshot));
-  if (snapshotToTelemetryQueue == nullptr) Serial.println("snapshot to telemetry queue failed");
+  if (imuToSnapshotQueue == nullptr) {
+    Serial.println("imu2snapshot queue FAILED");
+    stopOnError();
+  }
 
-  // ?? \/ ??
-  const bool needsI2c = SystemConfig::kInitImuStrip || SystemConfig::kInitEnvironment ||
-                        SystemConfig::kInitHeartRate || SystemConfig::kRunI2cScanAtBoot;
-  if (needsI2c) {
-    Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin, SystemConfig::kI2cClockHz);
-    Wire.setTimeOut(SystemConfig::kI2cTimeoutMs);
-  }
-  if (SystemConfig::kRunI2cScanAtBoot) {
-    slowSensorsScanBus(Wire, imuManager);
-  }
 
   // -----------------------------------
   // INITIALIZE SENSORS & PERIPHERALS
   // -----------------------------------
+
+  // setup I2C peripheral
+  if (!Wire.begin(SystemConfig::kSdaPin, SystemConfig::kSclPin, SystemConfig::kI2cClockHz)) {
+    Serial.println("I2C Init: FAILED");
+    stopOnError();
+  }
+  Wire.setTimeOut(SystemConfig::kI2cTimeoutMs);
+
   if (SystemConfig::kInitImuStrip) {
     if (imuManager.begin() != fw::Result::Ok) {
-      Serial.println("failed to ini imu strip");
-      while (true) delay(1000);
+      Serial.println("IMU Strip Init: FAILED");
+      stopOnError();
     }
-    Serial.println("imu strip ini succesful");
+    Serial.println("IMU Strip Init: SUCCESFUL");
   }
 
   if (SystemConfig::kInitAudio) {
     if (audioMonitor.begin() != fw::Result::Ok) {
-      Serial.println("failed to ini audio audio sensor");
-      while (true) delay(1000);
+      Serial.println("AUDIO Sensor Init: FAILED");
+      stopOnError();
     };
-    Serial.println("audio sensor ini succesful");
+    Serial.println("AUDIO Sensor Init: SUCCESFUL");
   }
 
   if (SystemConfig::kInitEnvironment) {
     if (environmentManager.begin() != fw::Result::Ok) {
-      Serial.println("env sensor failed to ini");
-      while (true) delay(1000);
+      Serial.println("ENV Sensor Init: FAILED");
+      stopOnError();
     }
-    Serial.println("env sensor ini succesful");
+    Serial.println("ENV Sensor Init: SUCCESFUL");
   }
 
   if (SystemConfig::kInitHeartRate) {
     if (heartRateMonitor.begin() != fw::Result::Ok) {
-      debugPrintln("heart-rate sensor failed to initialize.");
+      Serial.println("HEART Sensor Init: FAILED");
+      stopOnError();
     }
+    Serial.println("HEART Sensor Init: SUCCESFUL");
   }
 
   if (SystemConfig::kInitBLE) {
     if (bleBegin() != fw::Result::Ok) {
-      Serial.println("ble stack failed to ini");
+      Serial.println("BLE Stack Init: FAILED");
+      stopOnError();
     }
-    Serial.println("ble stack ini succesful");
+    Serial.println("BLE Stack Init: SUCCESFUL");
   }
 
   // -----------------------------------
@@ -113,26 +123,23 @@ void setup() {
 
   if (SystemConfig::kStartAcquisitionTask) {
     if (xTaskCreate(acquisitionTask, "acquisition", SystemConfig::kTaskStackBytes,
-                    &imuManager, 1, nullptr) != pdPASS) {
+      &imuManager, 1, nullptr) != pdPASS) {
       debugPrintln("Acquisition task creation failed.");
-    }
-  }
-  if (SystemConfig::kStartTelemetryTask) {
-    if (xTaskCreate(telemetryTask, "telemetry", SystemConfig::kTaskStackBytes,
-                    nullptr, 1, nullptr) != pdPASS) {
-      debugPrintln("Telemetry task creation failed.");
+      stopOnError();
     }
   }
   if (SystemConfig::kStartIMUTask) {
     if (xTaskCreate(IMUTask, "IMUTask", SystemConfig::kTaskStackBytes,
-                    nullptr, 1, nullptr) != pdPASS) {
+      nullptr, 1, nullptr) != pdPASS) {
       debugPrintln("IMU task creation failed.");
+      stopOnError();
     }
   }
 }
 
 void loop() {
-  // Support sensor bring-up without the acquisition task. The IMU task may
+  bleUpdateStatus();
+  // support sensor bring-up without the acquisition task. The IMU task may
   // still be running, so mux selection and reads share its I2C mutex.
   if (!SystemConfig::kStartAcquisitionTask) {
     if (xSemaphoreTake(i2cMutex, pdMS_TO_TICKS(10)) == pdTRUE) {

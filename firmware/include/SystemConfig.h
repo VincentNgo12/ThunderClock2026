@@ -11,54 +11,57 @@ namespace SystemConfig {
 constexpr unsigned long kSerialBaud = 115200;
 constexpr bool kDebugEnabled = true;
 
+// Adafruit Feather ESP32-S3 onboard NeoPixel (separate from the red GPIO 13 LED).
+constexpr int kStatusLedPin = 33;
+constexpr int kStatusLedPowerPin = 21;
+constexpr uint8_t kStatusLedBrightness = 16;
+constexpr uint32_t kBleBlinkPeriodMs = 500;
+
 // sensor and telemetry ini 
 constexpr bool kInitImuStrip = true;
+constexpr bool kInitEnvironment = false;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
+constexpr bool kInitAudio = false;
+constexpr bool kInitHeartRate = false;  // MAX30102 on kHeartRateMuxChannel.
 constexpr bool kInitBLE = true;
-constexpr bool kInitEnvironment = true;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
-constexpr bool kInitAudio = true;
 
 // task ini
 constexpr bool kStartAcquisitionTask = true;
-constexpr bool kStartTelemetryTask = false;
 constexpr bool kStartIMUTask = true;
-constexpr bool kInitHeartRate = true;  // MAX30102 on kHeartRateMuxChannel.
 
-constexpr bool kRunI2cScanAtBoot = false;  // Bring-up aid: lists devices on every mux channel.
 constexpr bool kPrintHeartRateRaw = false;  // Prints "IR red" samples for the Serial Plotter.
 
-constexpr uint32_t kAcquisitionPeriodMs = 10;  // Target 100 Hz.
-constexpr uint32_t kTelemetryPeriodMs = 50;  // Target 20 Hz.
-constexpr uint32_t kAudioIdlePeriodMs = 50;  // Shell wait, independent of I2S sample rate.
-constexpr uint32_t kSlowSensorPollMs = 50;  // MAX30102 FIFO holds 320 ms at 100 Hz.
-constexpr uint32_t kEnvironmentPeriodMs = 1000;  // One AHT21/ENS160 cycle per second.
-constexpr uint32_t kAht21ConversionMs = 80;  // Datasheet measurement time.
+constexpr uint32_t kAcquisitionPeriodMs = 10;       // Target 100 Hz.
+constexpr uint32_t kAudioIdlePeriodMs = 50;         // Shell wait, independent of I2S sample rate.
+constexpr uint32_t kSlowSensorPollMs = 50;          // MAX30102 FIFO holds 320 ms at 100 Hz.
+constexpr uint32_t kEnvironmentPeriodMs = 1000;     // One AHT21/ENS160 cycle per second.
+constexpr uint32_t kAht21ConversionMs = 80;         // Datasheet measurement time.
 constexpr uint32_t kHeartRateBeatTimeoutMs = 3000;  // No beat for this long -> unavailable.
-constexpr uint32_t kTaskStackBytes = 4096;  // ESP32 FreeRTOS uses bytes.
+constexpr uint32_t kTaskStackBytes = 4096;          // ESP32 FreeRTOS uses bytes.
 
 constexpr float kImuRateHz = 100.0f;
 constexpr uint32_t kImuSamplePeriodUs = 10000;
 constexpr uint32_t kMaxSampleGapUs = 100000;  // Longer gap restarts that sensor's filter.
-// IMU ranges used for scaling and fusion. ImuManager's register settings must match.
+
+// IMU ranges used for scaling and fusion, ImuManager's register settings must match.
 constexpr float kImuAccelRangeG = 8.0f;
 constexpr float kImuGyroRangeDps = 1000.0f;
 constexpr uint32_t kSampleFreshUs = 50000;
 constexpr unsigned kGyroCalibrationSamples = 200;
 constexpr size_t kFifoBatchSize = 8;
 
-// -1 uses board defaults for Wire pins and leaves microphone pins unconfigured.
-constexpr int kSdaPin = -1;
-constexpr int kSclPin = -1;
+// i2c pin config
+constexpr int kSdaPin = -1; // -1 for default
+constexpr int kSclPin = -1; // -1 for default
 constexpr int kI2sBclkPin = 9;
+// i2s pin config
 constexpr int kI2sWsPin = 10;
 constexpr int kI2sDataPin = 11;
 
-// Prototype mux defaults. Confirm wiring, placement and mounting before use.
+// i2c peripherals adresses
 constexpr uint8_t kMuxAddress = 0x70;
 constexpr uint8_t kImuAddress = 0x68;
-// constexpr int kImuMuxChannels[fw::kImuCount] = {0, 1, 2, 3};
-// TODO(FW-IMU): confirm each board's sensor-to-segment mounting transform.
 
-// Datasheet default addresses. Confirm with kRunI2cScanAtBoot during bring-up.
+// i2c timing, sensor addresses and mux channels
 constexpr uint32_t kI2cClockHz = 100000;  // Long harness wires: stay at 100 kHz.
 constexpr uint16_t kI2cTimeoutMs = 10;
 constexpr int kHeartRateMuxChannel = 4;  // TODO(FW-HR): confirm wiring.
@@ -70,4 +73,5 @@ constexpr uint8_t kMax30102Address = 0x57;
 constexpr uint8_t kMax30102LedCurrent = 0x24;
 // Raw IR (18-bit) below this means the sensor is not touching skin. Tune on the body.
 constexpr uint32_t kHeartRateContactThreshold = 50000;
+
 }  // namespace SystemConfig
