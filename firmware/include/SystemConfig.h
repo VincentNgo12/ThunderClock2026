@@ -11,11 +11,17 @@ namespace SystemConfig {
 constexpr unsigned long kSerialBaud = 115200;
 constexpr bool kDebugEnabled = true;
 
+// Adafruit Feather ESP32-S3 onboard NeoPixel (separate from the red GPIO 13 LED).
+constexpr int kStatusLedPin = 33;
+constexpr int kStatusLedPowerPin = 21;
+constexpr uint8_t kStatusLedBrightness = 16;
+constexpr uint32_t kBleBlinkPeriodMs = 500;
+
 // sensor and telemetry ini 
 constexpr bool kInitImuStrip = true;
-constexpr bool kInitEnvironment = true;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
-constexpr bool kInitAudio = true;
-constexpr bool kInitHeartRate = true;  // MAX30102 on kHeartRateMuxChannel.
+constexpr bool kInitEnvironment = false;  // AHT21 + ENS160 on kEnvironmentMuxChannel.
+constexpr bool kInitAudio = false;
+constexpr bool kInitHeartRate = false;  // MAX30102 on kHeartRateMuxChannel.
 constexpr bool kInitBLE = true;
 
 // task ini

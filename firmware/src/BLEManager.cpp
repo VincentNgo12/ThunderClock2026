@@ -1,9 +1,31 @@
-/** * File: BLEManager.cpp
- * Purpose: Unimplemented BLE setup and packet publication.
+/**
+ * File: BLEManager.cpp
+ * Purpose: BLE setup, connection state and onboard status LED.
  * Contributors:
  * - Unassigned
  */
 #include "BLEManager.h"
+
+#include <atomic>
+#include "SystemConfig.h"
+
+namespace {
+enum class BleState { Starting, Advertising, Connected, Error };
+std::atomic<BleState> state{BleState::Starting};
+
+void setState(BleState next) {
+    BleState current = state.load();
+    // A callback must not clear a system error reported by setup().
+    if (current != BleState::Error) {
+        state.compare_exchange_strong(current, next);
+    }
+}
+
+fw::Result bleFailure() {
+    bleReportError();
+    return fw::Result::IoFailure;
+}
+}  // namespace
 
 const char* const DEVICE_NAME = "THUNDER CLOCK";
 const char* const SERVICE_UUID = "AAAA";
@@ -12,7 +34,36 @@ const char* const CHARACTERISTIC_UUID_Snapshot = "00008889-0000-1000-8000-00805f
 
 NimBLECharacteristic *pCharIMU = nullptr;
 NimBLECharacteristic *pCharSnapshot = nullptr;
-bool deviceConnected = false;
+
+void bleStatusBegin() {
+    pinMode(SystemConfig::kStatusLedPowerPin, OUTPUT);
+    digitalWrite(SystemConfig::kStatusLedPowerPin, HIGH);
+    rgbLedWrite(SystemConfig::kStatusLedPin, 0, 0, 0);
+}
+
+void bleUpdateStatus() {
+    const uint8_t brightness = SystemConfig::kStatusLedBrightness;
+    switch (state.load()) {
+        case BleState::Starting:
+            rgbLedWrite(SystemConfig::kStatusLedPin, 0, 0, 0);
+            break;
+        case BleState::Advertising: {
+            const bool blueOn = (millis() / SystemConfig::kBleBlinkPeriodMs) % 2 == 0;
+            rgbLedWrite(SystemConfig::kStatusLedPin, 0, 0, blueOn ? brightness : 0);
+            break;
+        }
+        case BleState::Connected:
+            rgbLedWrite(SystemConfig::kStatusLedPin, 0, brightness, 0);
+            break;
+        case BleState::Error:
+            rgbLedWrite(SystemConfig::kStatusLedPin, brightness, 0, 0);
+            break;
+    }
+}
+
+void bleReportError() {
+    state.store(BleState::Error);
+}
 
 
 // object storing callbacks
@@ -24,13 +75,20 @@ class ServerCallbacks : public NimBLEServerCallbacks {
 
 fw::Result bleBegin() {
 
-    NimBLEDevice::init(DEVICE_NAME); // initialize stack and set device name
-    NimBLEDevice::setMTU(517);       // set MTU
+    if (!NimBLEDevice::init(DEVICE_NAME) || !NimBLEDevice::setMTU(517)) {
+        return bleFailure();
+    }
     NimBLEServer *pServer = NimBLEDevice::createServer(); // create GATT server
+    if (pServer == nullptr) {
+        return bleFailure();
+    }
     pServer->setCallbacks(new ServerCallbacks());         // set callbacks
 
     // describe gatt structure
     NimBLEService *pService = pServer->createService(SERVICE_UUID);
+    if (pService == nullptr) {
+        return bleFailure();
+    }
     pCharIMU = pService->createCharacteristic(CHARACTERISTIC_UUID_IMU,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY
     ); // bit mask for characteristic permissions
@@ -38,11 +96,19 @@ fw::Result bleBegin() {
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY
     ); // bit mask for characteristic permissions
 
+    if (pCharIMU == nullptr || pCharSnapshot == nullptr) {
+        return bleFailure();
+    }
+
     // advertising as GAP peripheral and GATT server
     NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-    pAdvertising->addServiceUUID(SERVICE_UUID); 
-    pAdvertising->setName(DEVICE_NAME);
-    pAdvertising->start();  // start advertisement
+    if (!pAdvertising->addServiceUUID(SERVICE_UUID) || !pAdvertising->setName(DEVICE_NAME)) {
+        return bleFailure();
+    }
+    setState(BleState::Advertising);
+    if (!pAdvertising->start()) {
+        return bleFailure();
+    }
 
     return fw::Result::Ok;
 }
@@ -52,14 +118,16 @@ fw::Result bleBegin() {
 // ----------------------
 
 void ServerCallbacks::onConnect(NimBLEServer *pServer, NimBLEConnInfo &connInfo) { 
-    deviceConnected = true;
+    setState(BleState::Connected);
     Serial.println("Connected");
 }
 
 void ServerCallbacks::onDisconnect(NimBLEServer *pServer, NimBLEConnInfo &connInfo, int reason) {
-    deviceConnected = false;
+    setState(BleState::Advertising);
     Serial.println("Disconnected");
-    NimBLEDevice::getAdvertising()->start(); // on disconnect advertise for connection again
+    if (!NimBLEDevice::getAdvertising()->start()) {
+        bleReportError();
+    }
 }
 
 void ServerCallbacks::onMTUChange(uint16_t MTU, NimBLEConnInfo& connInfo) {
