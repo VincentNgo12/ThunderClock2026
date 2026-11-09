@@ -1,7 +1,3 @@
-// File: test_beat_detector.cpp
-// Purpose: Host check of BeatDetector on synthetic PPG. Run from firmware/:
-//   g++ -std=c++17 -Iinclude src/BeatDetector.cpp test/native_beat/test_beat_detector.cpp -o /tmp/beat && /tmp/beat
-// Contributors: Suvir Duggal
 #include <cmath>
 #include <cstdio>
 #include <random>

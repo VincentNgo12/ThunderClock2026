@@ -1,9 +1,3 @@
-/**
- * File: Debug.h
- * Purpose: Small Arduino debug helper controlled by SystemConfig.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include <Arduino.h>
 

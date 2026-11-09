@@ -1,9 +1,3 @@
-/**
- * File: ImuManager.h
- * Purpose: Accel and gyro reads from the four mux-connected IMUs, called by acquisition.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include <Adafruit_ICM20948.h>
 #include <Adafruit_MPU6050.h>

@@ -1,9 +1,3 @@
-/**
- * File: HeartRateMonitor.h
- * Purpose: Acquisition-owned MAX30102 driver producing bpm and an SpO2 estimate.
- * Contributors:
- * - Suvir Duggal
- */
 #pragma once
 #include <Wire.h>
 

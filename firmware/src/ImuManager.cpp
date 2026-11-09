@@ -1,8 +1,3 @@
-/**
- * File: ImuManager.cpp
- * Purpose: Starts and reads two ICM-20948 and two MPU-6050 sensors through the mux.
- * Contributors: Pedro
- */
 #include "ImuManager.h"
 
 #include "SystemConfig.h"

@@ -1,9 +1,3 @@
-/**
- * File: Spo2Estimator.h
- * Purpose: Hardware-free SpO2 estimate from red/IR PPG, using the ratio of ratios.
- * Contributors:
- * - Suvir Duggal
- */
 #pragma once
 #include <cstddef>
 

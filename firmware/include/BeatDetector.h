@@ -1,9 +1,3 @@
-/**
- * File: BeatDetector.h
- * Purpose: Hardware-free PPG beat detection, so it can be tested on a laptop.
- * Contributors:
- * - Suvir Duggal
- */
 #pragma once
 #include <cstddef>
 #include <cstdint>

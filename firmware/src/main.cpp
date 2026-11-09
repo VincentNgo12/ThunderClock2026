@@ -1,9 +1,3 @@
-/**
- * File: main.cpp
- * Purpose: Arduino startup for the shared snapshot and optional empty tasks.
- * Contributors:
- * - Unassigned
- */
 #include <Arduino.h>
 #include <Wire.h>
 #include <freertos/FreeRTOS.h>

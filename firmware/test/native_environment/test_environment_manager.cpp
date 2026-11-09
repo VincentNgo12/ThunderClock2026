@@ -1,8 +1,3 @@
-/**
- * File: test_environment_manager.cpp
- * Purpose: Host checks of conversion timing, partial availability and stale data.
- * Contributors: Unassigned
- */
 #include <Arduino.h>
 #include <cassert>
 #include <cmath>

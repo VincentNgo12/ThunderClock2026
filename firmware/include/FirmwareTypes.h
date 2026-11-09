@@ -1,9 +1,3 @@
-/**
- * File: FirmwareTypes.h
- * Purpose: Shared measurements for drivers, processing and telemetry.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include <cstddef>
 #include <cstdint>

@@ -1,9 +1,3 @@
-/**
- * File: BeatDetector.cpp
- * Purpose: Baseline removal, smoothing and adaptive-threshold peak detection for PPG.
- * Contributors:
- * - Suvir Duggal
- */
 #include "BeatDetector.h"
 
 #include <cmath>

@@ -1,8 +1,3 @@
-/**
- * File: Arduino.h
- * Purpose: Controllable clock and silent serial output for environment host tests.
- * Contributors: Unassigned
- */
 #pragma once
 #include <cstdint>
 

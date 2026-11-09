@@ -1,9 +1,3 @@
-/**
- * File: SharedData.h
- * Purpose: One shared snapshot and its FreeRTOS mutex.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>

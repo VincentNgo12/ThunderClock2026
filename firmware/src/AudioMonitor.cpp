@@ -1,9 +1,3 @@
-/**
- * File: AudioMonitor.cpp
- * Purpose: Unimplemented microphone acquisition and relative-noise processing.
- * Contributors:
- * - Unassigned
- */
 
 #include "AudioMonitor.h"
 

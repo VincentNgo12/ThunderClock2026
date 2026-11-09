@@ -1,10 +1,3 @@
-/**
- * File: OrientationProcessor.h
- * Purpose: Sensor fusion for the IMU strip. Turns each StripData (raw accel/gyro)
- * into a StripDataProcessed (one quaternion per sensor) with x-io Fusion, 6-axis.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include <Fusion.h>
 

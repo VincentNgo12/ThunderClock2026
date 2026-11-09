@@ -1,7 +1,3 @@
-// File: test_spo2_estimator.cpp
-// Purpose: Host check of BeatDetector + Spo2Estimator on synthetic red/IR PPG. Run from firmware/:
-//   g++ -std=c++17 -Iinclude src/BeatDetector.cpp src/Spo2Estimator.cpp test/native_beat/test_spo2_estimator.cpp -o spo2 && ./spo2
-// Contributors: Suvir Duggal
 #include <cmath>
 #include <cstdio>
 #include <random>

@@ -1,9 +1,3 @@
-/**
- * File: HeartRateMonitor.cpp
- * Purpose: MAX30102 configuration, FIFO draining, skin contact, bpm and SpO2 validity.
- * Contributors:
- * - Suvir Duggal
- */
 #include "HeartRateMonitor.h"
 
 #include <Arduino.h>

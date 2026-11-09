@@ -1,8 +1,3 @@
-/**
- * File: Arduino.h
- * Purpose: Clock, GPIO and RGB LED observations for BLE state host checks.
- * Contributors: Unassigned
- */
 #pragma once
 #include <cstdint>
 

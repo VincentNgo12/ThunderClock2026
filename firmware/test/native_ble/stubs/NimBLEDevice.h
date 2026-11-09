@@ -1,8 +1,3 @@
-/**
- * File: NimBLEDevice.h
- * Purpose: Minimal BLE callbacks and controllable startup results for host checks.
- * Contributors: Unassigned
- */
 #pragma once
 #include <cstdint>
 

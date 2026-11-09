@@ -1,9 +1,3 @@
-/**
- * File: EnvironmentManager.h
- * Purpose: One temperature, humidity and air-quality reader for AHT21 + ENS160.
- * Contributors:
- * - Suvir Duggal
- */
 #pragma once
 #include <cmath>
 #include <Wire.h>

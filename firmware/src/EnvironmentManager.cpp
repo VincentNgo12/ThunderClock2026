@@ -1,9 +1,3 @@
-/**
- * File: EnvironmentManager.cpp
- * Purpose: AHT21 temperature/humidity and ENS160 air-quality acquisition.
- * Contributors:
- * - Suvir Duggal
- */
 #include "EnvironmentManager.h"
 
 #include <Arduino.h>

@@ -1,9 +1,3 @@
-/**
- * File: OrientationProcessor.cpp
- * Purpose: Four x-io Fusion AHRS filters (6-axis, no magnetometer), one per strip slot.
- * Contributors:
- * - Unassigned
- */
 #include "OrientationProcessor.h"
 
 #include <cmath>

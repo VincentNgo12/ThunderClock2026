@@ -1,9 +1,3 @@
-/**
- * File: TelemetryManager.cpp
- * Purpose: Unimplemented device packet encoding with explicit failure status.
- * Contributors:
- * - Unassigned
- */
 #include "TelemetryManager.h"
 
 // namespace telemetry {

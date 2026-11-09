@@ -1,9 +1,3 @@
-/**
- * File: FirmwareTasks.h
- * Purpose: Optional acquisition, telemetry and audio task entry points.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 
 #include <Arduino.h>

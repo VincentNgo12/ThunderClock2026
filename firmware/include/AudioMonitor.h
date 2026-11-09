@@ -1,9 +1,3 @@
-/**
- * File: AudioMonitor.h
- * Purpose: Separate INMP441 I2S boundary for the future audio task.
- * Contributors:
- * - Unassigned
- */
 
 #pragma once
 

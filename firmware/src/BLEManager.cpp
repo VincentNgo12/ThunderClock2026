@@ -1,9 +1,3 @@
-/**
- * File: BLEManager.cpp
- * Purpose: BLE setup, connection state and onboard status LED.
- * Contributors:
- * - Unassigned
- */
 #include "BLEManager.h"
 
 #include <atomic>

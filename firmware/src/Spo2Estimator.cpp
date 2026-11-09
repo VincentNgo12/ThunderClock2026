@@ -1,9 +1,3 @@
-/**
- * File: Spo2Estimator.cpp
- * Purpose: Per-beat ratio of ratios with plausibility checks and averaging.
- * Contributors:
- * - Suvir Duggal
- */
 #include "Spo2Estimator.h"
 
 namespace {

@@ -1,9 +1,3 @@
-/**
- * File: SystemConfig.h
- * Purpose: One place for pinouts, debug output and optional task startup.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include "FirmwareTypes.h"
 

@@ -1,8 +1,3 @@
-/**
- * File: Wire.h
- * Purpose: Minimal mux/AHT21/ENS160 bus double for testing the real environment driver.
- * Contributors: Unassigned
- */
 #pragma once
 #include <cstddef>
 #include <cstdint>

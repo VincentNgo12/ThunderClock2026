@@ -1,9 +1,3 @@
-/**
- * File: TelemetryManager.h
- * Purpose: Bounded raw and quaternion encoder interfaces for the telemetry task.
- * Contributors:
- * - Unassigned
- */
 #pragma once
 #include "FirmwareTypes.h"
 

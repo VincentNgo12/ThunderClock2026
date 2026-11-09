@@ -1,9 +1,3 @@
-/**
- * File: FirmwareTasks.cpp
- * Purpose: FreeRTOS task bodies. Acquisition reads the IMU strip every 10 ms.
- * Contributors:
- * - Unassigned
- */
 #include "FirmwareTasks.h"
 #include "ImuManager.h"
 #include "OrientationProcessor.h"

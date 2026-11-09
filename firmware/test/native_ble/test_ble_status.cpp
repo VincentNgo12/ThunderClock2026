@@ -1,8 +1,3 @@
-/**
- * File: test_ble_status.cpp
- * Purpose: Check actual BLE manager transitions, LED timing and latched faults.
- * Contributors: Unassigned
- */
 #include <cassert>
 #include <cstdio>
 #include <string>
