@@ -45,6 +45,12 @@ class Worker:
     neutral_curvature_deg: tuple[float, float, float, float] = (-12.0, -6.0, 10.0, 18.0)
     mount_error_deg: float = 6.0  # random strap misalignment per sensor (SIM_SPEC 2: +/-5-10 deg) [design]
     sensor_offset_m: float = 0.04  # IMU sits 3-5 cm posterior to the spine line (SIM_SPEC 0) [design]
+    # Optional body geometry (added for a body-model adapter, e.g. Anny; None = the old formulas).
+    # pelvis_height_m: pelvis-anchor height standing (default 0.53 x height).
+    # com_to_pelvis_m: whole-body centre of mass -> pelvis anchor in the segment frame (+X right, +Y up,
+    #   +Z posterior), used by the fall model (default (0, -0.03 x height, 0.10)).
+    pelvis_height_m: float | None = None
+    com_to_pelvis_m: tuple[float, float, float] | None = None
 
     def spacings(self) -> np.ndarray:
         if self.spacing_m is not None:
@@ -54,7 +60,15 @@ class Worker:
 
     @property
     def pelvis_height(self) -> float:
+        if self.pelvis_height_m is not None:
+            return float(self.pelvis_height_m)
         return 0.53 * self.height_m  # sacral sensor height standing (design estimate)
+
+    def com_to_pelvis(self) -> np.ndarray:
+        """Centre of mass -> pelvis anchor, segment frame, metres (fall model)."""
+        if self.com_to_pelvis_m is not None:
+            return np.asarray(self.com_to_pelvis_m, float)
+        return np.array([0.0, -0.03 * self.height_m, 0.10])  # [design]
 
     @property
     def total_mass(self) -> float:

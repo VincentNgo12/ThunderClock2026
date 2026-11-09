@@ -43,7 +43,7 @@ def snapshot(stream, sequence: int, stale_after: float = STALE_AFTER_SECONDS, *,
             }
     esp32 = "disconnected"
     if connected:
-        esp32 = "simulated" if source == "simulated" else "connected"
+        esp32 = {"simulated": "simulated", "replay": "replay"}.get(source, "connected")
     return {
         "schema_version": "2.0", "timestamp": datetime.now(UTC).isoformat(), "sequence": sequence,
         "device": None,  # The device packets omit boot, frame and session metadata.

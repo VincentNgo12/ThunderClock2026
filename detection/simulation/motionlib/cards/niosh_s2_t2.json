@@ -1,0 +1,525 @@
+{
+  "clip": "niosh_s2_t2",
+  "source": "niosh_roofing",
+  "source_name": "NIOSH residential roofing datasets (CDC data.cdc.gov)",
+  "file": "raw/niosh_roofing/rd-1042-2022-0.zip",
+  "url": "https://data.cdc.gov/api/views/76u3-26ik/files/ffcd1d9a-43e0-4bee-9849-7e08458b672e?filename=rd-1042-2022-0.zip",
+  "sha256": "15525526d20003045aa043940e4eb6913dab04a4e624c09916396a77bbf9fcc6",
+  "licence": {
+    "class": "A",
+    "name": "Public domain (US Government work, CC public domain mark)",
+    "url": "https://creativecommons.org/public-domain/",
+    "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain."
+  },
+  "tags": [
+    "kneel",
+    "kneel_work"
+  ],
+  "source_fps": 100.0,
+  "source_frames": 1377,
+  "seconds": 13.76,
+  "fs": 100.0,
+  "frames": 1377,
+  "height_est_m": 1.767,
+  "valid_joints": [
+    "hip_l",
+    "hip_r",
+    "knee_l",
+    "knee_r",
+    "ankle_l",
+    "ankle_r",
+    "shoulder_l",
+    "shoulder_r",
+    "elbow_l",
+    "elbow_r",
+    "hand_l",
+    "hand_r",
+    "neck",
+    "head",
+    "pelvis",
+    "head_top"
+  ],
+  "joint_map": {
+    "ankle": "r_foot/l_foot (Human3.6M foot = ankle)",
+    "toe": "not available",
+    "heel": "not available",
+    "hand": "wrist extended along the forearm by 0.045 m x s [design]",
+    "neck": "thorax",
+    "head_top": "head",
+    "head": "60 % from thorax to head [design]",
+    "spine": "hip mid -> hip -> spine -> thorax (3 points)"
+  },
+  "root_relative": true,
+  "trunk": {
+    "method": "positions: chord directions with hip-line to shoulder-line lateral axes blended [design]",
+    "spine_points": 4,
+    "neutral_frames": [
+      1295,
+      1345
+    ],
+    "neutral_method": "fallback: no still standing window, most upright and slowest 0.5 s",
+    "neutral_ok": true,
+    "neutral_reference": null,
+    "tilt_deg": 9.99,
+    "speed_mps": 0.03,
+    "knee_deg": 81.4
+  },
+  "anterior_share": 1.0,
+  "notes": [
+    "NIOSH roofing: shingle installation on a roof mock-up; positions are pelvis-relative (no global translation) and the roof slope is unknown, so feet and floor are not usable."
+  ],
+  "problems": [],
+  "status": "gated",
+  "gates": {
+    "stage": "S5 preview",
+    "payload_fs": 50.0,
+    "rig": {
+      "H": 1.75,
+      "mass_kg": 80.0,
+      "scale": 1.0065
+    },
+    "method": "clip retargeted onto rig.Dims with rig.two_bone on its own pelvis path (see tools/gates.py)",
+    "source": {
+      "value": {
+        "bone_std_mm": 7.099,
+        "foot_p99_mps": 0.2,
+        "hand_p99_mps": 2.86,
+        "note": "n/a (position data, not a rigid skeleton)"
+      },
+      "limit": "FK bone std < 1 mm (n/a for position data); foot p99 < 12, hand p99 < 15 m/s",
+      "result": "PASS"
+    },
+    "bones": {
+      "value": 2.22e-16,
+      "limit": "< 1e-3 m",
+      "result": "PASS"
+    },
+    "penetration": {
+      "value": "no floor or no heel/toe joints: legs stay procedural for this clip",
+      "limit": "-",
+      "result": "n/a"
+    },
+    "skate": {
+      "value": "no floor or no heel/toe joints: legs stay procedural for this clip",
+      "limit": "-",
+      "result": "n/a"
+    },
+    "pops": {
+      "value": {
+        "hands_m": 0.1009
+      },
+      "limit": "< 0.20 m hands per frame",
+      "result": "PASS"
+    },
+    "knee": {
+      "value": "no floor or no heel/toe joints: legs stay procedural for this clip",
+      "limit": "-",
+      "result": "n/a"
+    },
+    "elbow": {
+      "value": {
+        "max_deg": 103.1,
+        "min_deg": 13.3
+      },
+      "limit": "0-155 deg",
+      "result": "PASS"
+    },
+    "hip": {
+      "value": "no floor or no heel/toe joints: legs stay procedural for this clip",
+      "limit": "-",
+      "result": "n/a"
+    },
+    "reach": {
+      "value": {
+        "legs_share": null,
+        "arms_share": 0.0,
+        "legs_max_clamp_m": null,
+        "arms_max_clamp_m": 0.0
+      },
+      "limit": "< 5 % of frames clamped (end joint > 5 mm from its target) per limb",
+      "result": "PASS"
+    },
+    "sync": {
+      "value": null,
+      "limit": "heel strike median < 30 ms, p90 < 60 ms; tool strike < 20 ms",
+      "result": "PENDING",
+      "note": "needs the S6 time warp to simulator anchors; measured on the payload in S6"
+    },
+    "failed": [],
+    "fails_only_skate": false
+  },
+  "reviewed_by": null,
+  "member": "rd-1042-2022-0/datasets/Dataset-3DJointPositions_roofing.csv",
+  "subject": 2,
+  "trial": 2,
+  "s2_checks": {
+    "shape": true,
+    "height_m": 1.767,
+    "scale": true,
+    "up": true,
+    "bone_std_mm_max": 7.099,
+    "hand_toe_span_std_mm_max": 2.91,
+    "bones": "n/a (position data, not a rigid skeleton)",
+    "foot_p99_mps": 0.2,
+    "hand_p99_mps": 2.86,
+    "speed": true,
+    "sim_conv_err_deg": 9.73e-06,
+    "sim_conv": true,
+    "neutral_resid_deg": 0.001,
+    "neutral": true,
+    "trunk_p5_p95_deg": {
+      "pitch": [
+        0.9,
+        72.9
+      ],
+      "flex_sum": [
+        -3.8,
+        12.3
+      ],
+      "roll": [
+        -22.7,
+        23.3
+      ],
+      "twist_sum": [
+        -16.1,
+        9.5
+      ]
+    },
+    "pass": true
+  },
+  "s3": {
+    "floor_m": null,
+    "floor_slope_deg": null,
+    "flat_offsets_m": {
+      "l": {
+        "ankle": 0.0,
+        "heel": 0.0,
+        "toe": 0.0
+      },
+      "r": {
+        "ankle": 0.0,
+        "heel": 0.0,
+        "toe": 0.0
+      }
+    },
+    "contact_share": {
+      "l": 0.0,
+      "r": 0.0
+    },
+    "stances": {
+      "l": 0,
+      "r": 0
+    },
+    "heel_strikes": [],
+    "cycles": 0,
+    "wrist_decel_peaks": [
+      {
+        "t": 1.09,
+        "frame": 109,
+        "side": "r",
+        "decel_mps2": 28.3,
+        "speed_before_mps": 1.45
+      },
+      {
+        "t": 1.89,
+        "frame": 189,
+        "side": "r",
+        "decel_mps2": 83.4,
+        "speed_before_mps": 3.96
+      },
+      {
+        "t": 2.32,
+        "frame": 232,
+        "side": "r",
+        "decel_mps2": 18.9,
+        "speed_before_mps": 1.32
+      },
+      {
+        "t": 3.67,
+        "frame": 367,
+        "side": "l",
+        "decel_mps2": 46.5,
+        "speed_before_mps": 2.0
+      },
+      {
+        "t": 3.67,
+        "frame": 367,
+        "side": "r",
+        "decel_mps2": 86.7,
+        "speed_before_mps": 3.49
+      },
+      {
+        "t": 4.07,
+        "frame": 407,
+        "side": "r",
+        "decel_mps2": 14.2,
+        "speed_before_mps": 0.64
+      },
+      {
+        "t": 4.54,
+        "frame": 454,
+        "side": "r",
+        "decel_mps2": 75.8,
+        "speed_before_mps": 2.77
+      },
+      {
+        "t": 4.55,
+        "frame": 455,
+        "side": "l",
+        "decel_mps2": 50.7,
+        "speed_before_mps": 2.52
+      },
+      {
+        "t": 4.8,
+        "frame": 480,
+        "side": "r",
+        "decel_mps2": 44.5,
+        "speed_before_mps": 2.25
+      },
+      {
+        "t": 5.01,
+        "frame": 501,
+        "side": "l",
+        "decel_mps2": 9.5,
+        "speed_before_mps": 0.54
+      },
+      {
+        "t": 5.01,
+        "frame": 501,
+        "side": "r",
+        "decel_mps2": 14.1,
+        "speed_before_mps": 0.78
+      },
+      {
+        "t": 5.62,
+        "frame": 562,
+        "side": "l",
+        "decel_mps2": 59.0,
+        "speed_before_mps": 2.89
+      },
+      {
+        "t": 5.75,
+        "frame": 575,
+        "side": "r",
+        "decel_mps2": 47.2,
+        "speed_before_mps": 3.11
+      },
+      {
+        "t": 6.13,
+        "frame": 613,
+        "side": "r",
+        "decel_mps2": 7.8,
+        "speed_before_mps": 0.45
+      },
+      {
+        "t": 6.74,
+        "frame": 674,
+        "side": "r",
+        "decel_mps2": 8.4,
+        "speed_before_mps": 1.3
+      },
+      {
+        "t": 7.45,
+        "frame": 745,
+        "side": "l",
+        "decel_mps2": 40.8,
+        "speed_before_mps": 2.28
+      },
+      {
+        "t": 7.45,
+        "frame": 745,
+        "side": "r",
+        "decel_mps2": 32.6,
+        "speed_before_mps": 1.4
+      },
+      {
+        "t": 7.67,
+        "frame": 767,
+        "side": "l",
+        "decel_mps2": 4.8,
+        "speed_before_mps": 1.09
+      },
+      {
+        "t": 7.67,
+        "frame": 767,
+        "side": "r",
+        "decel_mps2": 8.5,
+        "speed_before_mps": 0.5
+      },
+      {
+        "t": 8.15,
+        "frame": 815,
+        "side": "l",
+        "decel_mps2": 23.3,
+        "speed_before_mps": 0.9
+      },
+      {
+        "t": 8.15,
+        "frame": 815,
+        "side": "r",
+        "decel_mps2": 17.7,
+        "speed_before_mps": 1.08
+      },
+      {
+        "t": 8.35,
+        "frame": 835,
+        "side": "r",
+        "decel_mps2": 4.3,
+        "speed_before_mps": 0.48
+      },
+      {
+        "t": 8.65,
+        "frame": 865,
+        "side": "l",
+        "decel_mps2": 23.2,
+        "speed_before_mps": 1.74
+      },
+      {
+        "t": 8.86,
+        "frame": 886,
+        "side": "r",
+        "decel_mps2": 10.0,
+        "speed_before_mps": 0.83
+      },
+      {
+        "t": 8.9,
+        "frame": 890,
+        "side": "l",
+        "decel_mps2": 14.7,
+        "speed_before_mps": 1.08
+      },
+      {
+        "t": 9.4,
+        "frame": 940,
+        "side": "r",
+        "decel_mps2": 15.2,
+        "speed_before_mps": 1.06
+      },
+      {
+        "t": 10.08,
+        "frame": 1008,
+        "side": "r",
+        "decel_mps2": 9.3,
+        "speed_before_mps": 0.78
+      },
+      {
+        "t": 10.98,
+        "frame": 1098,
+        "side": "l",
+        "decel_mps2": 7.4,
+        "speed_before_mps": 2.16
+      },
+      {
+        "t": 12.0,
+        "frame": 1200,
+        "side": "r",
+        "decel_mps2": 6.1,
+        "speed_before_mps": 1.92
+      },
+      {
+        "t": 12.56,
+        "frame": 1256,
+        "side": "l",
+        "decel_mps2": 9.7,
+        "speed_before_mps": 1.77
+      }
+    ],
+    "wrist_decel_peak_count": 30,
+    "rung_contacts": [],
+    "bends": [],
+    "segments": [
+      {
+        "primitive": "kneel_work",
+        "t0": 0.0,
+        "t1": 13.77
+      }
+    ],
+    "notes": [
+      "no floor (pelvis-relative or no heel/toe): no foot contacts; activity from the source tags"
+    ]
+  },
+  "activity_tags": [
+    "kneel",
+    "kneel_work"
+  ],
+  "s4": {
+    "file": "clips/niosh_s2_t2.npz",
+    "format": 1,
+    "has_legs": false,
+    "task": "none",
+    "leg_len_m": [
+      0.8393,
+      0.8124
+    ],
+    "arm_len_m": [
+      0.5833,
+      0.5874
+    ],
+    "foot_pitch_flat_deg": [
+      NaN,
+      NaN
+    ],
+    "finite": true,
+    "non_finite": []
+  },
+  "s6": {
+    "stage": "S6 payload",
+    "roles": {
+      "kneel_work": {
+        "gates": {
+          "bones": {
+            "value": 0.000139,
+            "limit": "< 1e-3 m",
+            "result": "PASS"
+          },
+          "pops": {
+            "value": {
+              "feet_m": null,
+              "hands_m": 0.1149
+            },
+            "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+            "result": "PASS"
+          },
+          "elbow": {
+            "value": {
+              "min_deg": 39.6,
+              "max_deg": 130.6
+            },
+            "limit": "0-155 deg",
+            "result": "PASS"
+          },
+          "reach": {
+            "value": {
+              "arms_share": 0.0,
+              "legs_share": null
+            },
+            "limit": "< 5 % of frames clamped per limb",
+            "result": "PASS"
+          },
+          "deck": {
+            "value": 0.786,
+            "limit": "reported only: share of frames where the clip's hand height above the deck is out of the rig arm's reach (hands then as low as reachable)",
+            "result": "n/a"
+          },
+          "sync": {
+            "value": {
+              "work_impulses": 32,
+              "matched_to_clip_wrist_events": 25
+            },
+            "limit": "reported only: kneel_work impulses are trunk jolts, not tool strikes",
+            "result": "n/a"
+          }
+        },
+        "failed": [],
+        "result": "PASS",
+        "runs": [
+          "A-KNEEL:0",
+          "A-KNEEL:1",
+          "A-KNEEL:2"
+        ],
+        "frames": 9446
+      }
+    },
+    "result": "PASS"
+  }
+}

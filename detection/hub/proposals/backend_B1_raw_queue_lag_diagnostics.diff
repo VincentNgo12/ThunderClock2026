@@ -1,0 +1,51 @@
+diff -ru a/backend/app/ble.py b/backend/app/ble.py
+--- a/backend/app/ble.py	2026-11-07 21:20:55
++++ b/backend/app/ble.py	2026-11-07 21:21:33
+@@ -49,9 +49,10 @@
+         if packet_format == "both" and characteristic is not None:
+             raise ValueError("Dual streaming uses the standard raw and orientation characteristics")
+         if queue_size is None:
+-            queue_size = 32 if packet_format == "both" else 8
+-        if not 1 <= queue_size <= 64 or timeout <= 0:
+-            raise ValueError("Queue size must be 1–64 and timeout positive")
++            # Raw frames arrive at 100 Hz: 256 entries absorb a ~2.5 s loop stall (detector intake).
++            queue_size = 256 if packet_format in ("raw", "both") else 8
++        if not 1 <= queue_size <= 512 or timeout <= 0:
++            raise ValueError("Queue size must be 1–512 and timeout positive")
+         self.device = device
+         self.packet_format = packet_format
+         self.service = uuid(service)
+diff -ru a/backend/app/main.py b/backend/app/main.py
+--- a/backend/app/main.py	2026-11-07 21:20:55
++++ b/backend/app/main.py	2026-11-07 21:21:33
+@@ -79,13 +79,19 @@
+                 stream.stats.last_error = f"{type(error).__name__}: {error}"
+                 logging.getLogger(__name__).error("Device stream stopped: %s", stream.stats.last_error)
+ 
++        app.state.loop_lag_ms_max = 0.0
++
+         async def publish():
+             sequence = 1  # The initial snapshot already uses sequence zero.
+             while True:
+                 state = snapshot(pose_stream, sequence, source=source, posture=posture)
+                 app.state.latest = json.dumps(state, allow_nan=False)
+                 sequence += 1
++                planned = time.monotonic() + 0.05
+                 await asyncio.sleep(0.05)
++                # Loop-lag monitor: how late the 20 Hz publisher wakes up (raw intake shares this loop).
++                lag_ms = max(0.0, (time.monotonic() - planned) * 1000)
++                app.state.loop_lag_ms_max = max(app.state.loop_lag_ms_max, lag_ms)
+ 
+         tasks = [asyncio.create_task(acquire()), asyncio.create_task(publish())]
+         try:
+@@ -113,6 +119,10 @@
+         if app.state.source == "hardware" and stream.packet_format == "both":
+             result["raw"] = stream.stats_by_format["raw"].snapshot()
+             result["raw"]["state"] = result["state"]
++        result["loop_lag_ms_max"] = round(app.state.loop_lag_ms_max, 1)
++        detector = getattr(app.state, "detector", None)  # set by detection/hub/backend_hook.py
++        if detector is not None:
++            result["detector"] = detector.snapshot()["detector"]
+         return result
+ 
+     @app.post("/posture/calibrate")

@@ -1,0 +1,1686 @@
+{
+  "schema": 1,
+  "note": "Every downloaded file, by explicit URL, with its sha256 (filled in by tools/acquire.py). Entries with 'member' are single files read from a remote zip by HTTP Range; the sha256 is of the extracted member and crc32 is the zip's own checksum. raw/ is gitignored.",
+  "sources": {
+    "cmu": {
+      "name": "CMU Graphics Lab Motion Capture Database",
+      "class": "A",
+      "licence": "Free for all uses (site statement); do not resell the data itself",
+      "licence_url": "http://mocap.cs.cmu.edu/",
+      "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+      "format": "ASF/AMC, 120 Hz (subjects 62 and 79: 60 Hz); lengths in inches/0.45",
+      "files": [
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/07/07.asf",
+          "path": "raw/cmu/07.asf",
+          "sha256": "c29414591d76a34885bff0b04a2666bf9659f869751a2549591c55277cf95b04",
+          "bytes": 7260
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/08/08.asf",
+          "path": "raw/cmu/08.asf",
+          "sha256": "bcef1f4ec4741c1790ad488504fb0d46f2bf8409f75c7b9c88955f03c39852c9",
+          "bytes": 7265
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/09/09.asf",
+          "path": "raw/cmu/09.asf",
+          "sha256": "be10dbce393fd60a2d322410032d618757afcc5bb2f7a508d887c5b0213f1897",
+          "bytes": 7260
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/13/13.asf",
+          "path": "raw/cmu/13.asf",
+          "sha256": "eb33390bcbccb739d7622bd583fd9be55020868f68689aa6f2060ad688df10dc",
+          "bytes": 7264
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/14/14.asf",
+          "path": "raw/cmu/14.asf",
+          "sha256": "96a22ac52ac15bd464c296028936be0ae7d2f0ee4a056202b1aa17f4ad02ec7f",
+          "bytes": 7259
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/16/16.asf",
+          "path": "raw/cmu/16.asf",
+          "sha256": "2323f876564610f84bfbec9b90b8ebffb57515673b7f4a45b0fb0849af465bdb",
+          "bytes": 7257
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/23/23.asf",
+          "path": "raw/cmu/23.asf",
+          "sha256": "b6d21f9b08cc65deb938e842db315a2ac521a94be01471b8bcdfe24701d0cde4",
+          "bytes": 7268
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/26/26.asf",
+          "path": "raw/cmu/26.asf",
+          "sha256": "40ef9238bf97799f676c64151061027da0771793b8bee1c97780073d4e782088",
+          "bytes": 7267
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/35/35.asf",
+          "path": "raw/cmu/35.asf",
+          "sha256": "2a8e2eda3c0d7d828566b2a9a8ab36b2b8b3864110574e8b73c8f069fded416c",
+          "bytes": 7261
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/62/62.asf",
+          "path": "raw/cmu/62.asf",
+          "sha256": "a029f31db2849649019515451c895dbebc997699a2e59af3d529434513138580",
+          "bytes": 7265
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/69/69.asf",
+          "path": "raw/cmu/69.asf",
+          "sha256": "c3019031ae5789b1d43d3bba424229ac544ccc68bb8c06e7d67bf75b1c41605f",
+          "bytes": 7266
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/70/70.asf",
+          "path": "raw/cmu/70.asf",
+          "sha256": "44c828dd08454e54abc8052ae3779adff721f04886ecc062e7e0ffd4cd9fb34e",
+          "bytes": 7263
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/79/79.asf",
+          "path": "raw/cmu/79.asf",
+          "sha256": "aa7fb254b0e7b9155df59e0f0cf76cbe34c476c6f4b3f015e63d5ae170d2fe2d",
+          "bytes": 7257
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/86/86.asf",
+          "path": "raw/cmu/86.asf",
+          "sha256": "79055f3713978b92d660d6858048d7550d3f6eb582a03d7f9378443fdafbcb06",
+          "bytes": 7270
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/115/115.asf",
+          "path": "raw/cmu/115.asf",
+          "sha256": "26c627af258f337930ec3c84bb75d3a727425e27083208b79107e10be16a9017",
+          "bytes": 7267
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/123/123.asf",
+          "path": "raw/cmu/123.asf",
+          "sha256": "44c828dd08454e54abc8052ae3779adff721f04886ecc062e7e0ffd4cd9fb34e",
+          "bytes": 7263,
+          "duplicate_of": "raw/cmu/70.asf"
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/137/137.asf",
+          "path": "raw/cmu/137.asf",
+          "sha256": "01c47f541b92d94621575a5e093b6949bef4444be7402e05babac5f09d92f260",
+          "bytes": 7272
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/143/143.asf",
+          "path": "raw/cmu/143.asf",
+          "sha256": "6d7207da3bb9eceeaa32f23fb641b69f5836d11242b00c052e7d64f0cbe20a35",
+          "bytes": 7264
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/07/07_01.amc",
+          "path": "raw/cmu/07_01.amc",
+          "tags": [
+            "walk"
+          ],
+          "sha256": "3ca8e8b834481c97c32e9dd555f8c9023e33b6c52d93c9d556c83570204bf3f2",
+          "bytes": 252663
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/07/07_12.amc",
+          "path": "raw/cmu/07_12.amc",
+          "tags": [
+            "walk"
+          ],
+          "sha256": "f017a78b4431e73ade6cd20d0d2323fc6e451dd4e43c247ddb19a19e6a2df6f2",
+          "bytes": 188416
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/08/08_02.amc",
+          "path": "raw/cmu/08_02.amc",
+          "tags": [
+            "walk"
+          ],
+          "sha256": "0e4e5a9952f33a87f6c170000268bbff2826f44801701906c5ad9b7026a27551",
+          "bytes": 247645
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/16/16_15.amc",
+          "path": "raw/cmu/16_15.amc",
+          "tags": [
+            "walk"
+          ],
+          "sha256": "0873a7753a04c34de2a94dc768b61ef4ed8395f0bd351c2019864b16883b0f89",
+          "bytes": 375603
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/35/35_01.amc",
+          "path": "raw/cmu/35_01.amc",
+          "tags": [
+            "walk"
+          ],
+          "sha256": "0743f4ea48e7e199cd56b2810b5ce81f8ede08d32ff79aa4e363c44cc4fe33aa",
+          "bytes": 286988
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/143/143_32.amc",
+          "path": "raw/cmu/143_32.amc",
+          "tags": [
+            "walk"
+          ],
+          "sha256": "1436c4f0a9a132f4950b93aa43f639681120d86d01d57de9dcca86c53ff2a473",
+          "bytes": 620605
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/70/70_03.amc",
+          "path": "raw/cmu/70_03.amc",
+          "tags": [
+            "hold",
+            "carry",
+            "load"
+          ],
+          "sha256": "60030812e9139a009a531ec099aa413ec1762178a955cbe3d6a7838259b95974",
+          "bytes": 1487466,
+          "note": "stationary: lifts and holds a 19.5 lb suitcase (pelvis displacement 0.05 m)"
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/70/70_10.amc",
+          "path": "raw/cmu/70_10.amc",
+          "tags": [
+            "walk",
+            "carry",
+            "load"
+          ],
+          "sha256": "d434c46f681636e2dd0527ea4a06bf857e34ce597f9247e5e4ce441d9d0ce2eb",
+          "bytes": 640869
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/123/123_03.amc",
+          "path": "raw/cmu/123_03.amc",
+          "tags": [
+            "walk",
+            "carry",
+            "load"
+          ],
+          "sha256": "60030812e9139a009a531ec099aa413ec1762178a955cbe3d6a7838259b95974",
+          "bytes": 1487466,
+          "duplicate_of": "raw/cmu/70_03.amc"
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/69/69_69.amc",
+          "path": "raw/cmu/69_69.amc",
+          "tags": [
+            "walk",
+            "pickup",
+            "carry"
+          ],
+          "sha256": "fa2ec06790b4556413aa57e9edba8a058b569cf42c4f59f6ef10171fad32961d",
+          "bytes": 638219
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/115/115_01.amc",
+          "path": "raw/cmu/115_01.amc",
+          "tags": [
+            "pickup",
+            "stoop"
+          ],
+          "sha256": "22bce48b2cca0c75a746ec1630e756386352491603efc8f2c21c07b23965b322",
+          "bytes": 378186
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/115/115_02.amc",
+          "path": "raw/cmu/115_02.amc",
+          "tags": [
+            "pickup",
+            "stoop"
+          ],
+          "sha256": "1290ccd7c45d9074a5fe4849c866b9f742685202df1750e9e3b7894aab3a8647",
+          "bytes": 321516
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/115/115_06.amc",
+          "path": "raw/cmu/115_06.amc",
+          "tags": [
+            "pickup",
+            "squat"
+          ],
+          "sha256": "66d3a9e9a8eaed036ddc155dd335014a38c533924481b8075e1d5947c89a24c1",
+          "bytes": 286590
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/115/115_07.amc",
+          "path": "raw/cmu/115_07.amc",
+          "tags": [
+            "pickup",
+            "squat"
+          ],
+          "sha256": "394235f478d86f68a307b9a88be2311e8e03eeebd12f25f69a72a79d72392dbf",
+          "bytes": 334435
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/69/69_70.amc",
+          "path": "raw/cmu/69_70.amc",
+          "tags": [
+            "pickup",
+            "squat",
+            "putdown"
+          ],
+          "sha256": "f42be7692aaeb9ada69abe26a8bd4f971d91736573352e465b026f6c1e84b853",
+          "bytes": 831217
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/69/69_73.amc",
+          "path": "raw/cmu/69_73.amc",
+          "tags": [
+            "pickup",
+            "stoop",
+            "putdown"
+          ],
+          "sha256": "d2ecb55da6b915fddce0028354a9b15d9a1f3998b9371c1556a8c0c197623baf",
+          "bytes": 867789
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/69/69_75.amc",
+          "path": "raw/cmu/69_75.amc",
+          "tags": [
+            "pickup",
+            "squat",
+            "putdown"
+          ],
+          "sha256": "7994991a42e95dc649a6b66e9fe5c2230e51d153b9e8457baaec4691661219c0",
+          "bytes": 876357
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/143/143_10.amc",
+          "path": "raw/cmu/143_10.amc",
+          "tags": [
+            "walk",
+            "pickup"
+          ],
+          "sha256": "8d98200eb9b4530d9bbb344ca0ac04a51e25d71b1bc7ba82883da11f00ed6034",
+          "bytes": 457805
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/143/143_11.amc",
+          "path": "raw/cmu/143_11.amc",
+          "tags": [
+            "walk",
+            "pickup"
+          ],
+          "sha256": "8095a2e4c530b78519dcd365462ca5d005fe4a563193d9726757eb836f8fc8c2",
+          "bytes": 523109
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/79/79_25.amc",
+          "path": "raw/cmu/79_25.amc",
+          "tags": [
+            "pickup",
+            "carry"
+          ],
+          "sha256": "6826fad12ae62b692e7852b0bf27b74692d3e2987bccca921cf907ec67e4a1a4",
+          "bytes": 486332
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/26/26_10.amc",
+          "path": "raw/cmu/26_10.amc",
+          "tags": [
+            "pickup",
+            "stoop"
+          ],
+          "sha256": "aa4a09ec8dab46533aa29f37d9a78e5c6ee59840b4537f99a8a7d2319c126956",
+          "bytes": 555215
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/137/137_27.amc",
+          "path": "raw/cmu/137_27.amc",
+          "tags": [
+            "pickup"
+          ],
+          "sha256": "5fc2a19fce05397284fc81ad904d2d35f7e65f205edf5065ed05fa256d086374",
+          "bytes": 927028
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/137/137_40.amc",
+          "path": "raw/cmu/137_40.amc",
+          "tags": [
+            "pickup"
+          ],
+          "sha256": "7f1df2adf427e5f5cacd4a28cd7c4a178e0e40ffc40b27b2749d85d64b63f3f7",
+          "bytes": 1628765
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/23/23_03.amc",
+          "path": "raw/cmu/23_03.amc",
+          "tags": [
+            "kneel"
+          ],
+          "sha256": "95b674dd84d480fe213522997c522758ef18af4560d0489911ee0ca3f193b772",
+          "bytes": 649177
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/13/13_33.amc",
+          "path": "raw/cmu/13_33.amc",
+          "tags": [
+            "ladder"
+          ],
+          "sha256": "0681bf9d2ded8aaed7b5113db704d0fa03ae9ff7e2165a4f1324959d03725e95",
+          "bytes": 1199860
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/13/13_34.amc",
+          "path": "raw/cmu/13_34.amc",
+          "tags": [
+            "ladder"
+          ],
+          "sha256": "aacc9fb093e347bce06ab1bc59f472bf56ee3832cec57faf636227f2b864910e",
+          "bytes": 1131370
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/14/14_33.amc",
+          "path": "raw/cmu/14_33.amc",
+          "tags": [
+            "ladder"
+          ],
+          "sha256": "c3b176ec4dc1dbf70c01f6804d10cb5dd1844d812f604d60b69a9c050eaef9af",
+          "bytes": 1108609
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/14/14_34.amc",
+          "path": "raw/cmu/14_34.amc",
+          "tags": [
+            "ladder"
+          ],
+          "sha256": "6d181f3226668537adc6c96b5a822073fa451557f07b25e30ccd52ffac279df9",
+          "bytes": 1141732
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/86/86_13.amc",
+          "path": "raw/cmu/86_13.amc",
+          "tags": [
+            "walk",
+            "ladder"
+          ],
+          "sha256": "936afeda9929650350e2a99ec081018abd999aedc4dab0b892363fa11aa6d64b",
+          "bytes": 4950003
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/143/143_37.amc",
+          "path": "raw/cmu/143_37.amc",
+          "tags": [
+            "ladder"
+          ],
+          "sha256": "4de00ea84a3db045aa266cdf351426215b79072ee0cf66153c9acac059523676",
+          "bytes": 438386
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/62/62_07.amc",
+          "path": "raw/cmu/62_07.amc",
+          "tags": [
+            "hammer"
+          ],
+          "sha256": "f334e52a5f89ede72cbffcffac6a35712679a28365b4aca61ae05d077865cdc3",
+          "bytes": 890105
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/62/62_08.amc",
+          "path": "raw/cmu/62_08.amc",
+          "tags": [
+            "hammer"
+          ],
+          "sha256": "df08f6bd344210f720f01e5974e75d1aacc9ccfc655017906755d41e2135e372",
+          "bytes": 715856
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/62/62_10.amc",
+          "path": "raw/cmu/62_10.amc",
+          "tags": [
+            "hammer"
+          ],
+          "sha256": "28df11d54f35bd8101d245f5b3d864eab598474f2e4b3f5d9b8565805e73927d",
+          "bytes": 1614999
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/09/09_01.amc",
+          "path": "raw/cmu/09_01.amc",
+          "tags": [
+            "run"
+          ],
+          "sha256": "02c94e8c2d4d2ff05f9a784f06403700c2c9d7caedd9bd92b50284d1a05f2bee",
+          "bytes": 118653
+        },
+        {
+          "url": "http://mocap.cs.cmu.edu/subjects/16/16_35.amc",
+          "path": "raw/cmu/16_35.amc",
+          "tags": [
+            "run"
+          ],
+          "sha256": "28e83b8ee8ff46e15cb7d41d5e77faaefe3e06cf165f05fb18dd348457bdf387",
+          "bytes": 128829
+        }
+      ]
+    },
+    "accad": {
+      "name": "ACCAD Open Motion Project (The Ohio State University)",
+      "class": "A",
+      "licence": "CC BY 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by/3.0/",
+      "credit": "Open Motion Project by ACCAD/The Ohio State University, CC BY 3.0 (https://accad.osu.edu/research/motion-lab/mocap-system-and-data).",
+      "format": "BVH inside a zip",
+      "files": [
+        {
+          "url": "https://accad.osu.edu/sites/accad.osu.edu/files/Male1_bvh.zip",
+          "path": "raw/accad/Male1_bvh.zip",
+          "tags": [
+            "idle",
+            "walk",
+            "pickup",
+            "carry",
+            "crawl"
+          ],
+          "sha256": "1cd26aeac2ee7f20e3c0fe5082e633201bb136a714ae8f684a4f34c4421f4627",
+          "bytes": 3283636
+        },
+        {
+          "url": "https://accad.osu.edu/sites/accad.osu.edu/files/Female1_bvh.zip",
+          "path": "raw/accad/Female1_bvh.zip",
+          "tags": [
+            "idle",
+            "walk",
+            "pickup",
+            "carry",
+            "crawl"
+          ],
+          "sha256": "84543297a24fe9900449675837b5b7758c5208d0f56b699d10a3eb362a46530a",
+          "bytes": 5171377
+        }
+      ]
+    },
+    "100style": {
+      "name": "100STYLE (Mason, Starke, Komura 2022)",
+      "class": "A",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "credit": "100STYLE dataset, I. Mason, S. Starke, T. Komura, 'Real-Time Style Modelling of Human Locomotion via Feature-Wise Transformations and Local Motion Phases', 2022; Zenodo 10.5281/zenodo.8127870, CC BY 4.0.",
+      "format": "BVH, members of 100STYLE.zip (zip md5 3cf627852fd8192024c04a8d0ef49583)",
+      "files": [
+        {
+          "url": "https://zenodo.org/api/records/8127870/files/100STYLE.zip/content",
+          "member": "100STYLE/Neutral/Neutral_FW.bvh",
+          "path": "raw/100style/Neutral_FW.bvh",
+          "tags": [
+            "walk"
+          ],
+          "crc32": "6e5fdcdd",
+          "sha256": "2f28800baa299547c42c257d1c926172542a1e69b46a3d3e6aa0aded0e9b40f6",
+          "bytes": 5504825
+        },
+        {
+          "url": "https://zenodo.org/api/records/8127870/files/100STYLE.zip/content",
+          "member": "100STYLE/Neutral/Neutral_ID.bvh",
+          "path": "raw/100style/Neutral_ID.bvh",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "06371b3b",
+          "sha256": "71aead2e3246bdb47a5b839cb3e60e0574e9a1a046c071cc147e2922a35f259f",
+          "bytes": 1465227
+        },
+        {
+          "url": "https://zenodo.org/api/records/8127870/files/100STYLE.zip/content",
+          "member": "100STYLE/Heavyset/Heavyset_FW.bvh",
+          "path": "raw/100style/Heavyset_FW.bvh",
+          "tags": [
+            "walk"
+          ],
+          "crc32": "5be619e1",
+          "sha256": "852619771cc9155891c6b42abc1c289a6d866dbbe363674e151ff70bd5fe72af",
+          "bytes": 5244947
+        },
+        {
+          "url": "https://zenodo.org/api/records/8127870/files/100STYLE.zip/content",
+          "member": "100STYLE/Dataset_List.csv",
+          "path": "raw/100style/Dataset_List.csv",
+          "tags": [
+            "meta"
+          ],
+          "crc32": "53bc2128",
+          "sha256": "f4db941e17b11f698d577044ca75543a72ba6e4cef77c6054de37e5ecd8c859c",
+          "bytes": 6446
+        },
+        {
+          "url": "https://zenodo.org/api/records/8127870/files/100STYLE.zip/content",
+          "member": "100STYLE/Frame_Cuts.csv",
+          "path": "raw/100style/Frame_Cuts.csv",
+          "tags": [
+            "meta"
+          ],
+          "crc32": "55edd816",
+          "sha256": "e3c1d2beab6486e083622cef6a5402fe9b20edc75a9963ea30675c67ec29ee82",
+          "bytes": 10036
+        }
+      ]
+    },
+    "cml": {
+      "name": "Construction Motion Data Library (CML), public version",
+      "class": "A",
+      "licence": "CC BY 4.0 (figshare record)",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "credit": "Tian, Li, Cui, Chen, 'Construction motion data library: an integrated motion dataset for on-site activity recognition', Scientific Data 9, 726 (2022); figshare 10.6084/m9.figshare.20480787.v3, CC BY 4.0.",
+      "caveat": "CML merges processed samples from several upstream datasets (CMU, HDM05 CC BY-SA 3.0, Berkeley MHAD, CAD60, SBU, in-lab Perception Neuron). Each card records the upstream source where the file states it; HDM05-derived samples are treated as class B (share-alike) and are not used.",
+      "format": "JSON, 20-joint skeleton, 30 Hz, metres; members of Construction_Related_Data.zip (zip md5 e0c1e12fa74d072e423239a908473668)",
+      "files": [
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/19hammer/000001.json",
+          "path": "raw/cml/19hammer_000001.json",
+          "tags": [
+            "hammer"
+          ],
+          "crc32": "650a8fed",
+          "sha256": "9cbb0e21ebca32681c3324c71a2f0827d8de4b2fbe77349c99dea8da09e0659b",
+          "bytes": 1403631
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/19hammer/000002.json",
+          "path": "raw/cml/19hammer_000002.json",
+          "tags": [
+            "hammer"
+          ],
+          "crc32": "e9090fe6",
+          "sha256": "9a657e0f171cbb8d620e90bc0c5e32d3e15e5e39b4ec4b2077603863f79b5c50",
+          "bytes": 1124042
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/19hammer/000003.json",
+          "path": "raw/cml/19hammer_000003.json",
+          "tags": [
+            "hammer"
+          ],
+          "crc32": "1ccd8de4",
+          "sha256": "c85a47fda979f2d542f2a1e13189661f65a5a8a2fe0420d96948b4282fe5a176",
+          "bytes": 1426829
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/19hammer/000004.json",
+          "path": "raw/cml/19hammer_000004.json",
+          "tags": [
+            "hammer"
+          ],
+          "crc32": "494fd820",
+          "sha256": "eac64c2b3549694498c9700ce2f18184a93fd795194e30ba806859e8a636c807",
+          "bytes": 2546427
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000001.json",
+          "path": "raw/cml/43standing_000001.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "70d3edc8",
+          "sha256": "f83efac2d162591b4f15d1ab81cf4e29a7534e182627f7859fda3b3e0a4becd6",
+          "bytes": 1232070
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000002.json",
+          "path": "raw/cml/43standing_000002.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "bf3fe7f3",
+          "sha256": "22c3c7e6898f7ff7cc119d095fdb401a63dee0e47d40baa3badb58119213cfc3",
+          "bytes": 883395
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000003.json",
+          "path": "raw/cml/43standing_000003.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "4486b146",
+          "sha256": "6b423a555ee5e573ad8a443ba0a02144737e8c2e24b1291daa622b581516212b",
+          "bytes": 333275
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000004.json",
+          "path": "raw/cml/43standing_000004.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "d2aee33b",
+          "sha256": "c8f5eb207b9ea685aa2a8b95c3326eddeaffe54ce41db656e80269895f62d721",
+          "bytes": 100411
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000005.json",
+          "path": "raw/cml/43standing_000005.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "6ae97068",
+          "sha256": "bbf0dd65fba9f34db6d9fc92ceca122065e924216efb7c1d1934023bc3778148",
+          "bytes": 330478
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000006.json",
+          "path": "raw/cml/43standing_000006.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "74449019",
+          "sha256": "ce35d895e06bd3779d30a06122ef6ac49328101ee11657340628f27a58244dc5",
+          "bytes": 98581
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000007.json",
+          "path": "raw/cml/43standing_000007.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "5bc411c7",
+          "sha256": "83e0d1cdf8c692097c1fe460404b9b8d8ed4670cad1128bc5d293492ef240fa8",
+          "bytes": 1212933
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/43standing/000008.json",
+          "path": "raw/cml/43standing_000008.json",
+          "tags": [
+            "idle"
+          ],
+          "crc32": "c8c0b203",
+          "sha256": "0daa0d49e512702863e7491df7134617eca110b992b0baf3d675f086aa3b1d6f",
+          "bytes": 770768
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000001.json",
+          "path": "raw/cml/27movingObject_000001.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "6d496bb8",
+          "sha256": "4c9f1cf7807630e46153dd353ab4204cd728fa564a76414e2853a2bcb31d0987",
+          "bytes": 49227
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000002.json",
+          "path": "raw/cml/27movingObject_000002.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "e60df435",
+          "sha256": "8e1e63b15a8bb8052e38efd16faad80b821a0a9d764d65596b1cbb93d646a730",
+          "bytes": 69535
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000003.json",
+          "path": "raw/cml/27movingObject_000003.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "c59ce1f3",
+          "sha256": "3a68a043feec7192f375e7625d70a58c5770d8ed1e61678ece9038450be44e56",
+          "bytes": 477779
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000004.json",
+          "path": "raw/cml/27movingObject_000004.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "fe23d22e",
+          "sha256": "284ba83e9fb250dc573a07192f76f8e570ae8609e5877cc421a6d61bbdf72770",
+          "bytes": 774165
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000005.json",
+          "path": "raw/cml/27movingObject_000005.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "78f500b8",
+          "sha256": "c617ca0634cf8301b448f266a9834cab5c0d70161677af2745353c9875fe538a",
+          "bytes": 252094
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000006.json",
+          "path": "raw/cml/27movingObject_000006.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "443714b3",
+          "sha256": "2fc4227c1b1fb10ca6d925371c53f70fed718c06b80d19db87b795def82ad21f",
+          "bytes": 236798
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000007.json",
+          "path": "raw/cml/27movingObject_000007.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "38f64bd7",
+          "sha256": "06af5f3aa9eb33194ce4e383e8599de0da0341659392f3572d0a5ef5d312ceea",
+          "bytes": 222270
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000008.json",
+          "path": "raw/cml/27movingObject_000008.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "2797c007",
+          "sha256": "45995f7ab55bef5ba184a467aa26b184796ec784495cb4596c5da35e4feb506f",
+          "bytes": 2436944
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/27movingObject/000009.json",
+          "path": "raw/cml/27movingObject_000009.json",
+          "tags": [
+            "carry"
+          ],
+          "crc32": "0d6be178",
+          "sha256": "a94647106c03afddbcbead91978b50781f0be688ed2eab63ad83d52ada769de4",
+          "bytes": 1276318
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000001.json",
+          "path": "raw/cml/28pickingUp_000001.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "cc5cf2b4",
+          "sha256": "0539612ef3443181b4e8b3395d161b6ace3403804fd28ff74d0f333cfc4ef411",
+          "bytes": 361700
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000002.json",
+          "path": "raw/cml/28pickingUp_000002.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "ebb86047",
+          "sha256": "57445fcf60e287913564e2d1263952475b9800ce5badb6755eaf266104e76486",
+          "bytes": 347973
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000003.json",
+          "path": "raw/cml/28pickingUp_000003.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "d4ce830b",
+          "sha256": "a906d6fdd6c9fd9ad545d9759eda0c64ef63477c3cef5e07d2e5682c4bb07eb2",
+          "bytes": 115196
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000004.json",
+          "path": "raw/cml/28pickingUp_000004.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "1cb32e00",
+          "sha256": "6deba0b2f21cd0b693f16d9881c0b7b987f17843201e2aba5b883ac3366fe52b",
+          "bytes": 99372
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000005.json",
+          "path": "raw/cml/28pickingUp_000005.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "5711c658",
+          "sha256": "6439346c591614488236e57a6f61d071be31ce1216aa413ccd0e828edb1f3dd9",
+          "bytes": 94460
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000006.json",
+          "path": "raw/cml/28pickingUp_000006.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "c51fc406",
+          "sha256": "d2cd68108c33fd144f40bab796abdb0aebf1e8204d6f5c32cb25767ba60aee8c",
+          "bytes": 124560
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000007.json",
+          "path": "raw/cml/28pickingUp_000007.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "b05a563d",
+          "sha256": "c3156792202021a0cc8e28240dcd303f62bff51d3db71de012162c2c8a08e2b0",
+          "bytes": 115472
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000008.json",
+          "path": "raw/cml/28pickingUp_000008.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "b0fa0a4f",
+          "sha256": "d9fe6e80ab8100696f033d72c4eedea179159570f3580b228c1ecca98240d796",
+          "bytes": 132060
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000009.json",
+          "path": "raw/cml/28pickingUp_000009.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "79139813",
+          "sha256": "05128f00fe42adf4f6742414018adeae2134f8cd4e8c5e15e82541cc20f75638",
+          "bytes": 104688
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000010.json",
+          "path": "raw/cml/28pickingUp_000010.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "a906c6c2",
+          "sha256": "52a0dacf3aaf25f3bd7eef5604567a5d55608db715f43d423e8a3b7684e82989",
+          "bytes": 137026
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000011.json",
+          "path": "raw/cml/28pickingUp_000011.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "2caba10a",
+          "sha256": "9f087fe4f6608385eb58185a68cc3f4e427d2ec8d8e5193b4c3a6f0bdeed10fd",
+          "bytes": 314439
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000012.json",
+          "path": "raw/cml/28pickingUp_000012.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "43011bb0",
+          "sha256": "5f84a8f9ea060b167c95ca3773a7a69609b4ef58826244aa216063393bcad884",
+          "bytes": 106767
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000013.json",
+          "path": "raw/cml/28pickingUp_000013.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "f609c189",
+          "sha256": "3de67bd98fb561318865c86c6e83cb32205bdd6d7cd393195e40f700715e8a9a",
+          "bytes": 108521
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000014.json",
+          "path": "raw/cml/28pickingUp_000014.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "ebdeacd8",
+          "sha256": "1e052cb7b69aa69b47060d3c2b2e99b7508bbd5625431424341aa01ad7be753f",
+          "bytes": 64733
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000015.json",
+          "path": "raw/cml/28pickingUp_000015.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "6e2fedcc",
+          "sha256": "77ccade73bdcb17874e51d16e597930fcbc2e12a2f16d0fece10e2b24e6c555b",
+          "bytes": 357921
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000016.json",
+          "path": "raw/cml/28pickingUp_000016.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "ae946a07",
+          "sha256": "e20b6418e7d1358be3745273f0f8c8e84161faecea83949c3ec53e91a980ffbe",
+          "bytes": 363729
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000017.json",
+          "path": "raw/cml/28pickingUp_000017.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "e814cddc",
+          "sha256": "681c68335404528592137b189e22aaf15a3f6dca437825aa2d707f9ed47bc04f",
+          "bytes": 330554
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000018.json",
+          "path": "raw/cml/28pickingUp_000018.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "b00e5889",
+          "sha256": "2d897f293b7b63ec80443eabb4d033650bd1eca52ab8a02aeb51c7045fa7742f",
+          "bytes": 369493
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000019.json",
+          "path": "raw/cml/28pickingUp_000019.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "d1594e29",
+          "sha256": "d04f251324782da1aec0ef02d327202b9d14e999c7513273442e414089f61d6c",
+          "bytes": 393354
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000020.json",
+          "path": "raw/cml/28pickingUp_000020.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "b9341d6f",
+          "sha256": "9945d8a2854f20840137d8bb34cbb825789f7adbcd98acd27b4ac2a3f4c668a0",
+          "bytes": 385580
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000021.json",
+          "path": "raw/cml/28pickingUp_000021.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "72f0933b",
+          "sha256": "d99d753d70d32addabc032c6d58ab400ada7d869650ab2af55dbcd8e40515ce2",
+          "bytes": 157013
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000022.json",
+          "path": "raw/cml/28pickingUp_000022.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "83c35ec7",
+          "sha256": "07bbab4e6d538f1beb834843e06315b3f0d15a4289ebb8e477cf2d54cbbb7c5d",
+          "bytes": 167013
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000023.json",
+          "path": "raw/cml/28pickingUp_000023.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "e3d4d248",
+          "sha256": "aa3831a3d1cb0ea54196a84723c5b7d9687cb2ae75793d0277ca659ddf5c69c1",
+          "bytes": 180699
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000024.json",
+          "path": "raw/cml/28pickingUp_000024.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "8e2d66b3",
+          "sha256": "4ea0ba27671050d46c2ffb13e6437e99322c56179dd4ec405cf9f1d69d8e8a33",
+          "bytes": 180449
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000025.json",
+          "path": "raw/cml/28pickingUp_000025.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "40a9c24d",
+          "sha256": "a7f775b7c2e24f7710731fff6707f41485360e811eecab881b885ec743298ca3",
+          "bytes": 195389
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000026.json",
+          "path": "raw/cml/28pickingUp_000026.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "62460d90",
+          "sha256": "8f8fa6670d4c02e457bbf96eaf582ffbad44561790f8fce831e4853aa07968b3",
+          "bytes": 174601
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000027.json",
+          "path": "raw/cml/28pickingUp_000027.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "bfeef58f",
+          "sha256": "16261d13717f2473d298f5aed78a09360a0b6501e5cd4d3040df2e36639de8fc",
+          "bytes": 173105
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000028.json",
+          "path": "raw/cml/28pickingUp_000028.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "31e8fb0b",
+          "sha256": "d6f95e55aaf5f38d4bdde0daa46f29799dd552b5f45f07d1316c35a2dcc38ed6",
+          "bytes": 229919
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/28pickingUp/000029.json",
+          "path": "raw/cml/28pickingUp_000029.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "1fc8d575",
+          "sha256": "f509e8592a6f2f2d83d9175915d1c3022fc8d7c087feb39d3e8467202ba99934",
+          "bytes": 1125734
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/7crawling/000001.json",
+          "path": "raw/cml/7crawling_000001.json",
+          "tags": [
+            "crawl"
+          ],
+          "crc32": "50e800b0",
+          "sha256": "4097614cb25ad9c2f60c90f69f6f68d3077d88281187063319f30b589e8fc3b8",
+          "bytes": 970092
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/7crawling/000002.json",
+          "path": "raw/cml/7crawling_000002.json",
+          "tags": [
+            "crawl"
+          ],
+          "crc32": "e341a98f",
+          "sha256": "aaf3b8f2bffdf74f34ee62c55763a905e936eefc2bb9f23bb1fe84dece30085d",
+          "bytes": 256296
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/7crawling/000003.json",
+          "path": "raw/cml/7crawling_000003.json",
+          "tags": [
+            "crawl"
+          ],
+          "crc32": "bd6ce2e6",
+          "sha256": "988a55bfa152c6fa8bb05b1f6b9bd4df49f4ae49c0102f84bfb9ca55244f701b",
+          "bytes": 391861
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000001.json",
+          "path": "raw/cml/5climbUp_000001.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "7f65bfc9",
+          "sha256": "a81a60204b8a0f07d3a12b1f87e62777a021e8f1c3f6696de11e6ee671e7c585",
+          "bytes": 265594
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000002.json",
+          "path": "raw/cml/5climbUp_000002.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "a7b44b00",
+          "sha256": "9b191c7b3e7131522463773c082de96a195e75716a8191d2017f0937f9466118",
+          "bytes": 334788
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000003.json",
+          "path": "raw/cml/5climbUp_000003.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "ef25ffbe",
+          "sha256": "36d7f68e1304143d5099666d1560f2f91d2e1ea60ce487137245a81866f2c966",
+          "bytes": 406727
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000004.json",
+          "path": "raw/cml/5climbUp_000004.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "036f33e0",
+          "sha256": "f6d6280746edf5747812f255bca05d1cd4e8d4c17ddd00b491c1fc9059999a87",
+          "bytes": 255145
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000005.json",
+          "path": "raw/cml/5climbUp_000005.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "6c47a5d9",
+          "sha256": "0d131a64b01e3c83de11b6f3f5949d9b67e96661ef29c307c22bd59bcdb57150",
+          "bytes": 316524
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000006.json",
+          "path": "raw/cml/5climbUp_000006.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "2e9a64d1",
+          "sha256": "3bf154c5f68366ca78a17d0d3523d44fd67fedc64f32ace10078f86fd2fcabc1",
+          "bytes": 221469
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000007.json",
+          "path": "raw/cml/5climbUp_000007.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "bde05b9c",
+          "sha256": "502c0b9d5982187fbaf50804e7f83985241bafc2886de01f8952953657e2a272",
+          "bytes": 201913
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000008.json",
+          "path": "raw/cml/5climbUp_000008.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "3e00bde8",
+          "sha256": "43a6a19205097303fb31b7dd9a933697527125b9de10d5eaaf6fc4018b659aec",
+          "bytes": 235519
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000009.json",
+          "path": "raw/cml/5climbUp_000009.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "394ebf77",
+          "sha256": "a6e1d4db80a58459066ca208846e623fee576983bde5a77da418d5af50238062",
+          "bytes": 183265
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/5climbUp/000010.json",
+          "path": "raw/cml/5climbUp_000010.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "510b456e",
+          "sha256": "bda1eea1efe1a4a02482cd36a6cf96ff5380bf006982130d339783dca8b16b06",
+          "bytes": 249879
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000001.json",
+          "path": "raw/cml/4climbDown_000001.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "d1ece67d",
+          "sha256": "fad61c877059655cbf6cb249ac91c34eb701b547c97c636044031acf20e5c91d",
+          "bytes": 291660
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000002.json",
+          "path": "raw/cml/4climbDown_000002.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "106d54aa",
+          "sha256": "d2149a69ac8247aeab982d33a4654d5bded2cfa03d817fc5e005f517c95d7f49",
+          "bytes": 234099
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000003.json",
+          "path": "raw/cml/4climbDown_000003.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "24f6867c",
+          "sha256": "f80b91c8ea47208a7b2df0e06c16509bb33d998a02c16878e33b8f9f96095e34",
+          "bytes": 449660
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000004.json",
+          "path": "raw/cml/4climbDown_000004.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "75f9f569",
+          "sha256": "f3438adb55f995318ec701e5b985b929ea5c498d4c70e578b227757507ed38aa",
+          "bytes": 884212
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000005.json",
+          "path": "raw/cml/4climbDown_000005.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "abd0b262",
+          "sha256": "513fab1f63e528ee0a40db69a60e7587af9403d5fcfd1a1e746c764cb5fc5c27",
+          "bytes": 258711
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000006.json",
+          "path": "raw/cml/4climbDown_000006.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "d7b154b5",
+          "sha256": "6c0703f8052f64153a7d9b92e1d7fbc2e676681c2d196c57be4103853280002f",
+          "bytes": 186991
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000007.json",
+          "path": "raw/cml/4climbDown_000007.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "19a2b600",
+          "sha256": "e4ab3ca48eba17a2f5e210ca7072d519f7ee2b149490bdbd1a8cd57083bba0df",
+          "bytes": 150629
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000008.json",
+          "path": "raw/cml/4climbDown_000008.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "48672a64",
+          "sha256": "11a77da6f745ff35e16e4b010ea6bda17fd14bc814e6f76d655a0efae60d849f",
+          "bytes": 168789
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000009.json",
+          "path": "raw/cml/4climbDown_000009.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "ad64f173",
+          "sha256": "506f49c29114f117de9dbf6c3334a781563c84cfcb28036a97cc2813b7113f19",
+          "bytes": 205593
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/4climbDown/000010.json",
+          "path": "raw/cml/4climbDown_000010.json",
+          "tags": [
+            "ladder"
+          ],
+          "crc32": "e4ff2c85",
+          "sha256": "4921f977636956ada7b89bb980f4ca38ed43ebc33b153ea1776dac1288a97073",
+          "bytes": 226885
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000001.json",
+          "path": "raw/cml/1bending_000001.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "5a0bc19d",
+          "sha256": "ef2b0163cb898ddfd8640a16c033f0d295761cec28fc099994616fa4cd05ec12",
+          "bytes": 301422
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000002.json",
+          "path": "raw/cml/1bending_000002.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "c5b9b398",
+          "sha256": "30b574fd18b7d5f0db468c27783d9e906d4a5c432d09cf34e61aff47b95505b6",
+          "bytes": 255452
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000003.json",
+          "path": "raw/cml/1bending_000003.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "01068ffe",
+          "sha256": "b0d42170c008d8926e405658c7d34e925a0ee8f084fe81753e9345f4115314f3",
+          "bytes": 287619
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000004.json",
+          "path": "raw/cml/1bending_000004.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "7959007c",
+          "sha256": "96852a6c346d52b6cedfa8d70639c70754f620519406561fdeeaa612d9b41e29",
+          "bytes": 245557
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000005.json",
+          "path": "raw/cml/1bending_000005.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "c6c6cbbd",
+          "sha256": "6edefaeb66e39afe4d37b4574c33f2e57e7e8f5d492f35f1754d1fc4105f361b",
+          "bytes": 375039
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000006.json",
+          "path": "raw/cml/1bending_000006.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "8798e548",
+          "sha256": "b1b4b86fcefc0b003157d3653ad0a394ac4cb8afd24603916103b874e479acf8",
+          "bytes": 228903
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000007.json",
+          "path": "raw/cml/1bending_000007.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "cdfd43e2",
+          "sha256": "5aff4d1d7539d046f375555648b9d48d565d6ac157407ceb71920d1a9de4e29b",
+          "bytes": 266270
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000008.json",
+          "path": "raw/cml/1bending_000008.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "8e28428a",
+          "sha256": "05a6dbe724dc1654fd3c98a1e3e8b4b90c77a29772cd4c87bf7a57f5c2cd41ea",
+          "bytes": 312058
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000009.json",
+          "path": "raw/cml/1bending_000009.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "7aa454a1",
+          "sha256": "15502e317a350b2cb8ff58e3990d46748ae7bcbfb3cb5d4427191974ea937c6a",
+          "bytes": 255530
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/1bending/000010.json",
+          "path": "raw/cml/1bending_000010.json",
+          "tags": [
+            "stoop"
+          ],
+          "crc32": "798b495d",
+          "sha256": "068a6216a0a9900e3debe357e81db441ed9ec240803ab572fafd35fc40403d61",
+          "bytes": 233363
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000001.json",
+          "path": "raw/cml/39squats_000001.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "b433a795",
+          "sha256": "1c26f26b79e4dd9cab10f5558b06a36134db8b56acadc914db2013e41dcf48c9",
+          "bytes": 663727
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000002.json",
+          "path": "raw/cml/39squats_000002.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "0095dae4",
+          "sha256": "4801c5e7cd3ff847cc61bacc6baffcf021767e10e797af0fad4f417208178d30",
+          "bytes": 183345
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000003.json",
+          "path": "raw/cml/39squats_000003.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "c75812cf",
+          "sha256": "47a941457759c08523c04ca2d292d4f3e84f88d94a698702e6cebcbb8cb81be4",
+          "bytes": 184261
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000004.json",
+          "path": "raw/cml/39squats_000004.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "54635465",
+          "sha256": "6a893f2da82a37b850e395dfafd7b7f7b20c7efa431b251afe3eb9c467d67055",
+          "bytes": 476181
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000005.json",
+          "path": "raw/cml/39squats_000005.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "5753bc19",
+          "sha256": "6615af9f2d34bf879f2440cd8e39d0387809f339edace40673eaeb17091b3600",
+          "bytes": 334912
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000006.json",
+          "path": "raw/cml/39squats_000006.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "0d1ae519",
+          "sha256": "f5243ce44d058bcd51e223004019b33f25bc48848366a7cad903c57ff1f05150",
+          "bytes": 367129
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000007.json",
+          "path": "raw/cml/39squats_000007.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "16da259e",
+          "sha256": "2961ddf9ce5bce1718f34fa2daee1fdc3aeb09cfe018fc96e1a0fb2ffb69d6c7",
+          "bytes": 314946
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000008.json",
+          "path": "raw/cml/39squats_000008.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "1dc65d18",
+          "sha256": "ab95a1f4cf1c9f33ba37ad2c7f38ce4404f78669e7b1148fd5bdf5fcfa2e08bf",
+          "bytes": 132049
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000009.json",
+          "path": "raw/cml/39squats_000009.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "d90bc130",
+          "sha256": "0dd3b318bd3ec49a36845422767f4dcdcd0000a0b5e57ab5f11e4f779f5b990a",
+          "bytes": 135823
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/39squats/000010.json",
+          "path": "raw/cml/39squats_000010.json",
+          "tags": [
+            "squat"
+          ],
+          "crc32": "6b5b69ee",
+          "sha256": "4f9b1d4ba6265a2712a1082f6567665269cd734b67770a75bceb795ac9be181a",
+          "bytes": 89953
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/52weightLifting/000001.json",
+          "path": "raw/cml/52weightLifting_000001.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "6f854575",
+          "sha256": "1301c01e12ddc05bb56db58950d6d558c754a917226813936f85df93700e73ce",
+          "bytes": 449385
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/52weightLifting/000002.json",
+          "path": "raw/cml/52weightLifting_000002.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "20e96c8d",
+          "sha256": "947281697acadf865b12ce96b85663f86f207fe8b1379509982d23940049f681",
+          "bytes": 353150
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/52weightLifting/000003.json",
+          "path": "raw/cml/52weightLifting_000003.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "750a72ed",
+          "sha256": "0cad0bbf2ab5fe36cc4106c52b7a0031a6f9b73f82afed52736c0d04315f153c",
+          "bytes": 401176
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/52weightLifting/000004.json",
+          "path": "raw/cml/52weightLifting_000004.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "0261cabb",
+          "sha256": "02e33d931853b4342ba39fff55e98355e7cee6365ab2760da4a71f0da9b30f98",
+          "bytes": 215463
+        },
+        {
+          "url": "https://ndownloader.figshare.com/files/36703026",
+          "member": "Construction_Related_Data/20_nodes/52weightLifting/000005.json",
+          "path": "raw/cml/52weightLifting_000005.json",
+          "tags": [
+            "pickup"
+          ],
+          "crc32": "788ce151",
+          "sha256": "554947e7adf5d43aa9b089dedd170bacd982dba26c637c7c2a02fab33162e0dd",
+          "bytes": 1446809
+        }
+      ]
+    },
+    "niosh_roofing": {
+      "name": "NIOSH residential roofing datasets (CDC data.cdc.gov)",
+      "class": "A",
+      "licence": "Public domain (US Government work, CC public domain mark)",
+      "licence_url": "https://creativecommons.org/public-domain/",
+      "credit": "NIOSH, 'Video-based 3D pose estimation for residential roofing' dataset, doi 10.26616/NIOSHRD-1042-2022-0; NIOSH, 'Agreement of hip kinematics between two tracking marker configurations ... during ergonomic roofing tasks', doi 10.26616/NIOSHRD-1062-2023-0. Public domain.",
+      "format": "CSV inside a zip",
+      "files": [
+        {
+          "url": "https://data.cdc.gov/api/views/76u3-26ik/files/ffcd1d9a-43e0-4bee-9849-7e08458b672e?filename=rd-1042-2022-0.zip",
+          "path": "raw/niosh_roofing/rd-1042-2022-0.zip",
+          "tags": [
+            "kneel",
+            "kneel_work"
+          ],
+          "sha256": "15525526d20003045aa043940e4eb6913dab04a4e624c09916396a77bbf9fcc6",
+          "bytes": 12542924
+        },
+        {
+          "url": "https://data.cdc.gov/api/views/j63e-g9bn/files/2bc4055b-6e80-4ae9-af95-dc95d1883267?filename=rd-1062-2023-0.zip",
+          "path": "raw/niosh_roofing/rd-1062-2023-0.zip",
+          "tags": [
+            "kneel",
+            "kneel_work",
+            "hip_angles"
+          ],
+          "sha256": "2cc2715d3e45293cd3249a3d57f58fc94282d3cd15394d64399e04c9a7fc1d9a",
+          "bytes": 2397169
+        }
+      ]
+    }
+  }
+}

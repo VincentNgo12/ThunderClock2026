@@ -1,5 +1,6 @@
 # File: __main__.py
-# Purpose: Command line for ThunderSim: list, run, suite, shifts, tune, export, calibrate, plot.
+# Purpose: Command line for ThunderSim: list, run, suite, shifts, tune, export, calibrate, posture, motionval,
+#          plot, viz.
 # Contributors: Unassigned
 """Usage (from simulator/):  .venv/bin/python -m thundersim <command> --help"""
 
@@ -168,10 +169,29 @@ def cmd_posture(args) -> None:
     print((out / "posture_report.md").read_text())
 
 
+def cmd_motionval(args) -> None:
+    from .motion_validation import RECORDINGS_DIR, run_validation, write_example_session
+
+    if args.write_example:
+        print("synthetic vest session written to", write_example_session(Path(args.write_example)))
+        return
+    out = Path(args.out or OUTPUT / f"motionval_{time.strftime('%Y%m%d_%H%M%S')}")
+    scenarios = [] if args.no_sim else args.scenarios.split(",")
+    path = run_validation(out, scenarios, args.seeds, args.seed_base, args.obs,
+                          Path(args.recordings) if args.recordings else RECORDINGS_DIR, args.include_synthetic, args.jobs)
+    print("motion validation report:", path)
+
+
 def cmd_plot(args) -> None:
     from .plot import plot_run
 
     print(plot_run(args.scenario, args.seed, Path(args.out), None, args.obs))
+
+
+def cmd_viz(args) -> None:
+    from .viz.server import serve
+
+    serve(args.host, args.port, open_browser=not args.no_browser)
 
 
 def main(argv=None) -> None:
@@ -254,12 +274,31 @@ def main(argv=None) -> None:
     po.add_argument("--out", default=None)
     po.set_defaults(fn=cmd_posture)
 
+    mv = sub.add_parser("motionval", help="simulated trunk motion vs mocap, vest recordings and literature")
+    mv.add_argument("--scenarios", default="A-CARRY,A-RUN,A-KNEEL,A-LADDER")
+    mv.add_argument("--seeds", type=int, default=10, help="simulated runs per scenario")
+    mv.add_argument("--seed-base", type=int, default=0)
+    mv.add_argument("--obs", type=float, default=60.0)
+    mv.add_argument("--recordings", default=None, help="folder of vest sessions (default validation/recordings)")
+    mv.add_argument("--include-synthetic", action="store_true", help="also read sessions marked synthetic")
+    mv.add_argument("--no-sim", action="store_true", help="references only")
+    mv.add_argument("--write-example", default=None, help="write a synthetic vest session to this folder and stop")
+    mv.add_argument("--jobs", type=int, default=jobs)
+    mv.add_argument("--out", default=None)
+    mv.set_defaults(fn=cmd_motionval)
+
     pl = sub.add_parser("plot", help="spine snapshots + signals for one run")
     pl.add_argument("scenario", choices=list(CATALOGUE))
     pl.add_argument("--seed", type=int, default=0)
     pl.add_argument("--obs", type=float, default=60.0)
     pl.add_argument("--out", required=True)
     pl.set_defaults(fn=cmd_plot)
+
+    v = sub.add_parser("viz", help="3D viewer: replay any scenario with the worker, the strip and the site")
+    v.add_argument("--port", type=int, default=8765)
+    v.add_argument("--host", default="127.0.0.1")
+    v.add_argument("--no-browser", action="store_true", help="do not open a browser tab")
+    v.set_defaults(fn=cmd_viz)
 
     args = p.parse_args(argv)
     args.fn(args)

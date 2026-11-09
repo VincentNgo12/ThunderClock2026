@@ -54,6 +54,10 @@ constexpr int kI2sDataPin = 11;
 // i2c peripherals adresses
 constexpr uint8_t kMuxAddress = 0x70;
 constexpr uint8_t kImuAddress = 0x68;
+// Mux channel of each strip slot, in sensor_id order (pelvis, lumbar, thoracic, upper thoracic).
+// Wiring: pelvis 0, lumbar 1, thoracic 2, upper thoracic 3.
+constexpr uint8_t kImuMuxChannels[4] = {0, 1, 2, 3};
+// TODO(FW-IMU): confirm each board's sensor-to-segment mounting transform.
 
 // i2c timing, sensor addresses and mux channels
 constexpr uint32_t kI2cClockHz = 100000;  // Long harness wires: stay at 100 kHz.

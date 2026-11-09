@@ -28,7 +28,7 @@ fw::Result ImuManager::begin() {
   size_t startedCount = 0;
   for (uint8_t i = 0; i < kSlotCount; ++i) {
     bool started = false;
-    if (setChannel(i) == fw::Result::Ok) {
+    if (setChannel(SystemConfig::kImuMuxChannels[i]) == fw::Result::Ok) {
       // ±8 g keeps fall impacts from clipping. ±1000 deg/s covers fast trunk rotation.
       // The ~10 Hz low-pass suits posture; the backend can filter further.
       if (isIcm[i]) {
@@ -61,10 +61,12 @@ fw::Result ImuManager::begin() {
     slotAvailable[i] = started;
     const char* kindName = isIcm[i] ? "ICM-20948" : "MPU-6050";
     if (started) {
-      Serial.printf("Found IMU %u (%s)\n", static_cast<unsigned>(i + 1), kindName);
+      Serial.printf("Found IMU %u (%s) on mux channel %u\n", static_cast<unsigned>(i + 1), kindName,
+                    static_cast<unsigned>(SystemConfig::kImuMuxChannels[i]));
       startedCount++;
     } else {
-      Serial.printf("Failed to init IMU %u (%s)\n", static_cast<unsigned>(i + 1), kindName);
+      Serial.printf("Failed to init IMU %u (%s) on mux channel %u\n", static_cast<unsigned>(i + 1), kindName,
+                    static_cast<unsigned>(SystemConfig::kImuMuxChannels[i]));
     }
   }
 
@@ -80,7 +82,7 @@ fw::Result ImuManager::read(fw::StripData& output) {
   size_t validCount = 0;
   for (uint8_t i = 0; i < kSlotCount; ++i) {
     output.data[i] = fw::IMUData{};  // Zeroed and invalid until a read succeeds.
-    if (!slotAvailable[i] || setChannel(i) != fw::Result::Ok) {
+    if (!slotAvailable[i] || setChannel(SystemConfig::kImuMuxChannels[i]) != fw::Result::Ok) {
       continue;
     }
 

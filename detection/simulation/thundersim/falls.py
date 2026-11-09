@@ -35,6 +35,61 @@ UP = np.array([0.0, 1.0, 0.0])
 # Knee-collapse fraction of the pendulum length during same-level falls, U(0, COLLAPSE_MAX).
 # Calibrated so hip contact speeds centre near the 3.4 +/- 0.5 m/s consensus (see tests).
 COLLAPSE_MAX = 0.25
+# Same-level fall descent (realism scorecard, round 2). TRIP_KICK: extra rotation (rad/s) a trip
+# adds; PIVOT_MOMENTUM_KEEP: fraction of the walking rotation about the stance foot carried into the
+# fall (the rest is absorbed smoothly over the kick time, like a recovery step); PIVOT_RESIST:
+# protective rotational resistance (1/s, ramped in over 0.1 s). Neither applies to slips.
+# Fitted (realism/fit.py "descent_keep", "descent_resist", "descent2"; fit seeds; Erciyes forward/side/
+# recover falls and UNIVRFall walking trips with video-labelled onset/impact): resist 2.0 matches the
+# labelled onset->impact time (sim 0.63 s vs real 0.62 s) and brings trip hip speeds to 2.7-2.8 m/s
+# (literature 2.1-3.0 for real falls); keep 0.5 beat 1.0 and tied 0.2. Originals: keep 1.0, resist 0.0.
+TRIP_KICK = (0.6, 1.4)
+PIVOT_MOMENTUM_KEEP = 0.5
+PIVOT_RESIST = 2.0
+# Upper-trunk curl after the trunk lands (realism scorecard, iteration 1). Lying on the ground,
+# the segments conform to the floor: in Erciyes falls (UCI 455, waist + chest, 25 Hz) the
+# chest-minus-waist inclination 2-5 s after lying falls has median about -1 deg and a robust SD
+# of about 10 deg (forward, backward, side and syncope falls). The descent curl therefore relaxes
+# over FLATTEN_S to a residual drawn from N(CURL_REST_DEG) instead of being kept while lying.
+CURL_REST_DEG = (-1.0, 10.0)
+FLATTEN_S = 0.4
+# Body-contact energy loss (realism scorecard, iteration 2). None = the original linear
+# spring-damper; a value = Hunt-Crossley damping F = k x (1 + 1.5 alpha v_in), which has no force
+# step at touchdown and a restitution of about 1 - alpha v. ROT_CONTACT_ZETA damps the trunk's
+# rotational landing (ramped in over ROT_CONTACT_RAMP_S so the chest sees no torque step);
+# TRUNK_TOPPLE_GAIN scales the gravity topple of the trunk about the landed pelvis.
+# Fitted (realism/fit.py grids "contact".."contact4"; fit seeds; Erciyes forward, backward and side
+# falls): zeta 1.2 with a 50 ms ramp-in, topple gain 0.5 (zeta at the edge of its grid; gain 0.25
+# fitted the impact features better but left backward falls not lying). Hunt-Crossley alpha 0.6 s/m
+# fitted the mats but is NOT used (CONTACT_RESTITUTION below wins): it raised hard-surface site peaks
+# 20-50 %. Originals: alpha None, zeta 0.4, ramp 0.0, gain 1.0. See realism/REPORT.md.
+CONTACT_HC_ALPHA: float | None = None
+# Restitution-based hysteretic contact (iteration 2b). When set, it replaces both damping models:
+# loading is a pure spring F = k x (so the loading peak is the undamped v sqrt(k m), as before on
+# hard surfaces), unloading follows a stiffer line k/e^2 from the deepest compression, so only e^2
+# of the stored energy comes back (no bounce); that line is damped (zeta 0.7) so it cannot ring. Hunt-Crossley's velocity term, fitted on ~3 m/s mat
+# impacts, raised hard-surface peaks 20-50 % when extrapolated to 4-10 m/s (see REPORT.md).
+CONTACT_RESTITUTION: float | None = 0.25  # fitted ("contact4"; flat for 0.1-0.4)
+SET_RECOVERY_S = 1.5  # [design] soft-tissue recovery of the contact's permanent set
+ROT_CONTACT_ZETA = 1.2
+ROT_CONTACT_RAMP_S = 0.05
+TRUNK_TOPPLE_GAIN = 0.5
+# Collapse (syncope) descent (realism scorecard, iteration 3). None = the original kinematically
+# guided sag (pelvis eased to the floor, no impact). A value = the legs still carry this fraction
+# of body weight while the pelvis drops, and it lands through the ordinary body contact.
+# SYNC_BUCKLE_S is the knee-buckle duration range before the drop.
+# Fitted to Erciyes 919 (acted syncope onto a mat; realism/fit.py "sync"/"sync2", fit seeds): the
+# objective is flat for support 0.6-0.8 (weakly identified), 0.7 is its middle; buckle 0.4-0.8 s
+# beat 0.2-0.4 s and the original 1-2 s. Originals: None (guided sag) and (1.0, 2.0).
+SYNC_SUPPORT: float | None = 0.7
+SYNC_BUCKLE_S = (0.4, 0.8)
+
+
+def side_rng(rng: np.random.Generator) -> np.random.Generator:
+    """A generator seeded from rng's current state WITHOUT advancing it, so adding a random draw
+    here leaves every later draw of the run unchanged."""
+    state = rng.bit_generator.state["state"]
+    return np.random.default_rng([int(state["state"]) % 2**63, int(state["inc"]) % 2**63])
 
 
 def mj(u: float) -> float:
@@ -86,7 +141,7 @@ class Faller:
         fwd = np.array([-np.sin(self.heading), 0, -np.cos(self.heading)])
         right = np.array([np.cos(self.heading), 0, -np.sin(self.heading)])
         self.d = np.cos(self.alpha) * fwd + np.sin(self.alpha) * right
-        self.r_p = np.array([0.0, -0.03 * self.H, 0.10])   # COM -> pelvis anchor, body frame [design]
+        self.r_p = b.worker.com_to_pelvis()               # COM -> pelvis anchor, body frame (Worker)
         self.flex0, self.lat0, self.twist0 = b.pose.flex.copy(), b.pose.lat.copy(), b.pose.twist.copy()
         self.upper_gain = float(self.rng.uniform(1.0, 1.4))  # SIM_SPEC 1.3 segment lag [design]
         self.yaw_rate = float(self.rng.uniform(-0.75, 0.75))
@@ -98,6 +153,7 @@ class Faller:
         self.phase = PHASE_CODE[phase]
         self.events: list[tuple[float, str, dict]] = []
         self.contact_speed: float | None = None
+        self.flatten: tuple[int, float, float] | None = None  # (record index, curl at landing, rest curl)
 
     # --- helpers -------------------------------------------------------------------------
     def tilt(self, phi: float | None = None, perp: float | None = None) -> tuple[float, float]:
@@ -119,9 +175,20 @@ class Faller:
 
     def record(self) -> None:
         curl = float(np.clip((self.upper_gain - 1.0) * abs(self.phi), 0, np.deg2rad(40)))
+        if self.flatten is not None:
+            i0, c0, rest = self.flatten
+            curl = c0 + (rest - c0) * mj((len(self.rec) - i0) * self.dt / FLATTEN_S)
         mode = "com" if self.pelvis is None else "pel"
         xyz = self.com if self.pelvis is None else self.pelvis
         self.rec.append((mode, xyz.copy(), self.heading, self.phi, self.perp, self.phase, curl))
+
+    def start_flatten(self) -> None:
+        """The trunk has landed: relax the descent curl toward a resting value (see CURL_REST_DEG)."""
+        if self.flatten is not None or not self.rec:
+            return
+        mean, sd = CURL_REST_DEG
+        rest = float(np.deg2rad(np.clip(side_rng(self.rng).normal(mean, sd), -25.0, 25.0)))
+        self.flatten = (len(self.rec), float(self.rec[-1][6]), rest)
 
     def to_pelvis_mode(self) -> None:
         """Switch from centre-of-mass to pelvis-anchor integration with continuous velocity."""
@@ -155,7 +222,8 @@ class Faller:
     # --- phases --------------------------------------------------------------------------
     def pivot(self, max_s: float, release_phi: float | None = None, collapse: float = 0.3, collapse_s: float = 0.5,
               contact_height: float | None = None, kick: float = 0.0, kick_s: float = 0.15,
-              slip_du: float = 0.0, slip_s: float = 0.15, friction: float = 0.5) -> str:
+              slip_du: float = 0.0, slip_s: float = 0.15, friction: float = 0.5, keep: float = 1.0,
+              resist: float = 0.0) -> str:
         """Inverted pendulum over the stance foot with knee collapse (l shrinks).
 
         kick: extra angular velocity (rad/s) delivered smoothly over kick_s (push, stumble from rest).
@@ -174,6 +242,7 @@ class Faller:
         v_d = float(v @ self.d)
         drift = v - v_d * self.d - float(v @ UP) * UP   # sideways velocity, decays
         dtheta = v_d / (l0 * np.cos(theta))
+        kick = kick + (keep - 1.0) * dtheta              # momentum absorbed smoothly (no velocity step)
         offset = 0.0                                    # trunk lean relative to the leg line
         track_w, track_z = 12.0, 0.7                    # trunk follows the leg line (~0.2 s) [design]
         v_pivot = 0.0                                   # pivot speed along d (a slipping foot is negative)
@@ -192,6 +261,8 @@ class Faller:
             v_pivot += a_pivot * self.dt
             kick_acc = kick * np.pi / (2 * kick_s) * np.sin(np.pi * t / kick_s) if t < kick_s else 0.0
             ddtheta = (G * np.sin(theta) - a_pivot * np.cos(theta)) / length - 2 * dl * dtheta / length + kick_acc
+            if resist > 0:
+                ddtheta -= resist * min(t / 0.1, 1.0) * dtheta
             dtheta += ddtheta * self.dt
             theta += dtheta * self.dt
             ddphi = track_w**2 * (theta + offset - self.phi) - 2 * track_z * track_w * self.dphi
@@ -250,12 +321,13 @@ class Faller:
         return "timeout"
 
     def body_contact(self, surface: str, rest_height: float, phi_rest: float, duration: float,
-                     soften: float = 1.0, guided_s: float | None = None) -> float:
+                     soften: float = 1.0, guided_s: float | None = None, support: float = 0.0) -> float:
         """Mode A: pelvis spring-damper on the surface plus trunk rotation about the pelvis down
         to phi_rest, which ends in a stiff damped rotational contact (back/side/front landing).
 
         soften < 1 models a hands-first arrest (lower stiffness and damping energy).
         guided_s: lower the pelvis on a smooth path instead of letting it drop (collapse).
+        support: fraction of gravity still carried by the legs until the pelvis touches down.
         Returns the peak pelvis specific force from the contact, in g.
         """
         self.to_pelvis_mode()
@@ -270,6 +342,8 @@ class Faller:
         y_start = self.pelvis[1]
         self.phase = PHASE_CODE["impact"]
         touched = False
+        landed_at = None
+        max_comp, t_max = 0.0, 0.0
         for i in range(int(duration / self.dt)):
             t = (i + 1) * self.dt
             compression = floor - self.pelvis[1]
@@ -277,9 +351,28 @@ class Faller:
                 new_y = y_start + (floor - y_start) * mj(t / guided_s)
                 self.vpel = np.array([self.vpel[0] * 0.995, (new_y - self.pelvis[1]) / self.dt, self.vpel[2] * 0.995])
             else:
-                force = max(k_eff * compression - c * self.vpel[1], 0.0) if compression > 0 else 0.0
+                if compression <= 0:
+                    force = 0.0
+                elif CONTACT_RESTITUTION is not None:
+                    if compression > max_comp:
+                        max_comp, t_max = compression, t
+                    if self.vpel[1] <= 0 and compression >= max_comp - 1e-9:
+                        force = k_eff * compression                       # loading
+                    else:
+                        e2 = max(CONTACT_RESTITUTION, 0.02) ** 2
+                        # unloading line k/e^2; its permanent set recovers like soft tissue
+                        # (SET_RECOVERY_S), so a lying body does not stay sunk into the support
+                        rest = max_comp * (1.0 - e2) * np.exp(-(t - t_max) / SET_RECOVERY_S)
+                        k_u = k_eff / e2
+                        c_u = 2 * 0.7 * np.sqrt(k_u * params.m_eff)  # damped unloading line: no ringing
+                        force = min(max(k_u * (compression - rest) - c_u * self.vpel[1], 0.0), k_eff * compression)
+                elif CONTACT_HC_ALPHA is None:
+                    force = max(k_eff * compression - c * self.vpel[1], 0.0)
+                else:
+                    force = max(k_eff * compression * (1.0 - 1.5 * CONTACT_HC_ALPHA * self.vpel[1]), 0.0)
                 if force > 0 and not touched:
                     touched = True
+                    self.start_flatten()  # the trunk conforms to the floor from pelvis touchdown on
                     self.contact_speed = float(-self.vpel[1])
                     self.mark("impact", surface=surface, speed_ms=round(self.contact_speed, 2))
                 peak = max(peak, force / params.m_eff / G)
@@ -287,14 +380,20 @@ class Faller:
                 speed = np.linalg.norm(horizontal)
                 if compression > -0.01 and speed > 1e-6:
                     horizontal = horizontal - horizontal / speed * min(params.friction * G * self.dt, speed)
-                self.vpel = np.array([horizontal[0], self.vpel[1] + (force / params.m_eff - G) * self.dt, horizontal[1]])
+                carried = support * G if not touched else 0.0
+                self.vpel = np.array([horizontal[0], self.vpel[1] + (force / params.m_eff - G + carried) * self.dt, horizontal[1]])
             self.pelvis = self.pelvis + self.vpel * self.dt
             # Trunk: rotates about the pelvis under gravity until it lands, then a damped contact.
-            if (self.phi - target) * direction < 0:
-                ddphi = direction * (1.5 * G / rod * abs(np.sin(self.phi)) + 2.0)
+            if (self.phi - target) * direction < 0 and landed_at is None:
+                ddphi = direction * TRUNK_TOPPLE_GAIN * (1.5 * G / rod * abs(np.sin(self.phi)) + 2.0)
             else:
+                if landed_at is None:
+                    landed_at = t
+                self.start_flatten()
                 w = params.rot_omega * soften
-                ddphi = -w * w * (self.phi - target) - 2 * 0.4 * w * self.dphi
+                ramp = min((t - landed_at) / ROT_CONTACT_RAMP_S, 1.0) if ROT_CONTACT_RAMP_S > 0 else 1.0
+                zeta_rot = 0.4 + (ROT_CONTACT_ZETA - 0.4) * ramp
+                ddphi = -w * w * (self.phi - target) - 2 * zeta_rot * w * self.dphi
             self.dphi += ddphi * self.dt
             self.phi += self.dphi * self.dt
             self._perp_step(0.0, omega=6.0)
@@ -495,10 +594,11 @@ def same_level_fall(b: Builder, direction: str, surface: str | None = None, hand
     f.mark("fall_onset", kind="slip" if slip else ("trip" if direction == "forward" else "fall"))
     friction = available_friction(surface, b.site.condition)
     if kick is None:
-        kick = 0.0 if slip else float(rng.uniform(0.6, 1.4))
+        kick = 0.0 if slip else float(rng.uniform(*TRIP_KICK))
     rest = lying_rest_height(f.alpha, 1.0)
-    f.pivot(max_s=1.5, collapse=float(rng.uniform(0.0, COLLAPSE_MAX)), collapse_s=float(rng.uniform(0.35, 0.6)),
+    f.pivot(max_s=3.0, collapse=float(rng.uniform(0.0, COLLAPSE_MAX)), collapse_s=float(rng.uniform(0.35, 0.6)),
             contact_height=rest + 0.15, kick=kick, slip_du=float(rng.uniform(1.5, 2.5)) if slip else 0.0,
+            keep=1.0 if slip else PIVOT_MOMENTUM_KEEP, resist=0.0 if slip else PIVOT_RESIST,
             friction=max(friction, 0.05))
     soften = float(rng.uniform(0.5, 0.7)) if hands else 1.0  # hands-first arrest: 30-50 % softer
     peak = f.body_contact(surface, rest, pick_lying_angle(rng, 1.0), duration=1.6, soften=soften)
@@ -606,15 +706,20 @@ def slow_collapse(b: Builder, from_posture: str = "standing") -> dict:
     rng = b.rng
     b.event("fall_onset", kind="collapse")
     b.conscious = False
+    buckle = float(rng.uniform(*SYNC_BUCKLE_S)) if (from_posture == "standing" or SYNC_SUPPORT is not None) else 1.0
     if from_posture == "standing":
-        b.move(float(rng.uniform(1.0, 2.0)), "collapse", voluntary=False, y=b.ground_y + 0.30 * b.worker.height_m,
+        drop_to = 0.30 if SYNC_SUPPORT is None else 0.42  # a supported drop starts from a half-buckled stance
+        b.move(buckle, "collapse", voluntary=False, y=b.ground_y + drop_to * b.worker.height_m,
                pitch=np.deg2rad(rng.uniform(15, 30)), flex=np.deg2rad([8, 8, 10]))
     else:
-        b.move(1.0, "collapse", voluntary=False, flex=np.deg2rad([10, 10, 12]))
+        b.move(1.0 if SYNC_SUPPORT is None else min(buckle, 1.0), "collapse", voluntary=False, flex=np.deg2rad([10, 10, 12]))
     f = Faller(b, str(rng.choice(["forward", "left", "right"])), phase="collapse")
     rest = lying_rest_height(f.alpha, 1.0)
-    peak = f.body_contact(b.site.surface, rest, pick_lying_angle(rng, 1.0), duration=3.0,
-                          guided_s=float(rng.uniform(0.8, 1.4)))
+    if SYNC_SUPPORT is None:
+        peak = f.body_contact(b.site.surface, rest, pick_lying_angle(rng, 1.0), duration=3.0,
+                              guided_s=float(rng.uniform(0.8, 1.4)))
+    else:
+        peak = f.body_contact(b.site.surface, rest, pick_lying_angle(rng, 1.0), duration=3.0, support=SYNC_SUPPORT)
     f.commit()
     return {"peak_pelvis_g": round(peak, 2)}
 

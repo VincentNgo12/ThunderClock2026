@@ -1,0 +1,151 @@
+<!doctype html>
+<!-- File: index.html
+     Purpose: Page layout of the ThunderSim 3D viewer (run options, scenario list, 3D stage with HUD,
+              info panel with controls help, transport and charts). Logic lives in main.js.
+     Contributors: Unassigned -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThunderSim 3D</title>
+  <link rel="icon" href="data:,"><!-- no favicon request: the static server has none -->
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="bolt">⚡</span> ThunderSim <span class="dim">3D</span></div>
+    <div class="title" id="run-title">Pick a scenario</div>
+    <div class="chips" id="result-chips"></div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <section class="options">
+      <h2>Run</h2>
+      <label>Seed
+        <span class="row"><input type="number" id="opt-seed" min="0" step="1" placeholder="auto">
+        <button id="btn-test-seed" class="ghost" title="Use the scenario's test scene (first dev seed with a consistent scene)">Test scene</button></span>
+      </label>
+      <label>Model <select id="opt-model"></select></label>
+      <label>Firmware profile <select id="opt-profile"></select></label>
+      <label>Observe after event
+        <select id="opt-obs"><option value="30">30 s</option><option value="60" selected>60 s</option><option value="120">120 s</option></select>
+      </label>
+      <label>Dead sensor
+        <select id="opt-dead"><option value="">none</option><option value="0">pelvis</option><option value="1">lumbar</option><option value="2">thoracic</option><option value="3">upper thoracic</option></select>
+      </label>
+      <button id="btn-run" class="primary">Run scenario</button>
+    </section>
+    <section class="scenarios">
+      <h2>Scenarios <span class="dim" id="scenario-count"></span></h2>
+      <input type="search" id="scenario-search" placeholder="Filter (ladder, slip, NF-…)">
+      <div id="scenario-list"></div>
+    </section>
+  </aside>
+
+  <main class="stage">
+    <div id="viewport"></div>
+    <div class="hud-top">
+      <div class="now">
+        <div class="now-activity" id="now-activity">—</div>
+        <div class="now-phase"><span class="swatch" id="now-phase-swatch"></span><span id="now-phase">—</span></div>
+      </div>
+      <div class="toggles" id="toggles">
+        <button data-toggle="follow" class="on" title="Camera follows the worker (F)">Follow</button>
+        <button data-toggle="xray" title="See-through body: spine segments and the 4-anchor curve (X)">X-ray</button>
+        <button data-toggle="forces" class="on" title="Specific force each IMU reports, in g (V)">Force vectors</button>
+        <button data-toggle="gyro" title="Angular rate each IMU reports (G)">Gyro</button>
+        <button data-toggle="labels" class="on" title="Sensor labels (L)">Labels</button>
+        <button data-toggle="trail" title="Pelvis path (T)">Path</button>
+        <button data-toggle="slowmo" title="Opt-in slow motion: eases to 0.25× around falls and impacts. Off by default so falls play in real time (S)">Slow-mo</button>
+        <button data-toggle="physics" class="on" title="Limbs and head from the server's physics bake instead of the procedural rig; reloads the run (P)">Physics limbs</button>
+        <button data-toggle="mocap" title="Walking, hammering and kneeling-work limbs from motion-capture clips that passed the gates (not yet reviewed; motionlib); the spine stays simulated; reloads the run (M)">Mocap limbs</button>
+        <button data-toggle="contact" title="Contact and balance pass: feet locked on their plants, hands on fixed handholds of the sack, ladder rails and stepladder, a held sack clear of the legs; the spine stays simulated; reloads the run (C)">Contact pass</button>
+      </div>
+    </div>
+    <div class="hud-cams" id="cams">
+      <button data-cam="chase" title="1">Chase</button>
+      <button data-cam="side" title="2">Side</button>
+      <button data-cam="front" title="3">Front</button>
+      <button data-cam="back" title="4">Strip</button>
+      <button data-cam="top" title="5">Top</button>
+      <button data-cam="wide" title="6">Site</button>
+    </div>
+    <div class="rate-badge hidden" id="slowmo-badge">
+      <div class="rate-main">SLOW MOTION <span id="slowmo-rate">×0.25</span></div>
+      <div class="rate-note" id="slowmo-note"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div id="labels-layer"></div>
+    <div class="loading hidden" id="loading"><div class="spinner"></div><div id="loading-text">Simulating…</div></div>
+    <div class="error hidden" id="error"></div>
+  </main>
+
+  <aside class="info" id="info">
+    <section id="info-result"></section>
+    <section>
+      <h2>Sensors <span class="dim" id="sensor-profile"></span></h2>
+      <div id="sensor-table"></div>
+    </section>
+    <section>
+      <h2>Events <span class="dim">click to jump</span></h2>
+      <div id="event-list"></div>
+    </section>
+    <section>
+      <h2>Worker and site</h2>
+      <div id="worker-info"></div>
+    </section>
+    <section id="notes"></section>
+    <section id="help">
+      <h2>Controls</h2>
+      <dl class="kv keys">
+        <dt>Space</dt><dd>play / pause</dd>
+        <dt>← →</dt><dd>step 0.1 s (Shift: 1 s)</dd>
+        <dt>Home</dt><dd>back to the start</dd>
+        <dt>J / K</dt><dd>previous / next event</dd>
+        <dt>[ / ]</dt><dd>slower / faster playback</dd>
+        <dt>1–6</dt><dd>camera: chase, side, front, strip, top, site</dd>
+        <dt>F</dt><dd>camera follows the worker</dd>
+        <dt>X V G</dt><dd>x-ray spine, force vectors, gyro</dd>
+        <dt>L T</dt><dd>sensor labels, pelvis path</dd>
+        <dt>S</dt><dd>slow-mo around falls (off by default)</dd>
+        <dt>P</dt><dd>physics limbs (on by default; reloads the run)</dd>
+        <dt>M</dt><dd>mocap limbs (off by default; reloads the run)</dd>
+        <dt>C</dt><dd>contact pass (off by default; reloads the run)</dd>
+      </dl>
+      <p>Playback is real time unless you pick a slower speed or turn on Slow-mo. Slow-mo eases to 0.25× from 0.5 s
+        before to 1.3 s after each fall event; while playback is slower than real time a badge shows the effective
+        rate and the gravity it implies on screen, and the clock shows any rate other than 1×.</p>
+      <p>Follow tracks the worker 1:1 horizontally but follows height through a critically damped spring (about
+        0.8 s of simulated time), so in a fall the worker drops through the frame against the site, kept in view,
+        and the camera settles about 1.5 s after the impact. Dragging orbits around the worker.</p>
+      <p>Deep links: <code>?s=H-SCAF&amp;seed=3&amp;at=impact&amp;dt=-1&amp;cam=side</code>, plus <code>t</code>,
+        <code>play</code>, <code>speed</code>, <code>follow</code>, <code>xray</code>, <code>gyro</code>,
+        <code>slowmo=1</code>, <code>physics=0</code>, <code>mocap=1</code> and <code>contact=1</code>.</p>
+    </section>
+  </aside>
+
+  <footer class="timeline">
+    <div class="transport">
+      <button id="btn-start" title="Start (Home)">⏮</button>
+      <button id="btn-prev-event" title="Previous event (J)">⏪</button>
+      <button id="btn-play" class="play" title="Play / pause (Space)">▶</button>
+      <button id="btn-next-event" title="Next event (K)">⏩</button>
+      <select id="opt-speed" title="Playback speed ([ and ])">
+        <option value="0.1">0.1×</option><option value="0.25">0.25×</option><option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option>
+      </select>
+      <div class="clock"><span class="clock-rate hidden" id="clock-rate" title="Effective playback rate: speed × slow-mo">×1</span><span id="clock-t">0.00</span><span class="dim"> / <span id="clock-total">0.00</span> s</span></div>
+    </div>
+    <canvas id="timeline-canvas" height="58"></canvas>
+    <div class="charts">
+      <canvas id="chart-acc" height="120"></canvas>
+      <canvas id="chart-gyro" height="120"></canvas>
+    </div>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+{
+  "clip": "cml_27movingobject_000008",
+  "source": "cml",
+  "source_name": "Construction Motion Data Library (CML), public version",
+  "file": "raw/cml/27movingObject_000008.json",
+  "url": "https://ndownloader.figshare.com/files/36703026",
+  "sha256": "45995f7ab55bef5ba184a467aa26b184796ec784495cb4596c5da35e4feb506f",
+  "licence": {
+    "class": "A",
+    "name": "CC BY 4.0 (figshare record)",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "credit": "Tian, Li, Cui, Chen, 'Construction motion data library: an integrated motion dataset for on-site activity recognition', Scientific Data 9, 726 (2022); figshare 10.6084/m9.figshare.20480787.v3, CC BY 4.0."
+  },
+  "tags": [
+    "carry"
+  ],
+  "source_fps": 30.0,
+  "source_frames": 1009,
+  "seconds": 33.6,
+  "fs": 100.0,
+  "frames": 3361,
+  "height_est_m": 1.75,
+  "valid_joints": [
+    "hip_l",
+    "hip_r",
+    "knee_l",
+    "knee_r",
+    "ankle_l",
+    "ankle_r",
+    "heel_l",
+    "heel_r",
+    "toe_l",
+    "toe_r",
+    "shoulder_l",
+    "shoulder_r",
+    "elbow_l",
+    "elbow_r",
+    "hand_l",
+    "hand_r",
+    "neck",
+    "head",
+    "pelvis"
+  ],
+  "joint_map": {
+    "toe": "Foot (Kinect foot point, used as toe)",
+    "heel": "derived (rig.Dims proportions)",
+    "hand": "midpoint of Wrist and Hand",
+    "neck": "Shouldercentre",
+    "head": "Head",
+    "head_top": "not available",
+    "spine": "hip mid -> Hipcentre -> Spine -> Shouldercentre (3 points)"
+  },
+  "root_relative": false,
+  "trunk": {
+    "method": "positions: chord directions with hip-line to shoulder-line lateral axes blended [design]",
+    "spine_points": 4,
+    "neutral_frames": [
+      2344,
+      2394
+    ],
+    "neutral_method": "standing still",
+    "neutral_ok": true,
+    "neutral_reference": null,
+    "tilt_deg": 1.93,
+    "speed_mps": 0.048,
+    "knee_deg": 174.1
+  },
+  "anterior_share": 1.0,
+  "notes": [
+    "CML 20-joint skeleton at 30 Hz: trunk segments come from a 3-point spine (coarse).",
+    "CML lengths are not metric; scaled by 0.484 to a nominal 1.75 m body (positions are not true metres, angles are)."
+  ],
+  "problems": [],
+  "status": "rejected",
+  "gates": {
+    "stage": "S5 preview",
+    "payload_fs": 50.0,
+    "rig": {
+      "H": 1.75,
+      "mass_kg": 80.0,
+      "scale": 0.9966
+    },
+    "method": "clip retargeted onto rig.Dims with rig.two_bone on its own pelvis path (see tools/gates.py)",
+    "source": {
+      "value": {
+        "bone_std_mm": 17.951,
+        "foot_p99_mps": 0.94,
+        "hand_p99_mps": 1.2,
+        "note": "n/a (position data, not a rigid skeleton)"
+      },
+      "limit": "FK bone std < 1 mm (n/a for position data); foot p99 < 12, hand p99 < 15 m/s",
+      "result": "PASS"
+    },
+    "bones": {
+      "value": 3.89e-16,
+      "limit": "< 1e-3 m",
+      "result": "PASS"
+    },
+    "penetration": {
+      "value": {
+        "min_m": -0.0,
+        "frames_below": 0
+      },
+      "limit": ">= -0.005 m (heel, toe)",
+      "result": "PASS"
+    },
+    "skate": {
+      "value": {
+        "max_drift_m": 0.2097,
+        "p90_drift_m": 0.1208,
+        "median_mps": 0.025,
+        "stances": 25,
+        "rig_foot_max_drift_m": 0.2995,
+        "rig_foot_median_mps": 0.0286
+      },
+      "limit": "drift < 0.01 m every stance; median < 0.02 m/s",
+      "result": "FAIL"
+    },
+    "pops": {
+      "value": {
+        "feet_m": 0.0391,
+        "hands_m": 0.032
+      },
+      "limit": "< 0.12 m feet, < 0.20 m hands per frame",
+      "result": "PASS"
+    },
+    "knee": {
+      "value": {
+        "max_deg": 145.0,
+        "hyperextended_frames": 0
+      },
+      "limit": "0-160 deg, no hyperextension",
+      "result": "PASS"
+    },
+    "elbow": {
+      "value": {
+        "max_deg": 115.4,
+        "min_deg": 3.6
+      },
+      "limit": "0-155 deg",
+      "result": "PASS"
+    },
+    "hip": {
+      "value": {
+        "min_deg": -7.4,
+        "max_deg": 125.3,
+        "out_of_plane_frames": 0
+      },
+      "limit": "-30..+135 deg (pelvis segment, sagittal)",
+      "result": "PASS"
+    },
+    "reach": {
+      "value": {
+        "legs_share": 0.4634,
+        "arms_share": 0.0547,
+        "legs_max_clamp_m": 0.1243,
+        "arms_max_clamp_m": 0.0341
+      },
+      "limit": "< 5 % of frames clamped (end joint > 5 mm from its target) per limb",
+      "result": "FAIL"
+    },
+    "sync": {
+      "value": null,
+      "limit": "heel strike median < 30 ms, p90 < 60 ms; tool strike < 20 ms",
+      "result": "PENDING",
+      "note": "needs the S6 time warp to simulator anchors; measured on the payload in S6"
+    },
+    "failed": [
+      "skate",
+      "reach"
+    ],
+    "fails_only_skate": false
+  },
+  "reviewed_by": null,
+  "member": "Construction_Related_Data/20_nodes/27movingObject/000008.json",
+  "upstream": "In-lab experiment data",
+  "original_label": "03_second complex work",
+  "cml": {
+    "data source": "In-lab experiment data",
+    "original label": "03_second complex work",
+    "source file": "03",
+    "label": "moving object",
+    "frames": 1009,
+    "coordinates": "xyz",
+    "action type": 3,
+    "calibrated": "False"
+  },
+  "s2_checks": {
+    "shape": true,
+    "height_m": 1.75,
+    "scale": true,
+    "up": true,
+    "bone_std_mm_max": 17.951,
+    "hand_toe_span_std_mm_max": 2.11,
+    "bones": "n/a (position data, not a rigid skeleton)",
+    "foot_p99_mps": 0.94,
+    "hand_p99_mps": 1.2,
+    "speed": true,
+    "sim_conv_err_deg": 1.11e-05,
+    "sim_conv": true,
+    "neutral_resid_deg": 0.071,
+    "neutral": true,
+    "trunk_p5_p95_deg": {
+      "pitch": [
+        -7.0,
+        49.7
+      ],
+      "flex_sum": [
+        1.2,
+        23.2
+      ],
+      "roll": [
+        -13.1,
+        3.4
+      ],
+      "twist_sum": [
+        2.0,
+        24.4
+      ]
+    },
+    "pass": true
+  },
+  "s3": {
+    "floor_m": -1.0311,
+    "floor_slope_deg": 0.0,
+    "flat_offsets_m": {
+      "l": {
+        "ankle": 0.0494,
+        "heel": -0.0001,
+        "toe": 0.0226
+      },
+      "r": {
+        "ankle": 0.0529,
+        "heel": 0.0054,
+        "toe": 0.0243
+      }
+    },
+    "contact_share": {
+      "l": 0.832,
+      "r": 0.835
+    },
+    "stances": {
+      "l": 9,
+      "r": 6
+    },
+    "heel_strikes": [
+      {
+        "t": 6.43,
+        "side": "r"
+      },
+      {
+        "t": 7.39,
+        "side": "l"
+      },
+      {
+        "t": 7.62,
+        "side": "l"
+      },
+      {
+        "t": 8.32,
+        "side": "r"
+      },
+      {
+        "t": 9.54,
+        "side": "l"
+      }
+    ],
+    "cycles": 2,
+    "wrist_decel_peaks": [
+      {
+        "t": 6.59,
+        "frame": 659,
+        "side": "r",
+        "decel_mps2": 4.2,
+        "speed_before_mps": 0.51
+      },
+      {
+        "t": 18.34,
+        "frame": 1834,
+        "side": "r",
+        "decel_mps2": 6.1,
+        "speed_before_mps": 0.68
+      },
+      {
+        "t": 18.76,
+        "frame": 1876,
+        "side": "r",
+        "decel_mps2": 5.5,
+        "speed_before_mps": 0.75
+      },
+      {
+        "t": 19.33,
+        "frame": 1933,
+        "side": "r",
+        "decel_mps2": 6.9,
+        "speed_before_mps": 0.66
+      },
+      {
+        "t": 20.27,
+        "frame": 2027,
+        "side": "l",
+        "decel_mps2": 4.4,
+        "speed_before_mps": 0.59
+      },
+      {
+        "t": 20.4,
+        "frame": 2040,
+        "side": "r",
+        "decel_mps2": 8.1,
+        "speed_before_mps": 0.65
+      },
+      {
+        "t": 20.84,
+        "frame": 2084,
+        "side": "r",
+        "decel_mps2": 8.9,
+        "speed_before_mps": 0.83
+      },
+      {
+        "t": 21.51,
+        "frame": 2151,
+        "side": "r",
+        "decel_mps2": 10.5,
+        "speed_before_mps": 0.48
+      },
+      {
+        "t": 26.06,
+        "frame": 2606,
+        "side": "l",
+        "decel_mps2": 5.0,
+        "speed_before_mps": 0.83
+      },
+      {
+        "t": 27.43,
+        "frame": 2743,
+        "side": "r",
+        "decel_mps2": 8.5,
+        "speed_before_mps": 0.76
+      },
+      {
+        "t": 27.8,
+        "frame": 2780,
+        "side": "r",
+        "decel_mps2": 7.3,
+        "speed_before_mps": 0.58
+      },
+      {
+        "t": 28.88,
+        "frame": 2888,
+        "side": "r",
+        "decel_mps2": 5.0,
+        "speed_before_mps": 0.73
+      },
+      {
+        "t": 29.67,
+        "frame": 2967,
+        "side": "r",
+        "decel_mps2": 5.2,
+        "speed_before_mps": 0.82
+      },
+      {
+        "t": 29.77,
+        "frame": 2977,
+        "side": "l",
+        "decel_mps2": 5.0,
+        "speed_before_mps": 0.53
+      },
+      {
+        "t": 32.65,
+        "frame": 3265,
+        "side": "l",
+        "decel_mps2": 5.9,
+        "speed_before_mps": 0.5
+      }
+    ],
+    "wrist_decel_peak_count": 15,
+    "rung_contacts": [],
+    "bends": [],
+    "segments": [
+      {
+        "primitive": "hold",
+        "t0": 0.0,
+        "t1": 3.25
+      },
+      {
+        "primitive": "squat",
+        "t0": 3.25,
+        "t1": 5.42
+      },
+      {
+        "primitive": "hold",
+        "t0": 5.42,
+        "t1": 33.61
+      }
+    ],
+    "notes": []
+  },
+  "activity_tags": [
+    "hold",
+    "squat"
+  ],
+  "s4": {
+    "file": "clips/cml_27movingobject_000008.npz",
+    "format": 1,
+    "has_legs": true,
+    "task": "floor",
+    "leg_len_m": [
+      0.8313,
+      0.8368
+    ],
+    "arm_len_m": [
+      0.5954,
+      0.5945
+    ],
+    "foot_pitch_flat_deg": [
+      -16.4,
+      -17.7
+    ],
+    "finite": true,
+    "non_finite": []
+  }
+}

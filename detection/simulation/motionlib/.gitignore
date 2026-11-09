@@ -1,0 +1,5 @@
+# Downloads, restricted outputs and the offline tool venv never enter git.
+raw/
+restricted/
+.venv-tools/
+__pycache__/

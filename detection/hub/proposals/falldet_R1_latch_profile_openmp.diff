@@ -1,0 +1,121 @@
+diff -ru a/detection/models/falldet/__init__.py b/detection/models/falldet/__init__.py
+--- a/detection/models/falldet/__init__.py	2026-11-07 21:20:55
++++ b/detection/models/falldet/__init__.py	2026-11-07 21:21:33
+@@ -2,6 +2,11 @@
+ 
+     from falldet import detect, FallDetectorStream
+ """
++import os
++
++# GBT inference on a live loop: one OpenMP thread is enough and avoids oversubscription next to
++# the backend's threads. Set OMP_NUM_THREADS before importing falldet to override.
++os.environ.setdefault("OMP_NUM_THREADS", "1")
+ from .constants import ANCHORS, CLASSES, FS_HZ  # noqa: F401
+ from .detector import (Detector, FallDetectorStream, detect, fixture_arrays,  # noqa: F401
+                        get_detector, load_fixture, parse_sample, window_around)
+diff -ru a/detection/models/falldet/detector.py b/detection/models/falldet/detector.py
+--- a/detection/models/falldet/detector.py	2026-11-07 21:20:55
++++ b/detection/models/falldet/detector.py	2026-11-07 21:21:33
+@@ -34,7 +34,7 @@
+                        feature_vector, ground_contact, stage2_features)
+ from .nearfall import (NF_POST_S, NF_PRE_S, NearFallGBT, NearFallModel, PerturbationTrigger, decide_nf,
+                        load_nf_config, trigger_signals)
+-from .resample import Preprocessor
++from .resample import RECOVER_RATE_HZ, Preprocessor
+ from .stage1 import Stage1Scalar, Stage1Trigger, load_thresholds, run_stage1
+ 
+ LONG_GAP_S = 5.0   # after a data gap this long, pending triggers are decided with what exists
+@@ -309,6 +309,13 @@
+                 self.pre = Preprocessor(self.nominal_fs_hz)
+             segs = self.pre.process(t, acc, gyro, slot_mask)
+             events = []
++            if self.pre.just_recovered:
++                self.pre.just_recovered = False
++                self.rate_warned = False
++                events += self._on_gap(LONG_GAP_S + 1.0)   # decide anything pending; no pairing across
++                events.append({"type": "diagnostic", "code": "rate_recovered", "state": "normal",
++                               "t_s": float(np.nanmax(np.asarray(t, dtype=np.float64))),
++                               "message": f"rate back to >= {RECOVER_RATE_HZ:g} Hz; detection resumed"})
+             if self.pre.insufficient_rate:
+                 if not self.rate_warned:
+                     self.rate_warned = True
+diff -ru a/detection/models/falldet/resample.py b/detection/models/falldet/resample.py
+--- a/detection/models/falldet/resample.py	2026-11-07 21:20:55
++++ b/detection/models/falldet/resample.py	2026-11-07 21:21:33
+@@ -13,7 +13,8 @@
+     free fall / impact across a gap).
+  3. Rate check: if the median of the last 25 frame intervals exceeds 1/MIN_RATE_HZ (25 ms),
+     the data are too slow to show a fall (0.5 Hz firmware samples every 2 s) and nothing is
+-    passed on; `insufficient_rate` is set.
++    passed on; `insufficient_rate` is set. It clears again after RECOVER_S seconds at a median
++    rate >= RECOVER_RATE_HZ (hysteresis); the grid then restarts as after a gap.
+ """
+ import collections
+ 
+@@ -22,6 +23,8 @@
+ from .constants import FS_HZ
+ 
+ MIN_RATE_HZ = 40.0
++RECOVER_RATE_HZ = 90.0   # latch clears after RECOVER_S at >= this rate (hysteresis)
++RECOVER_S = 5.0
+ MAX_INTERP_GAP_S = 0.10
+ DT = 1.0 / FS_HZ
+ NEIGHBOURS = {0: (1, 2, 3), 1: (0, 2, 3), 2: (3, 1, 0), 3: (2, 1, 0)}
+@@ -42,6 +45,9 @@
+         self.recent_dt = collections.deque(maxlen=25)
+         self.insufficient_rate = nominal_fs_hz is not None and nominal_fs_hz < MIN_RATE_HZ
+         self.frames_in = self.frames_dropped = 0
++        self.fast_since = None        # first time of the current fast-rate run while latched
++        self.recoveries = 0
++        self.just_recovered = False
+ 
+     @staticmethod
+     def fill_slots(acc, gyro, ok):
+@@ -82,6 +88,15 @@
+         self.recent_dt.extend(np.diff(tt).tolist())
+         if len(self.recent_dt) >= 2 and np.median(self.recent_dt) > 1.0 / MIN_RATE_HZ:
+             self.insufficient_rate = True
++        if self.insufficient_rate and np.median(self.recent_dt) <= 1.0 / RECOVER_RATE_HZ:
++            self.fast_since = t[0] if self.fast_since is None else self.fast_since
++            if t[-1] - self.fast_since >= RECOVER_S:
++                self.insufficient_rate = False        # recovered: restart the grid, like after a gap
++                self.fast_since, self.last, self.next_t = None, None, None
++                self.recoveries += 1
++                self.just_recovered = True
++        elif self.insufficient_rate:
++            self.fast_since = None
+         if self.insufficient_rate:
+             self.last, self.next_t = (t[-1], acc[-1], gyro[-1], miss[-1]), None
+             return []
+diff -ru a/detection/models/falldet/sim_adapter.py b/detection/models/falldet/sim_adapter.py
+--- a/detection/models/falldet/sim_adapter.py	2026-11-07 21:20:55
++++ b/detection/models/falldet/sim_adapter.py	2026-11-07 21:21:33
+@@ -15,6 +15,7 @@
+ "insufficient_rate" diagnostic is not a ThunderSim event kind, so it is reported in
+ `model.status` / `model.diagnostics` instead. No man-down timers are produced.
+ """
++import os
+ from dataclasses import dataclass, field
+ 
+ from .constants import FS_HZ
+@@ -51,11 +52,16 @@
+         fs = float(getattr(context, "fs_hz", FS_HZ) or FS_HZ)
+         prof = str(getattr(context, "profile", "") or "")
+         rng = getattr(context, "accel_range_g", None)
+-        if self.forced_profile in ("target", "current"):
+-            self.model_profile = self.forced_profile
++        dlpf = getattr(context, "dlpf_hz", None)     # optional; StreamContext has no filter field yet
++        explicit = self.forced_profile or os.environ.get("FALLDET_PROFILE")
++        if explicit in ("target", "current"):
++            self.model_profile = explicit
+         else:
+-            self.model_profile = "current" if (prof.startswith("current") or (rng is not None and rng <= 4.0)) \
+-                else "target"
++            # The 'current' model was trained on 10 Hz-filtered data: pick it by filter bandwidth
++            # first (a +-8 g strip with a 10 Hz DLPF is 'current', not 'target').
++            narrow = dlpf is not None and dlpf <= 20.0
++            self.model_profile = "current" if (narrow or prof.startswith("current") or
++                                               (rng is not None and rng <= 4.0)) else "target"
+         det = get_detector(self.model_profile, self.backend)
+         self.stream = FallDetectorStream(detector=det, nominal_fs_hz=fs, nearfall=self.nearfall)
+         self.status = "ok"

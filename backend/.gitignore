@@ -7,3 +7,5 @@ venv/
 .env.*
 !.env.example
 capture.jsonl
+recordings/
+mountings/
