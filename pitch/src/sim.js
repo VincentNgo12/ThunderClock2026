@@ -1323,9 +1323,21 @@ async function anatInflate(s) {
     playBtn.textContent = playing ? 'Pause' : 'Play';
     playBtn.addEventListener('click', () => { playing = !playing; playBtn.textContent = playing ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', String(!playing)); });
   }
-  new IntersectionObserver((es, o) => { if (es.some((x) => x.isIntersecting)) { ensureLoaded(); o.disconnect(); } }, { rootMargin: '100% 0px' }).observe(SEC);
-  new IntersectionObserver((es) => es.forEach((en) => setActive(en.isIntersecting)), { threshold: 0.02 }).observe(SEC);
-  document.addEventListener('deck:page', (e) => { if (e.detail && e.detail.id === 'simulation') { ensureLoaded(); setActive(true); } });
-  document.addEventListener('visibilitychange', () => setActive(!document.hidden && inView()));
+  // Snapped desktop deck: render only while this is the current page, so slide 5 never competes with the
+  // live spine on slide 4 (a partly visible slide 5 used to switch the six scenes on). Stacked phone layout:
+  // render while on screen. Preloading (about 6 MB to decode) never runs while the Live page is showing:
+  // it happens in idle time on the earlier slides, or on arrival.
+  const snapped = matchMedia('(min-width:900px) and (min-height:620px)');
+  let current = null;
+  const mine = () => (snapped.matches ? current === 'simulation' : inView());
+  new IntersectionObserver((es) => { if (!snapped.matches) es.forEach((en) => { if (en.isIntersecting) ensureLoaded(); setActive(en.isIntersecting); }); }, { threshold: 0.02 }).observe(SEC);
+  document.addEventListener('deck:page', (e) => {
+    if (!e.detail) return;
+    current = e.detail.id;
+    if (current === 'simulation') { ensureLoaded(); setActive(true); } else if (snapped.matches) setActive(false);
+  });
+  document.addEventListener('visibilitychange', () => setActive(!document.hidden && mine()));
+  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1500));
+  idle(() => { if (current !== 'live') ensureLoaded(); }, { timeout: 4000 });
   window.__sim = { seek: (i, t) => { const tl = tiles[i]; if (tl) { tl.t = t; tl.dirty = true; tl.camInit = false; } }, play: (on) => { playing = on; }, mode: (i, m) => { const tl = tiles[i]; if (tl) { tl.mode = m; applyMode(tl); } }, ready: () => ready && anatState };
 })();

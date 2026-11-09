@@ -398,6 +398,7 @@
       if (!m || typeof m !== 'object' || !Array.isArray(m.imus)) return;
       LV.latest = m; LV.lastAt = performance.now(); LV.count++;
       onSnapshot(m);
+      hrSimUpdate(m);
     };
     sock.onerror = () => { /* onclose follows */ };
     sock.onclose = () => { if (LV.sock === sock) { LV.sock = null; LV.state = 'closed'; retry(); } };
@@ -441,12 +442,75 @@
   }
 
   // availability (protocol "Availability rules"): a group counts only when its freshness says valid
+  // ---- Laptop microphone as the noise sensor (Web Audio). localhost is a secure context, so the browser asks
+  // for permission once. Level: RMS of the raw input in dBFS, shown as an approximate sound level (dBFS + 100,
+  // a typical laptop-mic offset; not calibrated). Overrides the vest/replay noise everywhere while on.
+  const MIC = { on: false, db: NaN, ctx: null, an: null, buf: null, stream: null, timer: 0 };
+  const MB = { fps: 10, n: 0, noise: new Float32Array(6000) };
+  function micPush(v) { if (MB.n === MB.noise.length) { MB.noise.copyWithin(0, MB.n / 2); MB.n /= 2; } MB.noise[MB.n++] = v; }
+  async function micStart() {
+    try {
+      MIC.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      MIC.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = MIC.ctx.createMediaStreamSource(MIC.stream);
+      MIC.an = MIC.ctx.createAnalyser(); MIC.an.fftSize = 2048; MIC.buf = new Float32Array(MIC.an.fftSize);
+      src.connect(MIC.an);
+      if (MIC.ctx.state === 'suspended') MIC.ctx.resume().catch(() => {});
+      MIC.on = true; MB.n = 0;
+      MIC.timer = setInterval(() => {
+        MIC.an.getFloatTimeDomainData(MIC.buf);
+        let sum = 0, mean = 0;
+        for (let i = 0; i < MIC.buf.length; i++) mean += MIC.buf[i];
+        mean /= MIC.buf.length;
+        for (let i = 0; i < MIC.buf.length; i++) { const x = MIC.buf[i] - mean; sum += x * x; }
+        const dbfs = 10 * Math.log10(Math.max(sum / MIC.buf.length, 1e-12));
+        const lvl = Math.max(30, Math.min(110, dbfs + 100));
+        MIC.db = Number.isFinite(MIC.db) ? (lvl > MIC.db ? lvl : MIC.db + (lvl - MIC.db) * 0.3) : lvl;   // fast attack, slower release
+        micPush(MIC.db);
+      }, 100);
+    } catch (e) {
+      MIC.on = false;   // blocked or no microphone: keep the vest/replay noise
+    }
+    micUi();
+  }
+  function micLive() { return MIC.on && MIC.ctx && MIC.ctx.state === 'running' && Number.isFinite(MIC.db); }
+  function micUi() { $('u-noise').textContent = MIC.on ? 'dB' : 'dB rel.'; }
+  // Default on: ask for the microphone when the page loads. Browsers keep an AudioContext suspended until the
+  // first click or key press, so the level starts with the presenter's first interaction (e.g. an arrow key).
+  // If the microphone is blocked or missing, the noise row keeps the vest/replay value.
+  const micResume = () => { if (MIC.ctx && MIC.ctx.state === 'suspended') MIC.ctx.resume(); };
+  document.addEventListener('pointerdown', micResume, true); document.addEventListener('keydown', micResume, true);
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) micStart();
+
+  // Simulated heart rate for live mode: the backend does not send heart_rate_bpm yet, so while the vest
+  // streams, a synthetic value follows the wearer's measured trunk motion (resting ~72 bpm, rising with
+  // movement, ~8 s lag). Shown and labelled as simulated; a real backend value always wins.
+  const HRS = { v: 74, act: 0, q: null, t: 0 };
+  function hrSimUpdate(m) {
+    const now = performance.now() / 1000, k = 2;   // thoracic sensor
+    const q = rawQ[k];
+    if (!q || !wearerStreaming(m)) { HRS.q = null; return; }
+    if (HRS.q && HRS.t) {
+      const dt = Math.max(1e-3, now - HRS.t);
+      const dot = Math.min(1, Math.abs(HRS.q.x * q.x + HRS.q.y * q.y + HRS.q.z * q.z + HRS.q.w * q.w));
+      const rate = (2 * Math.acos(dot)) / dt;                       // rad/s
+      HRS.act += (Math.min(rate, 4) - HRS.act) * Math.min(1, dt / 1.5);
+      const target = 72 + Math.min(48, HRS.act * 30);
+      HRS.v += (target - HRS.v) * Math.min(1, dt / 8);
+    }
+    HRS.q = (HRS.q || new T.Quaternion()).copy(q); HRS.t = now;
+  }
+  function hrSim() { const s = performance.now() / 1000; return HRS.v + 1.3 * Math.sin(s * 0.9) + 0.7 * Math.sin(s * 2.3 + 1); }
+
   function liveValues(m, fresh) {
     const fr = (m && m.freshness) || {};
     const ok = (key, v) => fresh && v != null && (!fr[key] || fr[key].status === 'valid');
     const env = m && ok('environment', m.environment) ? m.environment : null;
+    const realHr = m && ok('heart_rate', m.heart_rate_bpm) ? numOr(m.heart_rate_bpm) : NaN;
+    const simHr = !Number.isFinite(realHr) && fresh && wearerStreaming(m) && HRS.q ? hrSim() : NaN;
     return {
-      hr: m && ok('heart_rate', m.heart_rate_bpm) ? numOr(m.heart_rate_bpm) : NaN,
+      hrSim: Number.isFinite(simHr),
+      hr: Number.isFinite(realHr) ? realHr : simHr,
       temp: env ? numOr(env.temperature_c) : NaN, hum: env ? numOr(env.humidity_percent) : NaN,
       aqi: env ? numOr(env.air_quality_index) : NaN, eco2: env ? numOr(env.eco2_ppm) : NaN,
       tvoc: env ? numOr(env.tvoc_ppb) : NaN, noise: env ? numOr(env.noise_relative_db) : NaN,
@@ -506,6 +570,7 @@
     }
   }
 
+  let lastTrace = 0;
   function liveFrame(dt, forceUi) {
     const now = performance.now(), fresh = liveFresh(now), m = LV.latest;
     const status = REGIONS.map((reg) => {
@@ -517,11 +582,16 @@
     });
     if (view) { view.pose(liveQ, dt, status); view.render(); }
     if (forceUi || now - lastUi > 120) { lastUi = now; liveUi(m, fresh, status); }
+    // the traces change at 10 Hz (LB samples); redrawing four canvases every frame forced a layout per canvas
+    // and cost the spine frame rate, so they redraw at most every 100 ms
+    if (!forceUi && now - lastTrace < 100) return;
+    lastTrace = now;
     const L = LB, f = L.n - 1;
     trace('c-hr', L, f, [{ a: L.hr, lo: 55, hi: 170, color: C.ink, w: 2, hi2: true }]);
     trace('c-env', L, f, [{ a: L.hum, lo: 30, hi: 70, color: C.ink3, dash: [4, 3] }, { a: L.temp, lo: 10, hi: 35, color: C.ink, w: 2, hi2: true }]);
     trace('c-aq', L, f, [{ a: L.eco2, lo: 400, hi: 1200, color: C.ink, w: 2, hi2: true }]);
-    trace('c-noise', L, f, [{ a: L.noise, lo: 40, hi: 95, color: C.ink2, bars: true }]);
+    if (micLive()) trace('c-noise', MB, MB.n - 1, [{ a: MB.noise, lo: 30, hi: 100, color: C.ink2, bars: true }]);
+    else trace('c-noise', L, f, [{ a: L.noise, lo: 40, hi: 95, color: C.ink2, bars: true }]);
   }
 
   function liveUi(m, fresh, status) {
@@ -592,10 +662,10 @@
     const aqi = Number.isFinite(v.aqi) ? Math.round(v.aqi) : NaN;
     setV('v-aqi', aqi, 0);
     els.aqm.forEach((x, i) => { if (Number.isFinite(aqi) && i < aqi) x.setAttribute('data-on', ''); else x.removeAttribute('data-on'); });
-    setV('v-eco2', v.eco2, 0); setV('v-tvoc', v.tvoc, 0); setV('v-noise', v.noise, 0);
+    setV('v-eco2', v.eco2, 0); setV('v-tvoc', v.tvoc, 0); setV('v-noise', micLive() ? MIC.db : v.noise, 0);
     const card = (id, st, val) => { $(id).textContent = Number.isFinite(val) ? '' : why(st) || 'no reading'; const li = $(id).closest('.sen'); if (Number.isFinite(val)) li.removeAttribute('data-off'); else li.setAttribute('data-off', ''); };
-    card('st-hr', v.hrSt, v.hr); card('st-env', v.envSt, v.temp); card('st-aq', v.envSt, Number.isFinite(aqi) ? aqi : v.eco2); card('st-noise', v.envSt, v.noise);
-    $('live-note').textContent = `Live from ${WS_URL}${m && m.connection ? ` (source ${m.connection.source}, ESP32 ${m.connection.esp32})` : ''}. Prototype, not a medical device.`;
+    card('st-hr', v.hrSt, v.hr); card('st-env', v.envSt, v.temp); card('st-aq', v.envSt, Number.isFinite(aqi) ? aqi : v.eco2); card('st-noise', micLive() ? 'valid' : v.envSt, micLive() ? MIC.db : v.noise);
+    $('live-note').textContent = `Live from ${WS_URL}${m && m.connection ? ` (source ${m.connection.source}, ESP32 ${m.connection.esp32})` : ''}. ${v.hrSim ? ' Heart rate is simulated in this demo.' : ''} Prototype, not a medical device.`;
   }
 
   // ---------- state, clock, UI ----------
@@ -664,7 +734,7 @@
     els.aqm.forEach((m, i) => { if (i < aqi) m.setAttribute('data-on', ''); else m.removeAttribute('data-on'); });
     $('v-eco2').textContent = Math.round(r.eco2[f]);
     $('v-tvoc').textContent = Math.round(r.tvoc[f]);
-    $('v-noise').textContent = Math.round(r.noise[f]);
+    $('v-noise').textContent = Math.round(micLive() ? MIC.db : r.noise[f]);
     updateBadge('replay');
   }
 
@@ -673,7 +743,8 @@
     trace('c-hr', r, f, [{ a: r.hr, lo: 55, hi: 170, color: C.ink, w: 2, hi2: true }], { marks: true });
     trace('c-env', r, f, [{ a: r.hum, lo: 30, hi: 70, color: C.ink3, dash: [4, 3] }, { a: r.temp, lo: 10, hi: 35, color: C.ink, w: 2, hi2: true }]);
     trace('c-aq', r, f, [{ a: r.eco2, lo: 400, hi: 1200, color: C.ink, w: 2, hi2: true }]);
-    trace('c-noise', r, f, [{ a: r.noise, lo: 40, hi: 95, color: C.ink2, bars: true }]);
+    if (micLive()) trace('c-noise', MB, MB.n - 1, [{ a: MB.noise, lo: 30, hi: 100, color: C.ink2, bars: true }]);
+    else trace('c-noise', r, f, [{ a: r.noise, lo: 40, hi: 95, color: C.ink2, bars: true }]);
   }
 
   function loop(now) {

@@ -303,6 +303,44 @@ function annySkin(h, root) {
     };
     const vest = new THREE.Mesh(vg, vm); vest.frustumCulled = false; H.root.add(vest);
 
+    // ---- jeans: Anny's own hip and leg skin, offset 5 mm (under the vest hem); waist and cuffs cut in the shader ----
+    const JEANS_OFF = 0.005;
+    const WAIST = hip.y + 0.035, CUFF = Math.max(bonePos('foot.L').y, bonePos('foot.R').y) + 0.035;
+    const jkeep = new Uint8Array(nv);
+    for (let v = 0; v < nv; v++) {
+      const w = [0, 0, 0, 0];
+      for (let e = A.off[v]; e < A.off[v + 1]; e++) w[grp[A.sb[e]]] += A.W[e];
+      const y = P[3 * v + 1];
+      jkeep[v] = (w[1] < 0.3 && y < WAIST + 0.05 && y > CUFF - 0.05) ? 1 : 0;   // no hands/arms hanging at the thighs
+    }
+    const jIdx = [];
+    for (let f = 0; f < idx.length; f += 3) if (jkeep[idx[f]] && jkeep[idx[f + 1]] && jkeep[idx[f + 2]]) jIdx.push(idx[f], idx[f + 1], idx[f + 2]);
+    const jp = new Float32Array(nv * 3);
+    for (let i = 0; i < nv * 3; i++) jp[i] = P[i] + N[i] * JEANS_OFF;
+    const jg = new THREE.BufferGeometry();
+    jg.setAttribute('position', new THREE.BufferAttribute(jp, 3)); jg.setAttribute('normal', new THREE.BufferAttribute(N, 3)); jg.setIndex(jIdx);
+    const JU = { uWaist: { value: WAIST }, uCuff: { value: CUFF }, uDenim: { value: new THREE.Color(0x3e5578) }, uDark: { value: new THREE.Color(0x26354d) },
+      uStitch: { value: new THREE.Color(0xc8923a) }, uLeather: { value: new THREE.Color(0x4a2e1f) } };
+    const jm = new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    jm.onBeforeCompile = (sh) => {
+      Object.assign(sh.uniforms, JU);
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vJP;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvJP = position;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
+        varying vec3 vJP; uniform float uWaist, uCuff; uniform vec3 uDenim, uDark, uStitch, uLeather;`)
+        .replace('#include <color_fragment>', `#include <color_fragment>
+        vec3 jp = vJP;
+        if (jp.y > uWaist || jp.y < uCuff) discard;
+        float tw = (sin(jp.y * 900. + jp.x * 900.) * .5 + .5) * .06;          // faint denim twill
+        vec3 col = uDenim * (1. - tw);
+        float top = uWaist - jp.y, cuff = jp.y - uCuff;
+        if (top < .035) col = uLeather;                                        // belt
+        if (top >= .035 && top < .045) col = uDark;                            // waistband edge
+        if (cuff < .025) col = uDark;                                          // rolled cuffs
+        if (abs(cuff - .025) < .0025 || abs(top - .05) < .002) col = uStitch;  // contrast stitching
+        diffuseColor.rgb = col;`);
+    };
+    const jeans = new THREE.Mesh(jg, jm); jeans.frustumCulled = false; H.root.add(jeans);
+
     // ---- sensors on top of the vest ----
     const blueM = new THREE.MeshLambertMaterial({ color: blue }), inkM = new THREE.MeshLambertMaterial({ color: ink, side: THREE.DoubleSide }), yelM = new THREE.MeshLambertMaterial({ color: yellow });
     const UP = V(0, 1, 0);
@@ -431,8 +469,11 @@ function annySkin(h, root) {
   }
   const inView = () => { const r = SEC.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
   new IntersectionObserver((es, o) => { if (es.some((x) => x.isIntersecting)) { start(); o.disconnect(); } }, { rootMargin: '60% 0px' }).observe(SEC);
-  new IntersectionObserver((es) => es.forEach((en) => setActive(en.isIntersecting)), { threshold: 0.02 }).observe(SEC);
-  document.addEventListener('deck:page', (e) => { if (!e.detail) return; if (e.detail.id === 'how') { start(); setActive(true); } else if (matchMedia('(min-width:900px) and (min-height:620px)').matches) setActive(false); });
-  document.addEventListener('visibilitychange', () => setActive(!document.hidden && inView()));
+  // Snapped desktop deck: render only while this is the current page (never alongside the Live page).
+  const snapped = matchMedia('(min-width:900px) and (min-height:620px)');
+  let current = null;
+  new IntersectionObserver((es) => { if (!snapped.matches) es.forEach((en) => setActive(en.isIntersecting)); }, { threshold: 0.02 }).observe(SEC);
+  document.addEventListener('deck:page', (e) => { if (!e.detail) return; current = e.detail.id; if (current === 'how') { start(); setActive(true); } else if (snapped.matches) setActive(false); });
+  document.addEventListener('visibilitychange', () => setActive(!document.hidden && (snapped.matches ? current === 'how' : inView())));
   window.__how = { view: (v) => { spin = false; if (ready) { setView(v); draw(); } }, spin: (b) => { spin = !!b; }, ready: () => ready, marks, cam: () => camera };
 })();

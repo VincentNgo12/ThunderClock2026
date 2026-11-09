@@ -39,6 +39,8 @@
   --inv-bg:var(--ink-0); --inv-ink:var(--paper);
   --accent:var(--yellow); --accent-ink:var(--ink-0);
   --accent-2:var(--blue); --accent-2-ink:var(--paper);
+  --red:#B42318; --red-ink:var(--paper);         /* page 7 cost box; paper text on it is 6.2:1 */
+  --green:#1F6B45; --green-ink:var(--paper);   /* page 7 cost/earnings boxes; paper text on it is 6.7:1 */
   --alert:var(--blue); /* ONLY functional alert status, always with a symbol and a word */
 
   --font:"Archivo", "Helvetica Neue", Arial, sans-serif;
@@ -139,6 +141,46 @@ a{color:var(--accent-2)}
 .cell.payoff .fig{font-weight:900;font-size:clamp(4.4rem, 11.5vw, 11.5rem);line-height:.82}
 .cell.payoff .claim{font-size:var(--fs-2);font-weight:700;max-width:none}
 .cell.payoff .grp,.cell.payoff .src{color:var(--accent-ink)}
+/* page 7: what it's worth: only the numbers sit in coloured boxes, the words stay on the page */
+.val{list-style:none;margin:0;padding:0;flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);gap:28px;align-content:center}
+@media (min-width:900px){.val{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:stretch;align-content:center}}
+.val-lead{margin:clamp(8px,3vh,40px) 0 0;font-size:clamp(2rem,4vw,3.75rem);font-weight:800;line-height:1.05;letter-spacing:-.01em;max-width:30ch;text-wrap:balance}
+.vc{display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-width:0;border:3px solid var(--ink);padding:clamp(18px,2.2vw,32px);align-self:stretch}
+.vb{display:inline-block;font-weight:900;font-variation-settings:"wdth" var(--w-narrow);font-size:clamp(4rem,9vw,9rem);line-height:.86;letter-spacing:-.03em;
+  padding:.12em .2em .08em}
+.vb small{font-size:.55em;margin-left:.04em}
+.vb-red{background:var(--red);color:var(--red-ink)}
+.vb-green{background:var(--green);color:var(--green-ink)}
+.vb-yellow{background:var(--accent);color:var(--accent-ink)}
+.vb-pre{font-size:clamp(2rem,3.4vw,3.25rem);font-weight:800;line-height:1}
+.vb-txt{margin:0;font-size:clamp(1.75rem,3vw,2.9rem);font-weight:800;line-height:1.08}
+.vb-note{margin:0;font-size:clamp(1.25rem,1.9vw,1.85rem);font-weight:600;line-height:1.2;color:var(--ink-2)}
+/* page 3: safety makes money */
+#makes .page-head{align-items:flex-end}
+#makes-h{text-transform:uppercase;font-size:clamp(2.8rem,7.6vw,7.5rem);font-weight:900;font-variation-settings:"wdth" var(--w-narrow);line-height:.9;letter-spacing:-.03em;text-wrap:balance}
+#makes-h b{font-weight:900;background:var(--accent);color:var(--accent-ink);padding:0 .12em}
+#makes .mk-fig{font-size:clamp(4.2rem,11vw,10.5rem)}
+.makes{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);gap:28px;align-content:center}
+@media (min-width:900px){.makes{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:56px}}
+.mk-hero{display:flex;flex-direction:column;justify-content:center;gap:16px;border-top:2px solid var(--ink);padding-top:14px}
+.mk-fig{font-weight:900;font-variation-settings:"wdth" var(--w-narrow);font-size:clamp(5rem,15vw,14rem);line-height:.82;letter-spacing:-.03em;color:var(--ink)}
+.mk-fig small{font-size:.55em;margin-left:.04em}
+.mk-claim{margin:0;font-size:var(--fs-3);line-height:1.2;font-weight:600;max-width:24ch}
+.mk-src{font-size:var(--fs-0);color:var(--ink-3);line-height:1.2}
+.mk-logos{display:flex;align-items:center;flex-wrap:wrap;gap:16px 40px;padding-top:6px}
+.mk-logos img{display:block;width:auto;max-width:100%}
+.mk-logos img[alt="PCL Construction"]{height:clamp(44px,5vw,72px)}
+.mk-logos img[alt="EllisDon"]{height:clamp(26px,3vw,42px)}
+.mk-side{display:flex;flex-direction:column;justify-content:center;gap:22px;min-width:0}
+.mk-lead{margin:0;font-size:var(--fs-3);line-height:1.2;font-weight:700}
+.mk-list{list-style:none;margin:0;padding:0;display:grid;gap:18px;counter-reset:mk}
+.mk-list li{counter-increment:mk;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px;row-gap:4px;border-top:1px solid var(--rule);padding-top:14px}
+.mk-list li::before{content:counter(mk);grid-row:span 2;font-weight:800;font-variation-settings:"wdth" var(--w-narrow);font-size:var(--fs-4);line-height:.9;color:var(--accent-2)}
+.mk-list b{font-size:var(--fs-2);line-height:1.2}
+.mk-list span{font-size:var(--fs-2);line-height:1.25;color:var(--ink-2)}
+.mk-pay{margin:0;background:var(--accent);color:var(--accent-ink);font-size:var(--fs-4);font-weight:800;line-height:1.05;padding:16px 20px}
+.mk-pay b{font-weight:900;text-decoration:underline;text-decoration-thickness:.08em;text-underline-offset:.12em}
+
 
 /* ===== Page 4: live. [spine data] [3D spine, centre] [other sensors] ===== */
 .live{flex:1;display:grid;grid-template-columns:minmax(0,1fr);gap:24px;min-height:0}
@@ -394,12 +436,14 @@ a{color:var(--accent-2)}
     <ol class="ticks" id="ticks">
       <li><a href="#team" aria-label="Page 1, team" aria-current="true"></a></li>
       <li><a href="#numbers" aria-label="Page 2, the numbers"></a></li>
-      <li><a href="#how" aria-label="Page 3, how it works"></a></li>
-      <li><a href="#live" aria-label="Page 4, live sensors"></a></li>
-      <li><a href="#simulation" aria-label="Page 5, simulation training"></a></li>
-      <li><a href="#close" aria-label="Page 6, what comes next"></a></li>
+      <li><a href="#makes" aria-label="Page 3, safety makes money"></a></li>
+      <li><a href="#how" aria-label="Page 4, how it works"></a></li>
+      <li><a href="#live" aria-label="Page 5, live sensors"></a></li>
+      <li><a href="#simulation" aria-label="Page 6, simulation training"></a></li>
+      <li><a href="#value" aria-label="Page 7, what it's worth"></a></li>
+      <li><a href="#close" aria-label="Page 8, what comes next"></a></li>
     </ol>
-    <span class="label" id="where-label" aria-live="polite"><b>1</b> of 6, Team</span>
+    <span class="label" id="where-label" aria-live="polite"><b>1</b> of 8, Team</span>
   </div>
   <div class="btns">
     <button type="button" id="prev" aria-label="Previous page">Previous</button>
@@ -413,9 +457,9 @@ a{color:var(--accent-2)}
 <section class="page" id="team" data-title="Team" aria-label="Team">
   <div class="team-top"><span>NatHacks 2026</span><span>Pitch</span></div>
   <svg class="site" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"><g class="ln" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="1.2" d="M172 392V118H402V392M198 140h34v40h-34zM266 140h34v40h-34zM334 140h34v40h-34zM198 206h34v40h-34zM266 206h34v40h-34zM334 206h34v40h-34zM198 272h34v40h-34zM266 272h34v40h-34zM334 272h34v40h-34zM198 338h34v40h-34zM266 338h34v40h-34zM334 338h34v40h-34zM142 340L430 340M150 314L422 314M142 284L430 284M150 258L422 258M142 228L430 228M150 202L422 202M142 172L430 172M150 146L422 146M142 116L430 116M150 90L422 90M150 392L218 336M286 392L354 336M218 336L286 280M354 336L422 280M150 280L218 224M286 280L354 224M218 224L286 168M354 224L422 168M150 168L218 112M286 168L354 112M118 392L150 280M132 392L164 280M122 378L136 378M126 364L140 364M130 350L144 350M134 336L148 336M138 322L152 322M142 308L156 308M146 294L160 294M10 392v-34h30v34M10 358L40 392M40 358L10 392M40 392v-34h30v34M40 358L70 392M70 358L40 392M70 392v-34h30v34M70 358L100 392M100 358L70 392M100 392v-34h30v34M100 358L130 392M130 358L100 392M480 328L845 328M480 258L845 258M480 188L845 188M624 118L845 118M701 392L768 328M701 328L768 392M557 322L624 258M557 258L624 322M773 252L840 188M773 188L840 252M485 252L552 188M485 188L552 252M629 182L696 118M629 118L696 182M480 160L624 160M624 90L845 90M482 182L482 160M554 182L554 160M626 112L626 90M698 112L698 90M770 112L770 90M842 112L842 90M872 392L896 368M872 368L896 368M896 368L872 344M872 344L896 344M872 344L896 320M872 320L896 320M896 320L872 296M872 296L896 296M872 296L896 272M872 272L896 272M896 272L872 248M872 248L896 248M872 248L896 224M872 224L896 224M896 224L872 200M872 200L896 200M872 200L896 176M872 176L896 176M896 176L872 152M872 152L896 152M872 152L896 128M872 128L896 128M896 128L872 104M872 104L896 104M872 104L896 80M872 80L896 80M896 80L872 56M872 56L896 56M500 56L512 44M512 44L524 56M524 56L536 44M536 44L548 56M548 56L560 44M560 44L572 56M572 56L584 44M584 44L596 56M596 56L608 44M608 44L620 56M620 56L632 44M632 44L644 56M644 56L656 44M656 44L668 56M668 56L680 44M680 44L692 56M692 56L704 44M704 44L716 56M716 56L728 44M728 44L740 56M740 56L752 44M752 44L764 56M764 56L776 44M776 44L788 56M788 56L800 44M800 44L812 56M812 56L824 44M824 44L836 56M836 56L848 44M848 44L860 56M860 56L872 44M896 44L908 56M908 56L920 44M920 44L932 56M932 56L944 44M944 44L956 56M956 56L968 44M968 44L980 56M980 56L992 44M992 44L1004 56M1004 56L1016 44M884 10L620 44M884 10L1000 44M872 44L884 10M896 44L884 10M902 63h14v9h-14zM553 63L553 128M553 128L512 146M553 128L594 146M1066 348h34v20h-34zM1116 348h34v20h-34zM1166 348h22v44h-22zM1078 296h34v20h-34zM1128 296h34v20h-34zM1200 336L1222 336M1222 336L1246 392M950 382a10 10 0 1 0 20 0a10 10 0 1 0 -20 0M970 382a10 10 0 1 0 20 0a10 10 0 1 0 -20 0M990 382a10 10 0 1 0 20 0a10 10 0 1 0 -20 0M960 364.5a10 10 0 1 0 20 0a10 10 0 1 0 -20 0M980 364.5a10 10 0 1 0 20 0a10 10 0 1 0 -20 0M1262 392v-38h34v38M1262 354L1296 392M1296 354L1262 392M1296 392v-38h34v38M1296 354L1330 392M1330 354L1296 392M1330 392v-38h34v38M1330 354L1364 392M1364 354L1330 392M1364 392v-38h34v38M1364 354L1398 392M1398 354L1364 392"/><path stroke-width="2.2" d="M0 392L1400 392M150 392L150 86M218 392L218 86M286 392L286 86M354 392L354 86M422 392L422 86M142 336L430 336M142 280L430 280M142 224L430 224M142 168L430 168M142 112L430 112M480 392L480 182M485 392L485 182M552 392L552 182M557 392L557 182M624 392L624 112M629 392L629 112M696 392L696 112M701 392L701 112M768 392L768 112M773 392L773 112M840 392L840 112M845 392L845 112M480 322L845 322M480 252L845 252M480 182L845 182M624 112L845 112M872 392L872 56M896 392L896 56M862 392h44M500 44L1010 44M500 56L1010 56M884 44L884 10M896 58h26v24h-26zM544 56h18v7h-18zM500 146h106v8h-106zM1050 336h150v56h-150zM1062 284h126v52h-126z"/><g fill="currentColor" stroke="none"><path d="M962 56h44v30h-44z"/></g><g fill="currentColor"><circle cx="250" cy="187" r="5.2"/><path d="M250 194V209" stroke-width="8"/><path d="M250 209L245 224M250 209L255 224" stroke-width="4.2"/><path d="M250 196L262 202M250 196L240 202" stroke-width="3.6"/><circle cx="372" cy="75" r="5.2"/><path d="M372 82V97" stroke-width="8"/><path d="M372 97L367 112M372 97L377 112" stroke-width="4.2"/><path d="M372 84L379 96M372 84L365 96" stroke-width="3.6"/><circle cx="730" cy="75" r="5.2"/><path d="M730 82V97" stroke-width="8"/><path d="M730 97L725 112M730 97L735 112" stroke-width="4.2"/><path d="M730 84L737 96M730 84L723 96" stroke-width="3.6"/><circle cx="540" cy="145" r="5.2"/><path d="M540 152V167" stroke-width="8"/><path d="M540 167L535 182M540 167L545 182" stroke-width="4.2"/><path d="M540 154L551 138M540 154L532 164" stroke-width="3.6"/><circle cx="1228" cy="355" r="5.2"/><path d="M1228 362V377" stroke-width="8"/><path d="M1228 377L1223 392M1228 377L1233 392" stroke-width="4.2"/><path d="M1228 364L1235 376M1228 364L1221 376" stroke-width="3.6"/><circle cx="455" cy="355" r="5.2"/><path d="M455 362V377" stroke-width="8"/><path d="M455 377L450 392M455 377L460 392" stroke-width="4.2"/><path d="M455 364L462 376M455 364L448 376" stroke-width="3.6"/></g></g><g class="hat"><path d="M243.4 184.5a6.6 6.6 0 0 1 13.2 0h2.6v2.2h-18.4v-2.2z"/><path d="M365.4 72.5a6.6 6.6 0 0 1 13.2 0h2.6v2.2h-18.4v-2.2z"/><path d="M723.4 72.5a6.6 6.6 0 0 1 13.2 0h2.6v2.2h-18.4v-2.2z"/><path d="M533.4 142.5a6.6 6.6 0 0 1 13.2 0h2.6v2.2h-18.4v-2.2z"/><path d="M1221.4 352.5a6.6 6.6 0 0 1 13.2 0h2.6v2.2h-18.4v-2.2z"/><path d="M448.4 352.5a6.6 6.6 0 0 1 13.2 0h2.6v2.2h-18.4v-2.2z"/></g></svg>
-  <h1 class="team-name">ThunderClock</h1>
+  <h1 class="team-name">InSite</h1>
   <div class="team-foot">
-    <div><p class="product">InSite</p><p class="product-line">A jobsite safety vest.</p></div>
+    <div><p class="product">ThunderClock</p><p class="product-line">We built a jobsite safety vest.</p></div>
     <p class="site-fact"><b>1,034</b> construction workers died on the job in 2024. The most of any industry.<cite>BLS CFOI 2024</cite></p>
   </div>
 </section>
@@ -441,7 +485,32 @@ a{color:var(--accent-2)}
   </ol>
 </section>
 
-<!-- ================= PAGE 3: HOW IT WORKS =================
+<!-- ================= PAGE 3: SAFETY MAKES MONEY =================
+     Figures and bid requirements as supplied by the team (Centre Block Rehabilitation, Parliament Hill). -->
+<section class="page" id="makes" data-title="Safety makes money" aria-labelledby="makes-h">
+  <header class="page-head"><span class="idx">3</span><h2 id="makes-h">Safety <b>makes</b> money</h2></header>
+  <div class="makes">
+    <div class="mk-hero">
+      <span class="mk-fig">$3.5<small>B</small></span>
+      <p class="mk-claim">Centre Block Rehabilitation, Parliament Hill: the 2nd-largest Government of Canada contract awarded for a construction project.</p>
+      <span class="mk-src">CanadaBuys contract EP748-151886: construction management, PCL and EllisDon joint venture, awarded 2017</span>
+      <div class="mk-logos">
+        <img src="logos/pcl.svg" alt="PCL Construction" height="64">
+        <img src="logos/ellisdon.svg" alt="EllisDon" height="40">
+      </div>
+    </div>
+    <div class="mk-side">
+      <p class="mk-lead">Government bids are judged on optics, not just price.</p>
+      <ol class="mk-list">
+        <li><b>OHS policy + site risk assessment</b><span>Submitted with the bid, and open to audit at any time.</span></li>
+        <li><b>WCB certificates from your other projects</b><span>Renewed every 60 days.</span></li>
+      </ol>
+      <p class="mk-pay">Being safe <b>makes</b> sites money.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAGE 4: HOW IT WORKS =================
      The real data path, checked against the repo. Sources per claim:
      sensors and positions: AGENTS.md "Hardware scope", docs/PRODUCT.md "Current hardware";
      mux, 10 ms strip, I2S pins, 20 Hz telemetry target: firmware/include/SystemConfig.h;
@@ -450,7 +519,7 @@ a{color:var(--accent-2)}
      backend posture + /ws/telemetry about 20 Hz: docs/ARCHITECTURE.md, docs/TELEMETRY_PROTOCOL.md, backend/app/posture.py;
      two-stage fall detector behind the raw hand-off: detection/models/README.md, detection/hub/backend_hook.py. -->
 <section class="page" id="how" data-title="How it works" aria-labelledby="how-h">
-  <header class="page-head"><span class="idx">3</span><h2 id="how-h">How it works</h2></header>
+  <header class="page-head"><span class="idx">4</span><h2 id="how-h">Our product</h2></header>
   <div class="how">
     <figure class="vest-stage" aria-label="A human figure wearing the InSite vest, with each sensor labelled">
       <canvas aria-label="3D figure in the vest. Drag to turn it."></canvas>
@@ -471,7 +540,7 @@ a{color:var(--accent-2)}
     <ol class="path" aria-label="Data path from the vest to the supervisor">
       <li><span class="n">1</span><h3>Vest</h3><p>Sensors on the worker</p></li>
       <li><span class="n">2</span><h3>ESP32-S3</h3><p>Fuses the data</p><p class="via">Bluetooth</p></li>
-      <li><span class="n">3</span><h3>Laptop</h3><p>Detects falls</p></li>
+      <li><span class="n">3</span><h3>Laptop</h3><p>Stream data, Detects falls, Analyze Posture</p></li>
       <li><span class="n">4</span><h3>Supervisor screen</h3><p>Live alerts</p></li>
     </ol>
   </div>
@@ -484,7 +553,7 @@ a{color:var(--accent-2)}
      Right: heart rate, temperature and humidity, air quality, noise; synthetic, on the same clock.
      Logic in live.js; data in data/live-runs.json and data/spine-model.json. -->
 <section class="page" id="live" data-title="Live sensors" aria-labelledby="live-h">
-  <header class="page-head head-src"><span class="idx">4</span><h2 id="live-h">Every signal, live to the supervisor</h2>
+  <header class="page-head head-src"><span class="idx">5</span><h2 id="live-h">Every signal, live to the supervisor</h2>
   <div class="src">
     <span class="src-badge" id="src-badge" data-kind="replay" role="status"><span class="src-dot" aria-hidden="true"></span><span id="src-text">Offline: simulated replay</span></span>
     <div class="src-mode" role="group" aria-label="Data source (key L cycles)">
@@ -583,7 +652,7 @@ a{color:var(--accent-2)}
         </li>
         <li class="sen">
           <div class="sen-id"><h3>Noise</h3><span class="sen-st" id="st-noise"></span></div>
-          <div class="sen-val"><b id="v-noise">60</b><i>dB rel.</i></div>
+          <div class="sen-val"><b id="v-noise">60</b><i id="u-noise">dB rel.</i></div>
           <canvas class="sen-viz" id="c-noise" aria-hidden="true"></canvas>
         </li>
       </ul>
@@ -593,8 +662,8 @@ a{color:var(--accent-2)}
 
 <!-- ================= PAGE 5: SIMULATION =================
      Grid of simulated scenes with Anny: skeleton, muscle, both, skin. -->
-<section class="page" id="simulation" data-title="Simulation training" aria-labelledby="simulation-h">
-  <header class="page-head"><span class="idx">5</span><h2 id="simulation-h">Simulation training</h2></header>
+<section class="page" id="simulation" data-title="Offline simulation training" aria-labelledby="simulation-h">
+  <header class="page-head"><span class="idx">6</span><h2 id="simulation-h">Offline simulation training</h2></header>
   <div class="sim">
     <ol class="sim-res" aria-label="Detector results, all on simulated data">
       <li class="res lead"><b class="res-fig">97<small>%</small></b><p>of simulated falls confirmed</p></li>
@@ -610,22 +679,34 @@ a{color:var(--accent-2)}
   </div>
 </section>
 
-<!-- ================= PAGE 6: CLOSE =================
+<!-- ================= PAGE 7: WHAT IT'S WORTH =================
+     Figures as supplied by the team. -->
+<section class="page" id="value" data-title="What it's worth" aria-labelledby="value-h">
+  <header class="page-head"><span class="idx">7</span><h2 id="value-h">What it's worth</h2></header>
+  <p class="val-lead">Yes, we thought about the costs as well.</p>
+  <ul class="val">
+    <li class="vc"><span class="vb-pre" aria-hidden="true">&nbsp;</span><span class="vb vb-red">$30</span><p class="vb-txt">for an InSite vest</p></li>
+    <li class="vc"><span class="vb-pre">Up to</span><span class="vb vb-yellow">$2<small>B</small></span><p class="vb-txt">in savings</p></li>
+    <li class="vc"><span class="vb-pre" aria-hidden="true">&nbsp;</span><span class="vb vb-green">$??<small>B</small></span><p class="vb-txt">in earnings</p><p class="vb-note">(we can't make the buildings for you)</p></li>
+  </ul>
+</section>
+
+<!-- ================= PAGE 8: CLOSE =================
      Next steps from detection/simulation/validation/RECORDING_PROTOCOL.md, JOINT_TUNING.md section 5 and
      docs/PRODUCT.md (stretch features). -->
 <section class="page" id="close" data-title="What comes next" aria-labelledby="close-h">
-  <header class="page-head"><span class="idx">6</span><h2 id="close-h">What comes next</h2></header>
+  <header class="page-head"><span class="idx">8</span><h2 id="close-h">What comes next</h2></header>
   <div class="close">
     <div class="claim-block">
-      <p class="claim-big">Safety saves money.</p>
+      <p class="claim-big">Safety Makes Money.</p>
       <p class="claim-what"><b>InSite</b>: a prototype safety vest, live to the supervisor.</p>
     </div>
     <div class="next">
       <h3>Next</h3>
       <ol>
-        <li><span class="n">1</span><h4>Record real vest sessions</h4><p>Check the simulator against our own vest.</p></li>
-        <li><span class="n">2</span><h4>Retrain the near-fall stage</h4><p>On the more realistic simulated walk.</p></li>
-        <li><span class="n">3</span><h4>Trial it on a real site</h4><p>Results so far are simulated.</p></li>
+        <li><span class="n">1</span><h4>Modular Design</h4><p>Allow companies to bring their own vests, we bring the hardware.</p></li>
+        <li><span class="n">2</span><h4>Union Outreach</h4><p>Construction Companies arent the only clients, the word needs to spread.</p></li>
+        <li><span class="n">3</span><h4>Site Pilot</h4><p>Boots on the ground. Iteration makes us better.</p></li>
       </ol>
     </div>
   </div>
